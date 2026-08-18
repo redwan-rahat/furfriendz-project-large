@@ -37,12 +37,22 @@ const Section2Carousal = ({getdata}) => {
 
 
 
-useEffect(()=>{
+// useEffect(()=>{
     
 
-    handleFetch(getdata.replace(/'/g,''))
+//     handleFetch(getdata.replace(/'/g,''))
+    
+    
+//  },[getdata])
+
+ useEffect(()=>{
+    
+
+    handleFetch(getdata)
+    
     
  },[getdata])
+ 
 
   
         setTimeout(() => {
@@ -64,14 +74,16 @@ useEffect(()=>{
                     {
                      
                     }
-                    <NavLink to={`/details/${data.category.toLowerCase()}/${data.pet_id ? data.pet_id: data.product_id}`} >
+                    {/* <NavLink to={`/details/${data.category.toLowerCase()}/${data.pet_id ? data.pet_id: data.product_id}`} > */}
+                    <NavLink to={`/details/${data.pet_id ? 'pet' : 'product'}/${data.pet_id ? data.pet_id: data.product_id}`} >
+
                     <div className={` text-center mt-5 grid-cols-1 space-y-4`}>
                     <div className="border-second border-opacity-50 border-2 w-24 tab:w-28  lap:w-36 lap:h-36 des:w-48 des:h-48 m-auto rounded-full group hover:border-fourth cursor-pointer">
                         <div className="rounded-full overflow-hidden border-opacity-60 border-second border-2 duration-500 group-hover:scale-105 group-hover:bg-primary  group-hover:border-fourth bg-second">
                     <img className="  " src={data.photo_url} alt="" />
                     </div>
                     </div>
-                    <h1 className="text-primary font-medium text-sm tab:text-base">{data?.breeds?.breed_name ? data.breeds.breed_name : data.product_name}</h1>
+                    <h1 className="text-primary font-medium text-sm tab:text-base">{data?.breed ? data.breed : data.product_name}</h1>
                     </div>
                     </NavLink>
                     </>

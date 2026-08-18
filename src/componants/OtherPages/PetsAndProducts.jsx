@@ -6,7 +6,7 @@ import DogWalking2 from "../Animations/DogWalking2";
 const PetsAndProducts = () => {
 
     const {handleFetch,fetchedData} = useContext(AuthContex)
-    const [searchCategory,setsearchCategory] = useState('cats')
+    const [searchCategory,setsearchCategory] = useState('cat')
     const [getdata,setgetdata] = useState(fetchedData)
     const [loadsearch,setloadsearch] = useState(false)
 
@@ -14,7 +14,7 @@ const PetsAndProducts = () => {
     useEffect(()=>{
     
 
-        handleFetch(searchCategory.replace(/'/g,''))
+        handleFetch(searchCategory)
         setgetdata(fetchedData)
         
      },[searchCategory])
@@ -22,10 +22,11 @@ const PetsAndProducts = () => {
      useEffect(()=>{
             setgetdata(fetchedData)
      },[fetchedData])
+     console.log(fetchedData)
      const handletakeSearch = (e) =>{
 
         const searchQuery = e.target.value
-        const filtered = fetchedData[0].product_id ? fetchedData.filter((item)=>item.product_name.toLowerCase().includes(searchQuery.toLowerCase())) : fetchedData.filter((item)=> item.breeds.breed_name.toLowerCase().includes(searchQuery.toLowerCase()))
+        const filtered = fetchedData[0].product_id ? fetchedData.filter((item)=>item.product_name.toLowerCase().includes(searchQuery.toLowerCase())) : fetchedData.filter((item)=> item.breed.toLowerCase().includes(searchQuery.toLowerCase()))
         setgetdata(filtered)
 
         
@@ -52,19 +53,19 @@ const PetsAndProducts = () => {
 
                         
                         <div className="  lap:col-span-8 des:col-span-6 grid grid-cols-4 ">
-                            <div onClick={()=>{setsearchCategory('cats'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'cats' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
+                            <div onClick={()=>{setsearchCategory('cat'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'cats' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
                                 <img className="w-14 hidden tab:flex bg-second rounded-full" src="https://i.ibb.co.com/XCTCMFC/Bengal-kitten.webp" alt="" />
                                 <h1 className="font-medium text-sm mob:text-base lap:text-xl des:text-2xl">Cats</h1>
                             </div>
-                            <div onClick={()=>{setsearchCategory('dogs'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'dogs' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
+                            <div onClick={()=>{setsearchCategory('dog'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'dogs' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
                                 <img className="w-14 hidden tab:flex bg-second rounded-full" src="https://i.ibb.co.com/3dy1rQv/Beagle.webp" alt="" />
                                 <h1 className="font-medium text-sm mob:text-base lap:text-xl des:text-2xl">Dogs</h1>
                             </div>
-                            <div onClick={()=>{setsearchCategory('birds'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'birds' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
+                            <div onClick={()=>{setsearchCategory('bird'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'birds' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
                                 <img className="w-14 hidden tab:flex bg-second rounded-full" src="https://i.ibb.co.com/Q6Mq1Qb/Amazon-Parrot.webp" alt="" />
                                 <h1 className="font-medium text-sm mob:text-base lap:text-xl des:text-2xl">Birds</h1>
                             </div>
-                            <div onClick={()=>{setsearchCategory('pet_products'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'pet_products' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
+                            <div onClick={()=>{setsearchCategory('products'),setloadsearch(true)}} className={` rounded-full w-11/12 ${searchCategory == 'pet_products' ? 'bg-white text-primary border-primary' : 'text-white bg-primary'} m-auto flex col-span-1 items-center hover:shadow-xl hover:shadow-primary space-x-2 mob:space-x-3 tab:space-x-4 hover:bg-white duration-200 hover:cursor-pointer hover:text-primary border-2 hover:border-primary  px-2  py-2`}>
                                 <img className="w-14 hidden tab:flex bg-second rounded-full" src="https://i.ibb.co.com/sVnbHn2/Pet-collar.webp" alt="" />
                                 <h1 className="font-medium text-sm mob:text-base lap:text-xl des:text-2xl">Items</h1>
                             </div>

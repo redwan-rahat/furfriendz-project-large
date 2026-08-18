@@ -4,13 +4,13 @@ import Section2Carousal from "./Section2Carousal";
 
 
 const Section2 = () => {
-            const {handleFetch} = useContext(AuthContex)
-        const [getdata,setgetData] = useState('cats')
+            // const {handleFetch} = useContext(AuthContex)
+        const [getdata,setgetData] = useState('cat')
         
         const handleClick = (name)=>{
-       
-           
+            
             setgetData(`${name}`)
+            
         }
 
      
@@ -38,26 +38,26 @@ const Section2 = () => {
             <div className="pt-44 grid grid-cols-2 tab:grid-cols-4 w-10/12 m-auto ">
 
 
-                <div onClick={()=>handleClick('cats')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
+                <div onClick={()=>handleClick('cat')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
                    
-                    <div className={` ${ getdata  == 'cats' ? 'bg-fourth' : 'bg-fifth'} w-36  lap:w-44 des:w-60 m-auto des:h-60  rounded-full hover:cursor-pointer overflow-hidden bg-fifth hover:bg-third transition-all group duration-500`}>
+                    <div className={` ${ getdata  == 'cat' ? 'bg-fourth' : 'bg-fifth'} w-36  lap:w-44 des:w-60 m-auto des:h-60  rounded-full hover:cursor-pointer overflow-hidden bg-fifth hover:bg-third transition-all group duration-500`}>
                     <img className="w-60 m-auto object-cover group-hover:scale-110 duration-500" src="https://i.ibb.co.com/XCTCMFC/Bengal-kitten.webp" alt="" />
                     </div>
                     <h3 className="font-semibold lap:text-2xl des:text-3xl">Cats</h3>
                 </div>
-                <div onClick={()=>handleClick('dogs')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
-                    <div className={` ${ getdata  == 'dogs' ? 'bg-fourth' : 'bg-fifth'} w-36  lap:w-44 des:w-60 m-auto des:h-60  rounded-full hover:cursor-pointer overflow-hidden bg-fifth hover:bg-third transition-all group duration-500`}>
+                <div onClick={()=>handleClick('dog')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
+                    <div className={` ${ getdata  == 'dog' ? 'bg-fourth' : 'bg-fifth'} w-36  lap:w-44 des:w-60 m-auto des:h-60  rounded-full hover:cursor-pointer overflow-hidden bg-fifth hover:bg-third transition-all group duration-500`}>
                     <img className="w-60 m-auto object-cover group-hover:scale-110 duration-500" src="https://i.ibb.co.com/3dy1rQv/Beagle.webp" alt="" />
                     </div>
                     <h3 className="font-semibold lap:text-2xl des:text-3xl">Dogs</h3>
                 </div>
-                <div onClick={()=>handleClick('birds')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
-                    <div className={` ${ getdata  == 'birds' ? 'bg-fourth' : 'bg-fifth'} w-36  lap:w-44 des:w-60 m-auto des:h-60  rounded-full hover:cursor-pointer overflow-hidden bg-fifth hover:bg-third transition-all group duration-500`}>
+                <div onClick={()=>handleClick('bird')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
+                    <div className={` ${ getdata  == 'bird' ? 'bg-fourth' : 'bg-fifth'} w-36  lap:w-44 des:w-60 m-auto des:h-60  rounded-full hover:cursor-pointer overflow-hidden bg-fifth hover:bg-third transition-all group duration-500`}>
                     <img className="w-60 m-auto object-cover group-hover:scale-110 duration-500" src="https://i.ibb.co.com/Q6Mq1Qb/Amazon-Parrot.webp" alt="" />
                     </div>
                     <h3 className="font-semibold lap:text-2xl des:text-3xl">Birds</h3>
                 </div>
-                <div onClick={()=>handleClick('pet_products')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
+                <div onClick={()=>handleClick('products')} className="text-center grid-cols-1  space-y-4 pb-6 tab:pb-0">
                     <div className={` ${ getdata  == 'pet_products' ? 'bg-fourth' : 'bg-fifth'} w-36  lap:w-44 des:w-60 m-auto des:h-60  rounded-full hover:cursor-pointer overflow-hidden bg-fifth hover:bg-third transition-all group duration-500`}>
                     <img className="w-60 m-auto object-cover group-hover:scale-110 duration-500" src="https://i.ibb.co.com/bB2xWSb/petcage.webp" alt="" />
                     </div>

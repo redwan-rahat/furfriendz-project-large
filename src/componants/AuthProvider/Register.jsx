@@ -49,11 +49,11 @@ const Register = () => {
         else{
             handleRegister(email,password)
             .then(result => {
-               
+                
                 const login_type = 'email'
                 setregisterError(null)
 
-                insertRegisterDB(  email,username,login_type,password)
+                insertRegisterDB( email,username,login_type,result.user.uid)
                 setVisible(true)
             setMessage('Registered Successfully')
             setType('success')

@@ -56,7 +56,8 @@ const Navbar = () => {
     : ''
 
 }
-        <NavLink to={'/blogs'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Blog</li></NavLink>
+        <NavLink to={'/blog'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Blog</li></NavLink>
+        {/* <NavLink to={'/blogs'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Blog</li></NavLink> */}
         <NavLink to={'/contactus'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Contact Us</li></NavLink>
        
     </>
@@ -66,14 +67,27 @@ const Navbar = () => {
         user ? 
     <NavLink to={'/profile'}><li className="mt-1 tab:mt-4 text-primary"  >Profile</li></NavLink>:
     ''
+
+    // <NavLink to={'/'}><li className="mt-1 tab:mt-4 text-primary"  >Profile</li></NavLink>
     
     }
+    {/* {
+
+    <NavLink to={'/'} className={`text-primary` } ><li className="mt-1 tab:mt-4">Login</li></NavLink>
+    
+    } */}
+
+
     {
         user ? 
     <NavLink><li className="mt-1 tab:mt-4 text-primary" onClick={()=>handleSignOut()}>Sign Out</li></NavLink>:
     <NavLink to={'/login'} className={`text-primary` } ><li className="mt-1 tab:mt-4">Login</li></NavLink>
     
     }
+
+
+    {/* <NavLink to={'/'} className={`text-primary ` } ><li className="mt-1 tab:mt-4 text-xl flex items-center" ><BsCart4 /><h1 className="lap:text-lg text-[16px] bg-orange-500 text-white items-center rounded-full w-5 h-5 lap:w-7 lap:h-7 "><h2 className="-mt-[5px]  lap:ml-[8px] lap:mt-0 ml-[5.5px]">{0}</h2></h1></li></NavLink> */}
+
     <NavLink to={'/mycart'} className={`text-primary ` } ><li className="mt-1 tab:mt-4 text-xl flex items-center" ><BsCart4 /><h1 className="lap:text-lg text-[16px] bg-orange-500 text-white items-center rounded-full w-5 h-5 lap:w-7 lap:h-7 "><h2 className="-mt-[5px]  lap:ml-[8px] lap:mt-0 ml-[5.5px]">{totalCart ? totalCart : 0}</h2></h1></li></NavLink>
     </>
 
