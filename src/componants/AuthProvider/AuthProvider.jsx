@@ -30,7 +30,10 @@ const AuthProvider = ({ children }) => {
     const [message, setMessage] = useState("")
     const [navigating, setnavigate] = useState(false)
     const [favItem, setfavItems] = useState(null)
-
+    const [adminOrders, setadminOrders] = useState({
+        pets: [],
+        products: []
+    })
 
 
 
@@ -1021,7 +1024,279 @@ const AuthProvider = ({ children }) => {
     //     if (error) console.log(error);
     //   }
 
+    const handleCheckAdmin = async () => {
 
+        if (!user) return false
+
+        const { data, error } = await supabase
+            .from('userdata')
+            .select('is_admin')
+            .eq('user_id', user.uid)
+            .maybeSingle()
+
+        if (error) {
+            console.log('Admin check error:', error)
+            return false
+        }
+
+        return data?.is_admin === true
+    }
+
+
+    const handleGetOrders = async () => {
+
+        const { data: petOrders, error: petError } = await supabase
+            .from('pet_orders')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (petError) {
+            console.log('Pet orders error:', petError)
+            return
+        }
+
+
+        const { data: productOrders, error: productError } = await supabase
+            .from('product_orders')
+            .select('*')
+            .order('created_at', { ascending: false })
+
+        if (productError) {
+            console.log('Product orders error:', productError)
+            return
+        }
+
+
+        const petIds = petOrders?.map(order => order.pet_id) || []
+
+        let pets = []
+
+        if (petIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from('pets')
+                .select('pet_id, name, breed, category, photo_url, price')
+                .in('pet_id', petIds)
+
+            if (error) {
+                console.log('Order pets error:', error)
+                return
+            }
+
+            pets = data || []
+        }
+
+
+        const productOrderIds =
+            productOrders?.map(order => order.order_id) || []
+
+
+        let productItems = []
+
+        if (productOrderIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from('product_order_items')
+                .select('*')
+                .in('order_id', productOrderIds)
+
+            if (error) {
+                console.log('Product order items error:', error)
+                return
+            }
+
+            productItems = data || []
+        }
+
+
+        const productIds =
+            productItems.map(item => item.product_id) || []
+
+
+        let products = []
+
+        if (productIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from('products')
+                .select('product_id, product_name, type, photo_url, price, weight')
+                .in('product_id', productIds)
+
+            if (error) {
+                console.log('Order products error:', error)
+                return
+            }
+
+            products = data || []
+        }
+
+
+        const formattedPetOrders = petOrders.map(order => {
+
+            const pet = pets.find(
+                pet => pet.pet_id === order.pet_id
+            )
+
+            return {
+                ...order,
+                pet
+            }
+        })
+
+
+        const formattedProductOrders = productOrders.map(order => {
+
+            const items = productItems
+                .filter(item => item.order_id === order.order_id)
+                .map(item => {
+
+                    const product = products.find(
+                        product => product.product_id === item.product_id
+                    )
+
+                    return {
+                        ...item,
+                        product
+                    }
+                })
+
+            return {
+                ...order,
+                items
+            }
+        })
+
+
+        setadminOrders({
+            pets: formattedPetOrders,
+            products: formattedProductOrders
+        })
+    }
+
+    const handleUpdateOrder = async (type, order_id, status) => {
+
+        const table =
+            type === 'pet'
+                ? 'pet_orders'
+                : 'product_orders'
+
+
+        const { error } = await supabase
+            .from(table)
+            .update({
+                status: status,
+                updated_at: new Date().toISOString()
+            })
+            .eq('order_id', order_id)
+
+
+        if (error) {
+
+            console.log('Update order error:', error)
+
+            setVisible(true)
+            setMessage('Failed to update order')
+            setType('error')
+
+            return false
+        }
+
+
+        setadminOrders(prev => {
+
+            if (type === 'pet') {
+
+                return {
+                    ...prev,
+
+                    pets: prev.pets.map(order =>
+                        order.order_id === order_id
+                            ? {
+                                ...order,
+                                status
+                            }
+                            : order
+                    )
+                }
+
+            }
+
+
+            return {
+                ...prev,
+
+                products: prev.products.map(order =>
+                    order.order_id === order_id
+                        ? {
+                            ...order,
+                            status
+                        }
+                        : order
+                )
+            }
+
+        })
+
+
+        setVisible(true)
+        setMessage('Order status updated')
+        setType('success')
+
+        return true
+    }
+
+    const handleAdminDeleteOrder = async (type, order_id) => {
+
+        const table =
+            type === 'pet'
+                ? 'pet_orders'
+                : 'product_orders'
+
+
+        const { error } = await supabase
+            .from(table)
+            .delete()
+            .eq('order_id', order_id)
+
+
+        if (error) {
+
+            console.log('Delete order error:', error)
+
+            setVisible(true)
+            setMessage('Failed to delete order')
+            setType('error')
+
+            return false
+        }
+
+
+        if (type === 'pet') {
+
+            setadminOrders(prev => ({
+                ...prev,
+                pets: prev.pets.filter(
+                    order => order.order_id !== order_id
+                )
+            }))
+
+        } else {
+
+            setadminOrders(prev => ({
+                ...prev,
+                products: prev.products.filter(
+                    order => order.order_id !== order_id
+                )
+            }))
+        }
+
+
+        setVisible(true)
+        setMessage('Order deleted')
+        setType('success')
+
+        return true
+    }
 
     // use of subquery in supabase
 
@@ -1071,7 +1346,12 @@ const AuthProvider = ({ children }) => {
         special, setspecial, insertRegisterDB, myCart, setmyCart, handleCartIN, handleGetCart,
         handleCartDelete, handleProductQuantity, handleTotalCarts, totalCart, emaiUsername, getUID, getUsername,
         handlenameUpdate, handleFavourite, sectionRef, handleScrollToAllproduct,
-        setVisible, visible, setType, type, message, setMessage, navigating, favItem, handleCheckout
+        setVisible, visible, setType, type, message, setMessage, navigating, favItem, handleCheckout, handleCheckAdmin,
+
+        handleGetOrders,
+        handleUpdateOrder,
+        handleAdminDeleteOrder,
+        adminOrders,
     }
 
     return (

@@ -38,9 +38,9 @@ const Register = () => {
         const password = form.password.value 
         const confirmpassword = form.Confirmpassword.value 
 
-        if(!/^[a-zA-Z0-9_]+$/.test(username)) setregisterError('username can contain A-Z , 0-9 or _')
+        // if(!/^[a-zA-Z0-9_]+$/.test(username)) setregisterError('username can contain A-Z , 0-9 or _')
 
-        else if(password.length < 6 ) setregisterError('passwords must be greater than 5 character')
+         if(password.length < 6 ) setregisterError('passwords must be greater than 5 character')
        else if(!/\d/.test(password) ) setregisterError('passwords must contain one number')
        else if(!/[a-zA-Z]/.test(password)) setregisterError('passwords must contain one character')
         else if(password != confirmpassword) setregisterError('passwords does not match')
