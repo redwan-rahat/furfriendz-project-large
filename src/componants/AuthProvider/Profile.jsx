@@ -288,7 +288,7 @@ const Profile = () => {
 
                     {/* Account Type */}
 
-                    <div className="
+                    {/* <div className="
                         flex
                         flex-col
                         tab:flex-row
@@ -337,7 +337,7 @@ const Profile = () => {
 
                         </div>
 
-                    </div>
+                    </div> */}
 
 
                     {/* Items In Cart */}
