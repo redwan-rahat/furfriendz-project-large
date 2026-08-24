@@ -644,7 +644,7 @@ const FloatingCart = () => {
                                                         </p>
 
                                                         <p className="text-second text-sm mt-1 font-medium">
-                                                            ${Number(item.price || 0).toFixed(2)}
+                                                            ৳{Number(item.price || 0).toFixed(2)}
                                                         </p>
 
 
@@ -715,7 +715,7 @@ const FloatingCart = () => {
                                                     <div className="text-right">
 
                                                         <p className="text-primary font-semibold text-sm">
-                                                            ${(
+                                                            ৳{(
                                                                 Number(item.price || 0) *
                                                                 Number(item.quantity || 0)
                                                             ).toFixed(2)}
@@ -844,7 +844,7 @@ const FloatingCart = () => {
                                                         </p>
 
                                                         <p className="text-second text-sm mt-1 font-medium">
-                                                            ${Number(item.price || 0).toFixed(2)}
+                                                           ৳{Number(item.price || 0).toFixed(2)}
                                                         </p>
 
 
@@ -915,7 +915,7 @@ const FloatingCart = () => {
                                                     <div className="text-right">
 
                                                         <p className="text-primary font-semibold text-sm">
-                                                            ${(
+                                                            ৳{(
                                                                 Number(item.price || 0) *
                                                                 Number(item.quantity || 0)
                                                             ).toFixed(2)}
@@ -1044,7 +1044,7 @@ const FloatingCart = () => {
                                                         </p>
 
                                                         <p className="text-second text-sm mt-1 font-medium">
-                                                            ${Number(item.price || 0).toFixed(2)}
+                                                            ৳{Number(item.price || 0).toFixed(2)}
                                                         </p>
 
 
@@ -1115,7 +1115,7 @@ const FloatingCart = () => {
                                                     <div className="text-right">
 
                                                         <p className="text-primary font-semibold text-sm">
-                                                            ${(
+                                                            ৳{(
                                                                 Number(item.price || 0) *
                                                                 Number(item.quantity || 0)
                                                             ).toFixed(2)}
@@ -1173,7 +1173,7 @@ const FloatingCart = () => {
                                     </span>
 
                                     <span className="text-2xl font-semibold text-primary">
-                                        ${subtotal.toFixed(2)}
+                                        ৳{subtotal.toFixed(2)}
                                     </span>
 
                                 </div>
@@ -1345,7 +1345,7 @@ const FloatingCart = () => {
                                     </h3>
 
                                     <p className="text-xs text-primary/55 mt-1">
-                                        Additional $10 charge
+                                        Additional ৳10 charge
                                     </p>
 
                                 </div>
@@ -1382,7 +1382,7 @@ const FloatingCart = () => {
                                     </span>
 
                                     <span className="text-second font-medium">
-                                        ${subtotal.toFixed(2)}
+                                        ৳{subtotal.toFixed(2)}
                                     </span>
 
                                 </div>
@@ -1397,7 +1397,7 @@ const FloatingCart = () => {
                                         </span>
 
                                         <span className="text-second font-medium">
-                                            $10.00
+                                            ৳10.00
                                         </span>
 
                                     </div>
@@ -1412,7 +1412,7 @@ const FloatingCart = () => {
                                     </span>
 
                                     <span className="text-xl text-primary">
-                                        ${checkoutTotal.toFixed(2)}
+                                        ৳{checkoutTotal.toFixed(2)}
                                     </span>
 
                                 </div>

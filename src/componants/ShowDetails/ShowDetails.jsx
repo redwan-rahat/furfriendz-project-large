@@ -539,7 +539,7 @@ const ShowDetails = () => {
                                                 text-primary
                                             "
                                         >
-                                            ${price}
+                                            ৳{price}
                                         </p>
 
                                     </div>

@@ -1,9 +1,7 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContex } from "../AuthProvider";
 import DeliveryOrder from "./DeliveryOrder";
-
-
 
 
 const menuItems = [
@@ -50,7 +48,11 @@ const Delivery = () => {
 
     const {
         user,
-        handleSignOut
+        adminOrders,
+        adminUsers,
+        handleSignOut,
+        handleGetOrders,
+        handleGetUsers
     } = useContext(AuthContex);
 
 
@@ -58,10 +60,54 @@ const Delivery = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
+    useEffect(() => {
+
+        handleGetOrders();
+        handleGetUsers();
+
+    }, []);
+
+
+    const orders = adminOrders?.orders || [];
+
+
+    const assignedOrders = orders.filter(
+        order => order.delivered_by === user?.uid
+    );
+
+
+    const deliveryPending = assignedOrders.filter(
+        order => order.status === "confirmed"
+    ).length;
+
+
+    const completedOrders = assignedOrders.filter(
+        order => order.status === "completed"
+    ).length;
+
+
+    const totalAssigned = assignedOrders.length;
+
+
+    // --------------------------------
+    // CURRENT USER ROLE
+    // --------------------------------
+
+    const currentUser = adminUsers?.find(
+        adminUser => adminUser.user_id === user?.uid
+    );
+
+
+    const hasAdminAccess =
+        currentUser?.is_admin === true;
+
+
     const renderSection = () => {
 
         if (deliverySection === "orders") {
+
             return <DeliveryOrder />;
+
         }
 
 
@@ -109,6 +155,8 @@ const Delivery = () => {
                     gap-5
                 ">
 
+                    {/* DELIVERY PENDING */}
+
                     <div className="
                         bg-white
                         border
@@ -128,7 +176,7 @@ const Delivery = () => {
                             text-slate-900
                             mt-3
                         ">
-                            --
+                            {deliveryPending}
                         </h2>
 
 
@@ -142,6 +190,8 @@ const Delivery = () => {
 
                     </div>
 
+
+                    {/* COMPLETED */}
 
                     <div className="
                         bg-white
@@ -162,7 +212,7 @@ const Delivery = () => {
                             text-slate-900
                             mt-3
                         ">
-                            --
+                            {completedOrders}
                         </h2>
 
 
@@ -176,6 +226,8 @@ const Delivery = () => {
 
                     </div>
 
+
+                    {/* TOTAL ASSIGNED */}
 
                     <div className="
                         bg-white
@@ -196,7 +248,7 @@ const Delivery = () => {
                             text-slate-900
                             mt-3
                         ">
-                            --
+                            {totalAssigned}
                         </h2>
 
 
@@ -295,7 +347,7 @@ const Delivery = () => {
             {/* ================================= */}
 
             <aside
-                className={`
+                className="
                     fixed
                     left-0
                     top-0
@@ -309,7 +361,7 @@ const Delivery = () => {
                     duration-300
                     w-[76px]
                     md:w-[250px]
-                `}
+                "
             >
 
                 {/* LOGO */}
@@ -463,9 +515,7 @@ const Delivery = () => {
                 </nav>
 
 
-                {/* ================================= */}
                 {/* BOTTOM */}
-                {/* ================================= */}
 
                 <div className="
                     absolute
@@ -477,6 +527,73 @@ const Delivery = () => {
                     border-slate-800
                     space-y-1
                 ">
+
+
+                    {/* GO TO ADMIN PANEL */}
+
+                    {hasAdminAccess && (
+
+                        <NavLink
+                            to="/admin"
+                            className="
+                                w-full
+                                h-11
+                                flex
+                                items-center
+                                rounded-xl
+                                text-slate-400
+                                hover:bg-slate-900
+                                hover:text-white
+                                transition
+                            "
+                        >
+
+                            <span className="
+                                w-[52px]
+                                shrink-0
+                                flex
+                                justify-center
+                            ">
+
+                                <svg
+                                    className="w-5 h-5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                >
+                                    <rect
+                                        x="3"
+                                        y="4"
+                                        width="18"
+                                        height="16"
+                                        rx="2"
+                                    />
+                                    <path d="M8 8h8M8 12h5M8 16h3" />
+                                </svg>
+
+                            </span>
+
+
+                            <span
+                                className={`
+                                    text-sm
+                                    whitespace-nowrap
+                                    transition-all
+                                    duration-300
+                                    ${sidebarOpen
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }
+                                    md:opacity-100
+                                `}
+                            >
+                                Go to Admin Panel
+                            </span>
+
+                        </NavLink>
+
+                    )}
 
 
                     {/* GO TO WEBSITE */}
@@ -600,9 +717,7 @@ const Delivery = () => {
             </aside>
 
 
-            {/* ================================= */}
             {/* MAIN */}
-            {/* ================================= */}
 
             <main className="
                 ml-[76px]

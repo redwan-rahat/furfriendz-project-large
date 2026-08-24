@@ -2071,6 +2071,7 @@ const AuthProvider = ({ children }) => {
         handleGetUsers,
         handleGetUserDetails,
         handleMakeDelivery,
+        getUserData,
 
     }
 

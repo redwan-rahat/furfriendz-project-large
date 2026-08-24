@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { AuthContex } from "../AuthProvider/AuthProvider";
 
@@ -29,7 +29,6 @@ const menuItems = [
         )
     },
 
-
     {
         id: "orders",
         label: "Orders",
@@ -45,7 +44,6 @@ const menuItems = [
             </svg>
         )
     },
-
 
     {
         id: "pets",
@@ -66,7 +64,6 @@ const menuItems = [
         )
     },
 
-
     {
         id: "products",
         label: "Products",
@@ -82,7 +79,6 @@ const menuItems = [
             </svg>
         )
     },
-
 
     {
         id: "vaccines",
@@ -101,7 +97,6 @@ const menuItems = [
             </svg>
         )
     },
-
 
     {
         id: "users",
@@ -126,42 +121,118 @@ const menuItems = [
 
 const Admin = () => {
 
-    const { handleSignOut } = useContext(AuthContex);
+    const {
+        user,
+        adminOrders,
+        handleGetOrders,
+        adminUsers,
+        handleGetUsers,
+        adminPets,
+        handleGetPets,
+        handleSignOut
+    } = useContext(AuthContex);
+
 
     const [adminSection, setAdminSection] = useState("dashboard");
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
+    // --------------------------------
+    // FETCH DASHBOARD DATA
+    // --------------------------------
+
+    useEffect(() => {
+
+        if (adminSection === "dashboard") {
+
+            handleGetOrders();
+            handleGetUsers();
+            handleGetPets();
+
+        }
+
+    }, [adminSection]);
+
+
+    // --------------------------------
+    // CURRENT USER ROLE
+    // --------------------------------
+
+    const currentAdminUser = adminUsers?.find(
+        adminUser => adminUser.user_id === user?.uid
+    );
+
+    const hasDeliveryAccess =
+        currentAdminUser?.is_delivery === true;
+
+
+    // --------------------------------
+    // DASHBOARD DATA
+    // --------------------------------
+
+    const orders = adminOrders?.orders || [];
+
+    const totalOrders = orders.length;
+
+
+    const totalRevenue = orders
+        .filter(order => order.status === "completed")
+        .reduce(
+            (total, order) =>
+                total + Number(order.total_amount || 0),
+            0
+        );
+
+
+    const totalCustomers = adminUsers?.length || 0;
+
+
+    // --------------------------------
+    // RENDER SECTION
+    // --------------------------------
+
     const renderSection = () => {
 
         if (adminSection === "orders") {
+
             return <AdminOrders />;
+
         }
 
 
         if (adminSection === "pets") {
+
             return <AdminPets />;
+
         }
 
 
         if (adminSection === "products") {
+
             return <AdminProducts />;
+
         }
 
 
         if (adminSection === "vaccines") {
+
             return <AdminVaccines />;
+
         }
 
 
         if (adminSection === "users") {
+
             return <AdminUsers />;
+
         }
 
 
         return (
 
             <div>
+
+                {/* HEADER */}
 
                 <div className="mb-8">
 
@@ -191,13 +262,17 @@ const Admin = () => {
                 </div>
 
 
+                {/* STATS */}
+
                 <div className="
                     grid
                     grid-cols-1
-                    md:grid-cols-2
-                    xl:grid-cols-4
+                    md:grid-cols-3
                     gap-5
                 ">
+
+
+                    {/* TOTAL ORDERS */}
 
                     <div className="
                         bg-white
@@ -218,11 +293,22 @@ const Admin = () => {
                             text-slate-900
                             mt-3
                         ">
-                            --
+                            {totalOrders}
                         </h2>
+
+
+                        <p className="
+                            text-xs
+                            text-slate-400
+                            mt-2
+                        ">
+                            All orders placed in your store
+                        </p>
 
                     </div>
 
+
+                    {/* TOTAL REVENUE */}
 
                     <div className="
                         bg-white
@@ -243,11 +329,22 @@ const Admin = () => {
                             text-slate-900
                             mt-3
                         ">
-                            --
+                            ৳{totalRevenue.toFixed(2)}
                         </h2>
+
+
+                        <p className="
+                            text-xs
+                            text-slate-400
+                            mt-2
+                        ">
+                            Revenue from completed orders
+                        </p>
 
                     </div>
 
+
+                    {/* CUSTOMERS */}
 
                     <div className="
                         bg-white
@@ -268,38 +365,24 @@ const Admin = () => {
                             text-slate-900
                             mt-3
                         ">
-                            --
+                            {totalCustomers}
                         </h2>
 
-                    </div>
 
-
-                    <div className="
-                        bg-white
-                        border
-                        border-slate-200
-                        rounded-2xl
-                        p-6
-                    ">
-
-                        <p className="text-sm text-slate-500">
-                            Available Pets
-                        </p>
-
-
-                        <h2 className="
-                            text-3xl
-                            font-semibold
-                            text-slate-900
-                            mt-3
+                        <p className="
+                            text-xs
+                            text-slate-400
+                            mt-2
                         ">
-                            --
-                        </h2>
+                            Registered users
+                        </p>
 
                     </div>
 
                 </div>
 
+
+                {/* ADMIN ACCOUNT */}
 
                 <div className="
                     mt-6
@@ -308,7 +391,7 @@ const Admin = () => {
                     border-slate-200
                     rounded-2xl
                     p-6
-                    min-h-[300px]
+                    min-h-[260px]
                 ">
 
                     <h2 className="
@@ -316,18 +399,46 @@ const Admin = () => {
                         font-semibold
                         text-slate-900
                     ">
-                        Recent Activity
+                        Welcome
                     </h2>
 
 
-                    <div className="
-                        flex
-                        items-center
-                        justify-center
-                        h-56
-                        text-slate-400
+                    <p className="
+                        text-sm
+                        text-slate-500
+                        mt-2
                     ">
-                        Dashboard activity will appear here.
+                        Manage your store from the administration panel.
+                    </p>
+
+
+                    <div className="
+                        mt-6
+                        p-4
+                        rounded-xl
+                        bg-emerald-50
+                        border
+                        border-emerald-100
+                    ">
+
+                        <p className="
+                            text-xs
+                            text-emerald-600
+                            font-medium
+                        ">
+                            ADMIN ACCOUNT
+                        </p>
+
+
+                        <p className="
+                            text-sm
+                            text-slate-800
+                            mt-1
+                            break-all
+                        ">
+                            {user?.email || "Administrator"}
+                        </p>
+
                     </div>
 
                 </div>
@@ -543,6 +654,69 @@ const Admin = () => {
                     border-slate-800
                     space-y-1
                 ">
+
+
+                    {/* GO TO DELIVERY */}
+
+                    {hasDeliveryAccess && (
+
+                        <NavLink
+                            to="/delivery"
+                            className="
+                                w-full
+                                h-11
+                                flex
+                                items-center
+                                rounded-xl
+                                text-slate-400
+                                hover:bg-slate-900
+                                hover:text-white
+                                transition
+                            "
+                        >
+
+                            <span className="
+                                w-[52px]
+                                shrink-0
+                                flex
+                                justify-center
+                            ">
+
+                                <svg
+                                    className="w-5 h-5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                >
+                                    <path d="M3 7h11v10H3z" />
+                                    <path d="M14 10h4l3 3v4h-7z" />
+                                    <circle cx="7" cy="19" r="2" />
+                                    <circle cx="18" cy="19" r="2" />
+                                </svg>
+
+                            </span>
+
+
+                            <span
+                                className={`
+                                    text-sm
+                                    whitespace-nowrap
+                                    transition-all
+                                    duration-300
+                                    ${sidebarOpen
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    }
+                                    md:opacity-100
+                                `}
+                            >
+                                Go to Delivery
+                            </span>
+
+                        </NavLink>
+
+                    )}
 
 
                     {/* GO TO WEBSITE */}

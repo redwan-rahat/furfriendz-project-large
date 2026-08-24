@@ -10,12 +10,13 @@ const Profile = () => {
         totalCart,
         myOrders,
         handleTotalCarts,
-        handleGetMyOrders
+        handleGetMyOrders,
+        getUserData
     } = useContext(AuthContex);
 
+    const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    
 
     useEffect(() => {
 
@@ -25,10 +26,13 @@ const Profile = () => {
 
             setLoading(true);
 
-            await Promise.all([
+            const [supabaseUser] = await Promise.all([
+                getUserData(),
                 handleTotalCarts(),
                 handleGetMyOrders()
             ]);
+
+            setUserData(supabaseUser);
 
             setLoading(false);
         };
@@ -103,6 +107,7 @@ const Profile = () => {
                         Your Info
                     </h1>
 
+
                     {/* Profile Image */}
 
                     <div className="
@@ -170,7 +175,7 @@ const Profile = () => {
                 ">
 
 
-                    {/* Username / Name */}
+                    {/* Name */}
 
                     <div className="
                         flex
@@ -216,7 +221,9 @@ const Profile = () => {
                                 font-medium
                                 shadow-sm
                             ">
-                                {user?.displayName || "Pet Parent"}
+                                {userData?.full_name ||
+                                    user?.displayName ||
+                                    "Pet Parent"}
                             </div>
 
                         </div>
