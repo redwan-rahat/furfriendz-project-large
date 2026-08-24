@@ -1,49 +1,166 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContex } from "../AuthProvider/AuthProvider";
-import { useQuery } from '@tanstack/react-query';
-import ShowDetails from "../ShowDetails/ShowDetails";
 import { NavLink } from "react-router-dom";
 import DogSitting from "../Animations/DogSitting";
 
+const ShowPetsandProducts = ({ fetchedData = [] }) => {
 
-const ShowPetsandProducts = ({fetchedData}) => {
-        
-
-
-
-
- 
     return (
-        <div className="h-auto mb-12 w-full ">
-           
-        <div className="relative m-auto rounded-lg  bg-fifth">
-            <div className={` py-6 grid-cols-2 tab:grid-cols-3 lap:grid-cols-4 des:grid-cols-5 w-10/12 grid justify-between   m-auto  text-black text-[10px] space-x-4 transform duration-500 transition-transform`}
-           data-aos = 'fade-up'
-          
-          
-            >
-                {
 
-                   fetchedData && fetchedData.length == 0 ? <div className="w-64 tab:w-80 -translate-x-2 mob:translate-x-10 tab:translate-x-1/2 lap:translate-x-full des:translate-x-[500px] "> <DogSitting></DogSitting> <h1 className="text-3xl font-medium text-primary text-center">No Data Found</h1> </div> :
+        <div className="h-auto w-full">
 
-                   fetchedData && fetchedData.map(data => 
-                    <>
-                    <NavLink to={`/details/${data.pet_id ? 'pet' : 'product'}/${data.pet_id ? data.pet_id: data.product_id}`} >
-                    <div className={` text-center mt-5 grid-cols-1 space-y-4`}>
-                    <div className="border-second border-opacity-50 border-2 w-24 tab:w-28  lap:w-36 lap:h-36 des:w-48 des:h-48 m-auto rounded-full group hover:border-fourth cursor-pointer">
-                        <div className="rounded-full overflow-hidden border-opacity-60 border-second border-2 duration-500 group-hover:scale-105 group-hover:bg-primary  group-hover:border-fourth bg-second">
-                    <img className="  " src={data.photo_url} alt="" />
-                    </div>
-                    </div>
-                    <h1 className="text-primary font-medium text-sm tab:text-base">{data?.breed ? data.breed : data.product_name}</h1>
-                    </div>
-                    </NavLink>
-                    </>
-                   )
-                }
+            <div className="relative m-auto">
+
+                <div
+                    className="
+                        py-12
+                        grid
+                        grid-cols-2
+                        tab:grid-cols-3
+                        lap:grid-cols-4
+                        des:grid-cols-5
+                        gap-y-10
+                        gap-x-4
+                        w-11/12
+                        m-auto
+                        text-black
+                    "
+                    data-aos="fade-up"
+                >
+
+                    {fetchedData.length === 0 ? (
+
+                        <div className="col-span-full flex flex-col items-center justify-center py-12">
+
+                            <div className="w-64 tab:w-80">
+                                <DogSitting />
+                            </div>
+
+                            <h1 className="text-2xl tab:text-3xl font-medium text-primary text-center">
+                                No Data Found
+                            </h1>
+
+                        </div>
+
+                    ) : (
+
+                        fetchedData.map((data) => {
+
+                            const isPet = Boolean(data?.pet_id);
+                            const isVaccine = Boolean(data?.vaccine_id);
+
+                            const itemId = isPet
+                                ? data.pet_id
+                                : isVaccine
+                                    ? data.vaccine_id
+                                    : data.product_id;
+
+                            const itemType = isPet
+                                ? "pet"
+                                : isVaccine
+                                    ? "vaccine"
+                                    : "product";
+
+                            const itemName = isPet
+                                ? data.breed
+                                : isVaccine
+                                    ? data.vaccine_name
+                                    : data.product_name;
+
+
+                            return (
+
+                                <NavLink
+                                    key={`${itemType}-${itemId}`}
+                                    to={`/details/${itemType}/${itemId}`}
+                                    className="group text-center"
+                                >
+
+                                    <div className="space-y-4">
+
+                                        {/* Image */}
+
+                                        <div
+                                            className="
+                                                border-2
+                                                border-second
+                                                border-opacity-70
+                                                w-24
+                                                h-24
+                                                tab:w-28
+                                                tab:h-28
+                                                lap:w-36
+                                                lap:h-36
+                                                des:w-48
+                                                des:h-48
+                                                m-auto
+                                                rounded-full
+                                                p-1
+                                                transition-all
+                                                duration-300
+                                                group-hover:border-primary
+                                                group-hover:scale-[1.03]
+                                            "
+                                        >
+
+                                            <div
+                                                className="
+                                                    w-full
+                                                    h-full
+                                                    rounded-full
+                                                    overflow-hidden
+                                                    bg-second
+                                                    transition-colors
+                                                    duration-300
+                                                    group-hover:bg-third
+                                                "
+                                            >
+
+                                                <img
+                                                    className="
+                                                        w-full
+                                                        h-full
+                                                        object-cover
+                                                        transition-transform
+                                                        duration-300
+                                                        group-hover:scale-105
+                                                    "
+                                                    src={data?.photo_url}
+                                                    alt={itemName || "Pet"}
+                                                />
+
+                                            </div>
+
+                                        </div>
+
+
+                                        {/* Name */}
+
+                                        <h1
+                                            className="
+                                                text-primary
+                                                font-medium
+                                                text-sm
+                                                tab:text-base
+                                                transition-colors
+                                                duration-200
+                                                group-hover:text-second
+                                            "
+                                        >
+                                            {itemName}
+                                        </h1>
+
+                                    </div>
+
+                                </NavLink>
+
+                            );
+
+                        })
+
+                    )}
+
+                </div>
+
             </div>
-
-        </div>
 
         </div>
     );

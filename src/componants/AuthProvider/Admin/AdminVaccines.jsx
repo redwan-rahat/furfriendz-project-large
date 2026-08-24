@@ -3,32 +3,32 @@ import { AuthContex } from "../AuthProvider";
 import DeleteModal from "../../OtherPages/DeleteModal";
 
 
-
-const AdminProducts = () => {
+const AdminVaccines = () => {
 
     const {
-        adminProducts,
-        handleGetProducts,
-        handleUpdateProduct,
-        handleDeleteProduct,
-        handleCreateProduct
+        adminVaccines,
+        handleGetVaccines,
+        handleUpdateVaccine,
+        handleDeleteVaccine,
+        handleCreateVaccine,
     } = useContext(AuthContex);
 
 
-    const [selectedProduct, setSelectedProduct] = useState(null);
-    const [editingProduct, setEditingProduct] = useState(false);
-    const [addingProduct, setAddingProduct] = useState(false);
+    const [selectedVaccine, setSelectedVaccine] = useState(null);
+    const [editingVaccine, setEditingVaccine] = useState(false);
+    const [addingVaccine, setAddingVaccine] = useState(false);
 
-    const [savingProduct, setSavingProduct] = useState(false);
+    const [savingVaccine, setSavingVaccine] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
+
     const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
-    const [productForm, setProductForm] = useState({});
+    const [vaccineForm, setVaccineForm] = useState({});
 
 
     useEffect(() => {
 
-        handleGetProducts();
+        handleGetVaccines();
 
     }, []);
 
@@ -41,125 +41,9 @@ const AdminProducts = () => {
 
         setRefreshing(true);
 
-        await handleGetProducts();
+        await handleGetVaccines();
 
         setRefreshing(false);
-    };
-
-
-    /* =========================
-       OPEN ADD
-    ========================= */
-
-    const handleStartAdd = () => {
-
-        setSelectedProduct(null);
-        setEditingProduct(false);
-
-        setProductForm({
-            photo_url: "",
-            product_name: "",
-            type: "",
-            pet_types: [],
-            activity_level: "",
-            size: "",
-            purpose: "",
-            price: "",
-            availability: true,
-            stock_quantity: 0,
-            small_description: "",
-            material: "",
-            weight: ""
-        });
-
-        setAddingProduct(true);
-    };
-
-
-    /* =========================
-       OPEN VIEW
-    ========================= */
-
-    const handleOpenProduct = (product) => {
-
-        setSelectedProduct(product);
-        setEditingProduct(false);
-        setAddingProduct(false);
-    };
-
-
-    /* =========================
-       START EDIT
-    ========================= */
-
-    const handleStartEdit = () => {
-
-        if (!selectedProduct) return;
-
-
-        let petTypes = selectedProduct.pet_types || [];
-
-
-        if (typeof petTypes === "string") {
-
-            try {
-
-                petTypes = JSON.parse(petTypes);
-
-            } catch {
-
-                petTypes = petTypes
-                    .split(",")
-                    .map(item => item.trim())
-                    .filter(Boolean);
-            }
-        }
-
-
-        setProductForm({
-            photo_url: selectedProduct.photo_url || "",
-            product_name: selectedProduct.product_name || "",
-            type: selectedProduct.type || "",
-            pet_types: Array.isArray(petTypes)
-                ? petTypes
-                : [],
-            activity_level: selectedProduct.activity_level || "",
-            size: selectedProduct.size || "",
-            purpose: selectedProduct.purpose || "",
-            price: selectedProduct.price ?? "",
-            availability: selectedProduct.availability ?? true,
-            stock_quantity: selectedProduct.stock_quantity ?? 0,
-            small_description: selectedProduct.small_description || "",
-            material: selectedProduct.material || "",
-            weight: selectedProduct.weight ?? ""
-        });
-
-
-        setAddingProduct(false);
-        setEditingProduct(true);
-    };
-
-
-    /* =========================
-       FORM CHANGE
-    ========================= */
-
-    const handleProductInputChange = (e) => {
-
-        const {
-            name,
-            value,
-            type,
-            checked
-        } = e.target;
-
-
-        setProductForm(prev => ({
-            ...prev,
-            [name]: type === "checkbox"
-                ? checked
-                : value
-        }));
     };
 
 
@@ -167,193 +51,9 @@ const AdminProducts = () => {
        PET TYPES
     ========================= */
 
-    const handlePetTypesChange = (e) => {
+    const getPetTypes = (vaccine) => {
 
-        const value = e.target.value;
-
-        const petTypes = value
-            .split(",")
-            .map(item => item.trim())
-            .filter(Boolean);
-
-
-        setProductForm(prev => ({
-            ...prev,
-            pet_types: petTypes
-        }));
-    };
-
-
-    /* =========================
-       SAVE EDIT
-    ========================= */
-
-    const handleSaveProduct = async () => {
-
-        if (!selectedProduct) return;
-
-
-        setSavingProduct(true);
-
-
-        const updatedProduct = {
-
-            photo_url: productForm.photo_url,
-
-            product_name: productForm.product_name,
-
-            type: productForm.type,
-
-            pet_types: productForm.pet_types,
-
-            activity_level: productForm.activity_level,
-
-            size: productForm.size,
-
-            purpose: productForm.purpose,
-
-            price: Number(productForm.price),
-
-            availability: productForm.availability,
-
-            stock_quantity: Number(productForm.stock_quantity),
-
-            small_description: productForm.small_description,
-
-            material: productForm.material,
-
-            weight: Number(productForm.weight)
-
-        };
-
-
-        const updated = await handleUpdateProduct(
-            selectedProduct.product_id,
-            updatedProduct
-        );
-
-
-        if (updated) {
-
-            setSelectedProduct(updated);
-            setEditingProduct(false);
-
-        }
-
-
-        setSavingProduct(false);
-    };
-
-
-    /* =========================
-       CREATE PRODUCT
-    ========================= */
-
-    const handleCreateNewProduct = async () => {
-
-        setSavingProduct(true);
-
-
-        const newProduct = {
-
-            photo_url: productForm.photo_url,
-
-            product_name: productForm.product_name,
-
-            type: productForm.type,
-
-            pet_types: productForm.pet_types,
-
-            activity_level: productForm.activity_level,
-
-            size: productForm.size,
-
-            purpose: productForm.purpose,
-
-            price: Number(productForm.price),
-
-            availability: productForm.availability,
-
-            stock_quantity: Number(productForm.stock_quantity),
-
-            small_description: productForm.small_description,
-
-            material: productForm.material,
-
-            weight: Number(productForm.weight)
-
-        };
-
-
-        const created = await handleCreateProduct(newProduct);
-
-
-        if (created) {
-
-            setAddingProduct(false);
-            setProductForm({});
-
-        }
-
-
-        setSavingProduct(false);
-    };
-
-
-    /* =========================
-       DELETE
-    ========================= */
-
-    const handleDelete = () => {
-
-        if (!selectedProduct) return;
-
-        setDeleteModalOpen(true);
-    };
-
-
-    const handleConfirmDelete = async () => {
-
-        if (!selectedProduct) return;
-
-
-        setDeleteModalOpen(false);
-
-
-        const success = await handleDeleteProduct(
-            selectedProduct.product_id
-        );
-
-
-        if (success) {
-
-            handleCloseDrawer();
-
-        }
-    };
-
-
-    /* =========================
-       CLOSE DRAWER
-    ========================= */
-
-    const handleCloseDrawer = () => {
-
-        setSelectedProduct(null);
-        setEditingProduct(false);
-        setAddingProduct(false);
-        setProductForm({});
-        setDeleteModalOpen(false);
-    };
-
-
-    /* =========================
-       PET TYPE DISPLAY
-    ========================= */
-
-    const getPetTypes = (product) => {
-
-        let petTypes = product.pet_types || [];
+        let petTypes = vaccine.pet_types || [];
 
 
         if (typeof petTypes === "string") {
@@ -378,13 +78,259 @@ const AdminProducts = () => {
     };
 
 
+    /* =========================
+       ADD
+    ========================= */
+
+    const handleStartAdd = () => {
+
+        setSelectedVaccine(null);
+        setEditingVaccine(false);
+
+        setVaccineForm({
+            photo_url: "",
+            vaccine_name: "",
+            type: "",
+            pet_types: [],
+            dose_count: 1,
+            price: "",
+            availability: true,
+            stock_quantity: 0,
+            small_description: ""
+        });
+
+        setAddingVaccine(true);
+    };
+
+
+    /* =========================
+       OPEN VIEW
+    ========================= */
+
+    const handleOpenVaccine = (vaccine) => {
+
+        setSelectedVaccine(vaccine);
+        setEditingVaccine(false);
+        setAddingVaccine(false);
+    };
+
+
+    /* =========================
+       EDIT
+    ========================= */
+
+    const handleStartEdit = () => {
+
+        if (!selectedVaccine) return;
+
+
+        setVaccineForm({
+            photo_url: selectedVaccine.photo_url || "",
+            vaccine_name: selectedVaccine.vaccine_name || "",
+            type: selectedVaccine.type || "",
+            pet_types: getPetTypes(selectedVaccine),
+            dose_count: selectedVaccine.dose_count ?? 1,
+            price: selectedVaccine.price ?? "",
+            availability: selectedVaccine.availability ?? true,
+            stock_quantity: selectedVaccine.stock_quantity ?? 0,
+            small_description: selectedVaccine.small_description || ""
+        });
+
+
+        setEditingVaccine(true);
+        setAddingVaccine(false);
+    };
+
+
+    /* =========================
+       INPUT
+    ========================= */
+
+    const handleVaccineInputChange = (e) => {
+
+        const {
+            name,
+            value,
+            type,
+            checked
+        } = e.target;
+
+
+        setVaccineForm(prev => ({
+            ...prev,
+            [name]: type === "checkbox"
+                ? checked
+                : value
+        }));
+    };
+
+
+    /* =========================
+       PET TYPES INPUT
+    ========================= */
+
+    const handlePetTypesChange = (e) => {
+
+        const petTypes = e.target.value
+            .split(",")
+            .map(item => item.trim())
+            .filter(Boolean);
+
+
+        setVaccineForm(prev => ({
+            ...prev,
+            pet_types: petTypes
+        }));
+    };
+
+
+    /* =========================
+       SAVE
+    ========================= */
+
+    const handleSaveVaccine = async () => {
+
+        if (!selectedVaccine) return;
+
+
+        setSavingVaccine(true);
+
+
+        const updatedVaccine = {
+
+            photo_url: vaccineForm.photo_url,
+
+            vaccine_name: vaccineForm.vaccine_name,
+
+            type: vaccineForm.type,
+
+            pet_types: vaccineForm.pet_types,
+
+            dose_count: Number(vaccineForm.dose_count),
+
+            price: Number(vaccineForm.price),
+
+            availability: vaccineForm.availability,
+
+            stock_quantity: Number(vaccineForm.stock_quantity),
+
+            small_description: vaccineForm.small_description
+        };
+
+
+        const updated = await handleUpdateVaccine(
+            selectedVaccine.vaccine_id,
+            updatedVaccine
+        );
+
+
+        if (updated) {
+
+            setSelectedVaccine(updated);
+            setEditingVaccine(false);
+        }
+
+
+        setSavingVaccine(false);
+    };
+
+
+    /* =========================
+       CREATE
+    ========================= */
+
+    const handleCreateNewVaccine = async () => {
+
+        setSavingVaccine(true);
+
+
+        const newVaccine = {
+
+            photo_url: vaccineForm.photo_url,
+
+            vaccine_name: vaccineForm.vaccine_name,
+
+            type: vaccineForm.type,
+
+            pet_types: vaccineForm.pet_types,
+
+            dose_count: Number(vaccineForm.dose_count),
+
+            price: Number(vaccineForm.price),
+
+            availability: vaccineForm.availability,
+
+            stock_quantity: Number(vaccineForm.stock_quantity),
+
+            small_description: vaccineForm.small_description
+        };
+
+
+        const created = await handleCreateVaccine(newVaccine);
+
+
+        if (created) {
+
+            setAddingVaccine(false);
+            setVaccineForm({});
+        }
+
+
+        setSavingVaccine(false);
+    };
+
+
+    /* =========================
+       DELETE
+    ========================= */
+
+    const handleDelete = () => {
+
+        if (!selectedVaccine) return;
+
+        setDeleteModalOpen(true);
+    };
+
+
+    const handleConfirmDelete = async () => {
+
+        if (!selectedVaccine) return;
+
+
+        setDeleteModalOpen(false);
+
+
+        const success = await handleDeleteVaccine(
+            selectedVaccine.vaccine_id
+        );
+
+
+        if (success) {
+
+            handleCloseDrawer();
+        }
+    };
+
+
+    /* =========================
+       CLOSE
+    ========================= */
+
+    const handleCloseDrawer = () => {
+
+        setSelectedVaccine(null);
+        setEditingVaccine(false);
+        setAddingVaccine(false);
+        setVaccineForm({});
+        setDeleteModalOpen(false);
+    };
+
+
     return (
 
         <div>
 
-            {/* =========================
-                HEADER
-            ========================= */}
+            {/* HEADER */}
 
             <div className="
                 flex
@@ -403,7 +349,7 @@ const AdminProducts = () => {
                         font-semibold
                         text-slate-900
                     ">
-                        Furfriendz Products
+                        Furfriendz Vaccines
                     </h1>
 
                     <p className="
@@ -411,7 +357,7 @@ const AdminProducts = () => {
                         text-slate-500
                         mt-1
                     ">
-                        Manage products available in your store
+                        Manage vaccines available in your store
                     </p>
 
                 </div>
@@ -482,7 +428,7 @@ const AdminProducts = () => {
                             transition
                         "
                     >
-                        + Add Product
+                        + Add Vaccine
                     </button>
 
                 </div>
@@ -490,9 +436,7 @@ const AdminProducts = () => {
             </div>
 
 
-            {/* =========================
-                PRODUCT GRID
-            ========================= */}
+            {/* VACCINE GRID */}
 
             <div className="
                 mt-8
@@ -504,188 +448,182 @@ const AdminProducts = () => {
                 gap-5
             ">
 
-                {adminProducts.map(product => {
+                {adminVaccines.map(vaccine => (
 
-                    const petTypes = getPetTypes(product);
+                    <div
+                        key={vaccine.vaccine_id}
+                        className="
+                            bg-white
+                            border
+                            border-slate-200
+                            rounded-2xl
+                            overflow-hidden
+                            hover:border-slate-300
+                            transition
+                        "
+                    >
+
+                        {/* IMAGE */}
+
+                        <div className="
+                            aspect-[4/3]
+                            bg-slate-100
+                            overflow-hidden
+                        ">
+
+                            <img
+                                src={vaccine.photo_url}
+                                alt={vaccine.vaccine_name}
+                                className="
+                                    w-full
+                                    h-full
+                                    object-cover
+                                    transition
+                                    duration-300
+                                    hover:scale-105
+                                "
+                            />
+
+                        </div>
 
 
-                    return (
+                        {/* CONTENT */}
 
-                        <div
-                            key={product.product_id}
-                            className="
-                                bg-white
-                                border
-                                border-slate-200
-                                rounded-2xl
-                                overflow-hidden
-                                hover:border-slate-300
-                                transition
-                            "
-                        >
-
-                            {/* IMAGE */}
+                        <div className="p-4">
 
                             <div className="
-                                aspect-[4/3]
-                                bg-slate-100
-                                overflow-hidden
+                                flex
+                                items-start
+                                justify-between
+                                gap-3
                             ">
 
-                                <img
-                                    src={product.photo_url}
-                                    alt={product.product_name}
-                                    className="
-                                        w-full
-                                        h-full
-                                        object-cover
-                                        transition
-                                        duration-300
-                                        hover:scale-105
-                                    "
-                                />
+                                <div className="min-w-0">
 
-                            </div>
-
-
-                            {/* CONTENT */}
-
-                            <div className="p-4">
-
-                                <div className="
-                                    flex
-                                    items-start
-                                    justify-between
-                                    gap-3
-                                ">
-
-                                    <div className="min-w-0">
-
-                                        <h2 className="
-                                            font-semibold
-                                            text-slate-900
-                                            truncate
-                                        ">
-                                            {product.product_name}
-                                        </h2>
-
-                                        <p className="
-                                            text-xs
-                                            text-slate-500
-                                            mt-1
-                                        ">
-                                            {product.type}
-                                        </p>
-
-                                    </div>
-
-
-                                    <p className="
+                                    <h2 className="
                                         font-semibold
                                         text-slate-900
-                                        whitespace-nowrap
                                     ">
-                                        ৳{Number(product.price).toFixed(0)}
+                                        {vaccine.vaccine_name}
+                                    </h2>
+
+                                    <p className="
+                                        text-xs
+                                        text-slate-500
+                                        mt-1
+                                    ">
+                                        {vaccine.type}
                                     </p>
 
                                 </div>
 
 
-                                <div className="
-                                    flex
-                                    flex-wrap
-                                    items-center
-                                    gap-2
-                                    mt-4
+                                <p className="
+                                    font-semibold
+                                    text-slate-900
+                                    whitespace-nowrap
                                 ">
-
-                                    <span className="
-                                        px-2
-                                        py-1
-                                        rounded-md
-                                        bg-slate-100
-                                        text-xs
-                                        text-slate-500
-                                        capitalize
-                                    ">
-                                        {product.size}
-                                    </span>
-
-
-                                    <span className="
-                                        px-2
-                                        py-1
-                                        rounded-md
-                                        bg-slate-100
-                                        text-xs
-                                        text-slate-500
-                                    ">
-                                        Stock: {product.stock_quantity}
-                                    </span>
-
-                                </div>
-
-
-                                <div className="mt-3">
-
-                                    <span className={`
-                                        inline-flex
-                                        px-2
-                                        py-1
-                                        rounded-md
-                                        text-xs
-                                        font-medium
-                                        ${
-                                            product.availability
-                                                ? "bg-emerald-50 text-emerald-600"
-                                                : "bg-red-50 text-red-600"
-                                        }
-                                    `}>
-                                        {product.availability
-                                            ? "Available"
-                                            : "Unavailable"
-                                        }
-                                    </span>
-
-                                </div>
-
-
-                                <button
-                                    onClick={() =>
-                                        handleOpenProduct(product)
-                                    }
-                                    className="
-                                        w-full
-                                        mt-4
-                                        px-4
-                                        py-2.5
-                                        rounded-xl
-                                        border
-                                        border-slate-200
-                                        text-sm
-                                        font-medium
-                                        text-slate-700
-                                        hover:bg-slate-50
-                                        transition
-                                    "
-                                >
-                                    Manage
-                                </button>
+                                    ৳{Number(vaccine.price).toFixed(0)}
+                                </p>
 
                             </div>
 
+
+                            <div className="
+                                flex
+                                flex-wrap
+                                gap-2
+                                mt-4
+                            ">
+
+                                <span className="
+                                    px-2
+                                    py-1
+                                    rounded-md
+                                    bg-slate-100
+                                    text-xs
+                                    text-slate-500
+                                ">
+                                    {vaccine.dose_count} dose
+                                    {Number(vaccine.dose_count) !== 1
+                                        ? "s"
+                                        : ""
+                                    }
+                                </span>
+
+
+                                <span className="
+                                    px-2
+                                    py-1
+                                    rounded-md
+                                    bg-slate-100
+                                    text-xs
+                                    text-slate-500
+                                ">
+                                    Stock: {vaccine.stock_quantity}
+                                </span>
+
+                            </div>
+
+
+                            <div className="mt-3">
+
+                                <span className={`
+                                    inline-flex
+                                    px-2
+                                    py-1
+                                    rounded-md
+                                    text-xs
+                                    font-medium
+                                    ${
+                                        vaccine.availability
+                                            ? "bg-emerald-50 text-emerald-600"
+                                            : "bg-red-50 text-red-600"
+                                    }
+                                `}>
+                                    {vaccine.availability
+                                        ? "Available"
+                                        : "Unavailable"
+                                    }
+                                </span>
+
+                            </div>
+
+
+                            <button
+                                onClick={() =>
+                                    handleOpenVaccine(vaccine)
+                                }
+                                className="
+                                    w-full
+                                    mt-4
+                                    px-4
+                                    py-2.5
+                                    rounded-xl
+                                    border
+                                    border-slate-200
+                                    text-sm
+                                    font-medium
+                                    text-slate-700
+                                    hover:bg-slate-50
+                                    transition
+                                "
+                            >
+                                Manage
+                            </button>
+
                         </div>
 
-                    );
+                    </div>
 
-                })}
+                ))}
 
             </div>
 
 
             {/* EMPTY */}
 
-            {adminProducts.length === 0 && (
+            {adminVaccines.length === 0 && (
 
                 <div className="
                     mt-8
@@ -697,11 +635,8 @@ const AdminProducts = () => {
                     rounded-2xl
                 ">
 
-                    <p className="
-                        text-sm
-                        text-slate-500
-                    ">
-                        No products found.
+                    <p className="text-sm text-slate-500">
+                        No vaccines found.
                     </p>
 
                 </div>
@@ -709,11 +644,9 @@ const AdminProducts = () => {
             )}
 
 
-            {/* =========================
-                PRODUCT DRAWER
-            ========================= */}
+            {/* DRAWER */}
 
-            {(selectedProduct || addingProduct) && (
+            {(selectedVaccine || addingVaccine) && (
 
                 <div className="
                     fixed
@@ -769,11 +702,11 @@ const AdminProducts = () => {
                                     font-semibold
                                     text-slate-900
                                 ">
-                                    {addingProduct
-                                        ? "Add Product"
-                                        : editingProduct
-                                            ? "Edit Product"
-                                            : selectedProduct.product_name
+                                    {addingVaccine
+                                        ? "Add Vaccine"
+                                        : editingVaccine
+                                            ? "Edit Vaccine"
+                                            : selectedVaccine.vaccine_name
                                     }
                                 </h2>
 
@@ -783,11 +716,11 @@ const AdminProducts = () => {
                                     text-slate-500
                                     mt-1
                                 ">
-                                    {addingProduct
-                                        ? "Add a new product to your store"
-                                        : editingProduct
-                                            ? selectedProduct.product_name
-                                            : selectedProduct.type
+                                    {addingVaccine
+                                        ? "Add a new vaccine to your store"
+                                        : editingVaccine
+                                            ? selectedVaccine.vaccine_name
+                                            : selectedVaccine.type
                                     }
                                 </p>
 
@@ -834,15 +767,13 @@ const AdminProducts = () => {
                         ">
 
 
-                            {/* =========================
-                                ADD / EDIT FORM
-                            ========================= */}
+                            {/* ADD / EDIT */}
 
-                            {(addingProduct || editingProduct) ? (
+                            {(addingVaccine || editingVaccine) ? (
 
                                 <div className="space-y-5">
 
-                                    {/* IMAGE URL */}
+                                    {/* IMAGE */}
 
                                     <div>
 
@@ -858,8 +789,8 @@ const AdminProducts = () => {
                                         <input
                                             type="text"
                                             name="photo_url"
-                                            value={productForm.photo_url}
-                                            onChange={handleProductInputChange}
+                                            value={vaccineForm.photo_url}
+                                            onChange={handleVaccineInputChange}
                                             placeholder="https://i.ibb.co/..."
                                             className="
                                                 w-full
@@ -877,7 +808,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* PRODUCT NAME */}
+                                    {/* NAME */}
 
                                     <div>
 
@@ -887,15 +818,14 @@ const AdminProducts = () => {
                                             text-slate-500
                                             mb-1.5
                                         ">
-                                            Product Name
+                                            Vaccine Name
                                         </label>
 
                                         <input
-                                            type="text"
-                                            name="product_name"
-                                            value={productForm.product_name}
-                                            onChange={handleProductInputChange}
-                                            placeholder="e.g. Pet Collar"
+                                            name="vaccine_name"
+                                            value={vaccineForm.vaccine_name}
+                                            onChange={handleVaccineInputChange}
+                                            placeholder="e.g. Puppy Core Vaccine Package"
                                             className="
                                                 w-full
                                                 px-3
@@ -926,11 +856,10 @@ const AdminProducts = () => {
                                         </label>
 
                                         <input
-                                            type="text"
                                             name="type"
-                                            value={productForm.type}
-                                            onChange={handleProductInputChange}
-                                            placeholder="e.g. Dog Toys"
+                                            value={vaccineForm.type}
+                                            onChange={handleVaccineInputChange}
+                                            placeholder="e.g. Core Vaccines"
                                             className="
                                                 w-full
                                                 px-3
@@ -961,14 +890,13 @@ const AdminProducts = () => {
                                         </label>
 
                                         <input
-                                            type="text"
                                             value={
-                                                Array.isArray(productForm.pet_types)
-                                                    ? productForm.pet_types.join(", ")
+                                                Array.isArray(vaccineForm.pet_types)
+                                                    ? vaccineForm.pet_types.join(", ")
                                                     : ""
                                             }
                                             onChange={handlePetTypesChange}
-                                            placeholder="dog, cat, rabbit"
+                                            placeholder="dog, cat"
                                             className="
                                                 w-full
                                                 px-3
@@ -993,13 +921,46 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* PRICE + WEIGHT */}
+                                    {/* DOSES + PRICE */}
 
                                     <div className="
                                         grid
                                         grid-cols-2
                                         gap-4
                                     ">
+
+                                        <div>
+
+                                            <label className="
+                                                block
+                                                text-xs
+                                                text-slate-500
+                                                mb-1.5
+                                            ">
+                                                Dose Count
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                name="dose_count"
+                                                min="1"
+                                                value={vaccineForm.dose_count}
+                                                onChange={handleVaccineInputChange}
+                                                className="
+                                                    w-full
+                                                    px-3
+                                                    py-2.5
+                                                    rounded-lg
+                                                    border
+                                                    border-slate-200
+                                                    text-sm
+                                                    outline-none
+                                                    focus:border-emerald-500
+                                                "
+                                            />
+
+                                        </div>
+
 
                                         <div>
 
@@ -1017,8 +978,8 @@ const AdminProducts = () => {
                                                 name="price"
                                                 min="0"
                                                 step="0.01"
-                                                value={productForm.price}
-                                                onChange={handleProductInputChange}
+                                                value={vaccineForm.price}
+                                                onChange={handleVaccineInputChange}
                                                 className="
                                                     w-full
                                                     px-3
@@ -1033,151 +994,6 @@ const AdminProducts = () => {
                                             />
 
                                         </div>
-
-
-                                        <div>
-
-                                            <label className="
-                                                block
-                                                text-xs
-                                                text-slate-500
-                                                mb-1.5
-                                            ">
-                                                Weight
-                                            </label>
-
-                                            <input
-                                                type="number"
-                                                name="weight"
-                                                min="0"
-                                                step="0.01"
-                                                value={productForm.weight}
-                                                onChange={handleProductInputChange}
-                                                className="
-                                                    w-full
-                                                    px-3
-                                                    py-2.5
-                                                    rounded-lg
-                                                    border
-                                                    border-slate-200
-                                                    text-sm
-                                                    outline-none
-                                                    focus:border-emerald-500
-                                                "
-                                            />
-
-                                        </div>
-
-                                    </div>
-
-
-                                    {/* ACTIVITY + SIZE */}
-
-                                    <div className="
-                                        grid
-                                        grid-cols-2
-                                        gap-4
-                                    ">
-
-                                        <div>
-
-                                            <label className="
-                                                block
-                                                text-xs
-                                                text-slate-500
-                                                mb-1.5
-                                            ">
-                                                Activity Level
-                                            </label>
-
-                                            <input
-                                                type="text"
-                                                name="activity_level"
-                                                value={productForm.activity_level}
-                                                onChange={handleProductInputChange}
-                                                placeholder="low / moderate / high"
-                                                className="
-                                                    w-full
-                                                    px-3
-                                                    py-2.5
-                                                    rounded-lg
-                                                    border
-                                                    border-slate-200
-                                                    text-sm
-                                                    outline-none
-                                                    focus:border-emerald-500
-                                                "
-                                            />
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <label className="
-                                                block
-                                                text-xs
-                                                text-slate-500
-                                                mb-1.5
-                                            ">
-                                                Size
-                                            </label>
-
-                                            <input
-                                                type="text"
-                                                name="size"
-                                                value={productForm.size}
-                                                onChange={handleProductInputChange}
-                                                placeholder="small / medium / large"
-                                                className="
-                                                    w-full
-                                                    px-3
-                                                    py-2.5
-                                                    rounded-lg
-                                                    border
-                                                    border-slate-200
-                                                    text-sm
-                                                    outline-none
-                                                    focus:border-emerald-500
-                                                "
-                                            />
-
-                                        </div>
-
-                                    </div>
-
-
-                                    {/* PURPOSE */}
-
-                                    <div>
-
-                                        <label className="
-                                            block
-                                            text-xs
-                                            text-slate-500
-                                            mb-1.5
-                                        ">
-                                            Purpose
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="purpose"
-                                            value={productForm.purpose}
-                                            onChange={handleProductInputChange}
-                                            placeholder="e.g. exercise"
-                                            className="
-                                                w-full
-                                                px-3
-                                                py-2.5
-                                                rounded-lg
-                                                border
-                                                border-slate-200
-                                                text-sm
-                                                outline-none
-                                                focus:border-emerald-500
-                                            "
-                                        />
 
                                     </div>
 
@@ -1205,8 +1021,8 @@ const AdminProducts = () => {
                                                 type="number"
                                                 name="stock_quantity"
                                                 min="0"
-                                                value={productForm.stock_quantity}
-                                                onChange={handleProductInputChange}
+                                                value={vaccineForm.stock_quantity}
+                                                onChange={handleVaccineInputChange}
                                                 className="
                                                     w-full
                                                     px-3
@@ -1236,12 +1052,12 @@ const AdminProducts = () => {
 
                                             <select
                                                 value={
-                                                    productForm.availability
+                                                    vaccineForm.availability
                                                         ? "true"
                                                         : "false"
                                                 }
                                                 onChange={(e) =>
-                                                    setProductForm(prev => ({
+                                                    setVaccineForm(prev => ({
                                                         ...prev,
                                                         availability:
                                                             e.target.value === "true"
@@ -1276,41 +1092,6 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* MATERIAL */}
-
-                                    <div>
-
-                                        <label className="
-                                            block
-                                            text-xs
-                                            text-slate-500
-                                            mb-1.5
-                                        ">
-                                            Material
-                                        </label>
-
-                                        <input
-                                            type="text"
-                                            name="material"
-                                            value={productForm.material}
-                                            onChange={handleProductInputChange}
-                                            placeholder="e.g. Nylon, Metal"
-                                            className="
-                                                w-full
-                                                px-3
-                                                py-2.5
-                                                rounded-lg
-                                                border
-                                                border-slate-200
-                                                text-sm
-                                                outline-none
-                                                focus:border-emerald-500
-                                            "
-                                        />
-
-                                    </div>
-
-
                                     {/* DESCRIPTION */}
 
                                     <div>
@@ -1326,9 +1107,9 @@ const AdminProducts = () => {
 
                                         <textarea
                                             name="small_description"
-                                            value={productForm.small_description}
-                                            onChange={handleProductInputChange}
-                                            rows="4"
+                                            value={vaccineForm.small_description}
+                                            onChange={handleVaccineInputChange}
+                                            rows="5"
                                             placeholder="Write a short description..."
                                             className="
                                                 w-full
@@ -1357,7 +1138,7 @@ const AdminProducts = () => {
 
                                         <button
                                             onClick={handleCloseDrawer}
-                                            disabled={savingProduct}
+                                            disabled={savingVaccine}
                                             className="
                                                 flex-1
                                                 px-4
@@ -1378,11 +1159,11 @@ const AdminProducts = () => {
 
                                         <button
                                             onClick={
-                                                addingProduct
-                                                    ? handleCreateNewProduct
-                                                    : handleSaveProduct
+                                                addingVaccine
+                                                    ? handleCreateNewVaccine
+                                                    : handleSaveVaccine
                                             }
-                                            disabled={savingProduct}
+                                            disabled={savingVaccine}
                                             className="
                                                 flex-1
                                                 px-4
@@ -1396,12 +1177,12 @@ const AdminProducts = () => {
                                                 disabled:opacity-50
                                             "
                                         >
-                                            {savingProduct
-                                                ? addingProduct
+                                            {savingVaccine
+                                                ? addingVaccine
                                                     ? "Adding..."
                                                     : "Saving..."
-                                                : addingProduct
-                                                    ? "Add Product"
+                                                : addingVaccine
+                                                    ? "Add Vaccine"
                                                     : "Save Changes"
                                             }
                                         </button>
@@ -1418,11 +1199,9 @@ const AdminProducts = () => {
 
                                 <>
 
-                                    {/* IMAGE */}
-
                                     <img
-                                        src={selectedProduct.photo_url}
-                                        alt={selectedProduct.product_name}
+                                        src={selectedVaccine.photo_url}
+                                        alt={selectedVaccine.vaccine_name}
                                         className="
                                             w-full
                                             aspect-[4/3]
@@ -1432,7 +1211,7 @@ const AdminProducts = () => {
                                     />
 
 
-                                    {/* BASIC INFO */}
+                                    {/* DETAILS */}
 
                                     <div className="
                                         mt-6
@@ -1453,7 +1232,7 @@ const AdminProducts = () => {
                                                 text-slate-800
                                                 mt-1
                                             ">
-                                                ৳{Number(selectedProduct.price).toFixed(2)}
+                                                ৳{Number(selectedVaccine.price).toFixed(2)}
                                             </p>
 
                                         </div>
@@ -1471,7 +1250,7 @@ const AdminProducts = () => {
                                                 text-slate-800
                                                 mt-1
                                             ">
-                                                {selectedProduct.type}
+                                                {selectedVaccine.type}
                                             </p>
 
                                         </div>
@@ -1480,7 +1259,7 @@ const AdminProducts = () => {
                                         <div>
 
                                             <p className="text-xs text-slate-400">
-                                                Size
+                                                Dose Count
                                             </p>
 
                                             <p className="
@@ -1488,9 +1267,8 @@ const AdminProducts = () => {
                                                 font-medium
                                                 text-slate-800
                                                 mt-1
-                                                capitalize
                                             ">
-                                                {selectedProduct.size}
+                                                {selectedVaccine.dose_count}
                                             </p>
 
                                         </div>
@@ -1499,7 +1277,7 @@ const AdminProducts = () => {
                                         <div>
 
                                             <p className="text-xs text-slate-400">
-                                                Activity Level
+                                                Stock Quantity
                                             </p>
 
                                             <p className="
@@ -1507,9 +1285,8 @@ const AdminProducts = () => {
                                                 font-medium
                                                 text-slate-800
                                                 mt-1
-                                                capitalize
                                             ">
-                                                {selectedProduct.activity_level}
+                                                {selectedVaccine.stock_quantity}
                                             </p>
 
                                         </div>
@@ -1518,34 +1295,23 @@ const AdminProducts = () => {
                                         <div>
 
                                             <p className="text-xs text-slate-400">
-                                                Purpose
+                                                Availability
                                             </p>
 
-                                            <p className="
+                                            <p className={`
                                                 text-sm
                                                 font-medium
-                                                text-slate-800
                                                 mt-1
-                                            ">
-                                                {selectedProduct.purpose}
-                                            </p>
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <p className="text-xs text-slate-400">
-                                                Weight
-                                            </p>
-
-                                            <p className="
-                                                text-sm
-                                                font-medium
-                                                text-slate-800
-                                                mt-1
-                                            ">
-                                                {selectedProduct.weight}
+                                                ${
+                                                    selectedVaccine.availability
+                                                        ? "text-emerald-600"
+                                                        : "text-red-600"
+                                                }
+                                            `}>
+                                                {selectedVaccine.availability
+                                                    ? "Available"
+                                                    : "Unavailable"
+                                                }
                                             </p>
 
                                         </div>
@@ -1568,7 +1334,7 @@ const AdminProducts = () => {
                                             mt-2
                                         ">
 
-                                            {getPetTypes(selectedProduct).map(
+                                            {getPetTypes(selectedVaccine).map(
                                                 petType => (
 
                                                     <span
@@ -1594,79 +1360,6 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* INVENTORY */}
-
-                                    <div className="
-                                        mt-6
-                                        grid
-                                        grid-cols-2
-                                        gap-5
-                                    ">
-
-                                        <div>
-
-                                            <p className="text-xs text-slate-400">
-                                                Stock Quantity
-                                            </p>
-
-                                            <p className="
-                                                text-sm
-                                                font-medium
-                                                text-slate-800
-                                                mt-1
-                                            ">
-                                                {selectedProduct.stock_quantity}
-                                            </p>
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <p className="text-xs text-slate-400">
-                                                Availability
-                                            </p>
-
-                                            <p className={`
-                                                text-sm
-                                                font-medium
-                                                mt-1
-                                                ${
-                                                    selectedProduct.availability
-                                                        ? "text-emerald-600"
-                                                        : "text-red-600"
-                                                }
-                                            `}>
-                                                {selectedProduct.availability
-                                                    ? "Available"
-                                                    : "Unavailable"
-                                                }
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-
-
-                                    {/* MATERIAL */}
-
-                                    <div className="mt-6">
-
-                                        <p className="text-xs text-slate-400">
-                                            Material
-                                        </p>
-
-                                        <p className="
-                                            text-sm
-                                            text-slate-700
-                                            mt-1
-                                        ">
-                                            {selectedProduct.material}
-                                        </p>
-
-                                    </div>
-
-
                                     {/* DESCRIPTION */}
 
                                     <div className="mt-6">
@@ -1681,7 +1374,7 @@ const AdminProducts = () => {
                                             mt-1
                                             leading-6
                                         ">
-                                            {selectedProduct.small_description}
+                                            {selectedVaccine.small_description}
                                         </p>
 
                                     </div>
@@ -1709,7 +1402,7 @@ const AdminProducts = () => {
                                                 hover:bg-emerald-600
                                             "
                                         >
-                                            Edit Product
+                                            Edit Vaccine
                                         </button>
 
 
@@ -1758,4 +1451,4 @@ const AdminProducts = () => {
 };
 
 
-export default AdminProducts;
+export default AdminVaccines;

@@ -1,51 +1,114 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
+
 import Footer from "../Footer/Footer";
-import Home from "../HomePage/Home";
 import Navbar from "../Navbar/Navbar";
-import AOS from 'aos';
-import 'aos/dist/aos.css'; 
-import { useContext, useEffect, useState } from "react";
+
+import AOS from "aos";
+import "aos/dist/aos.css";
+
+import { useContext, useEffect } from "react";
+
 import { AuthContex } from "../AuthProvider/AuthProvider";
+
 import LoadingOverlay from "../OtherPages/LoadingOverlay";
 import ModalAlert from "../OtherPages/ModalAlert";
-// ..
+import FloatingCart from "../Cart/FloatingCart";
+
 AOS.init();
 
 const Root = () => {
-    const {setloader,setpageload,pageload,loader} = useContext(AuthContex)
-    
-    useEffect(()=>{
+
+    const location = useLocation();
+
+    const isAdmin = location.pathname.startsWith("/admin");
+    const isDelivery = location.pathname.startsWith("/delivery");
+
+    const isDashboardRoute = isAdmin || isDelivery;
+
+
+    const {
+        setloader,
+        setpageload,
+        pageload,
+        loader
+    } = useContext(AuthContex);
+
+
+    useEffect(() => {
+
         setTimeout(() => {
-            setpageload(true)
+
+            setpageload(true);
+
             setTimeout(() => {
-                setpageload(false)
+
+                setpageload(false);
+
             }, 1000);
+
         }, 100);
-    },[])
-    
+
+    }, []);
 
 
     return (
-        <div className=" bg-fifth z-10">
-        <div className={`${ pageload ? '' : 'hidden'}`} ><LoadingOverlay></LoadingOverlay></div>
-            
-            <div className={`${ pageload ? 'hidden' : ''} z-10`}>
 
-            <div className="">
-                <ModalAlert></ModalAlert>
+        <div className="bg-fifth z-10">
+
+            <div className={`${pageload ? "" : "hidden"}`}>
+
+                <LoadingOverlay />
+
             </div>
-            <div className="relative z-10">
-                <Navbar></Navbar>
+
+
+            <div className={`${pageload ? "hidden" : ""} z-10`}>
+
+                <ModalAlert />
+
+
+                {/* CUSTOMER NAVBAR */}
+
+                {!isDashboardRoute && (
+
+                    <div className="relative z-10">
+
+                        <Navbar />
+
+                    </div>
+
+                )}
+
+
+                {/* PAGE CONTENT */}
+
+                <div className="relative z-0">
+
+                    <Outlet />
+
+                </div>
+
+
+                {/* CUSTOMER FOOTER + CART */}
+
+                {!isDashboardRoute && (
+
+                    <>
+
+                        <Footer />
+
+                        <FloatingCart />
+
+                    </>
+
+                )}
+
             </div>
-            <div className="relative z-0">
-                <Outlet></Outlet>
-            </div>
-            <div className="">
-                <Footer></Footer>
-            </div>
-            </div>
+
         </div>
+
     );
+
 };
 
 export default Root;

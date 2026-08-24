@@ -14,6 +14,10 @@ import PetCareCenter from "../OtherPages/PetCareCenter";
 import PetsAndProducts from "../OtherPages/PetsAndProducts";
 import AdminRoutes from "../AuthProvider/AdminRoutes";
 import Admin from "../AuthProvider/Admin";
+import DeliveryRoutes from "../AuthProvider/DeliveryRoutes";
+import Delivery from "../AuthProvider/Delivery/Delivery";
+import BkashCheckout from "../OtherPages/BkashCheckout";
+import MyOrders from "../OtherPages/MyOrders";
 
 
 const router = createBrowserRouter([
@@ -60,19 +64,36 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <PrivateRoutes><Profile></Profile></PrivateRoutes>
       },
+      // {
+      //   path: '/petcare',
+      //   element: <PrivateRoutes><PetCareCenter></PetCareCenter></PrivateRoutes>,
+      //   loader: () => fetch('Cameras.json')
+      // },
       {
-        path: '/petcare',
-        element: <PrivateRoutes><PetCareCenter></PetCareCenter></PrivateRoutes>,
-        loader: () => fetch('Cameras.json')
+        path: '/myorders',
+        element: <PrivateRoutes><MyOrders></MyOrders></PrivateRoutes>,
       },
       {
         path: '/admin',
         element:
           <PrivateRoutes>
             <AdminRoutes>
-              <Admin/>
+              <Admin />
             </AdminRoutes>
           </PrivateRoutes>
+      },
+      {
+        path: '/delivery',
+        element:
+          <PrivateRoutes>
+            <DeliveryRoutes>
+              <Delivery />
+            </DeliveryRoutes>
+          </PrivateRoutes>
+      },
+      {
+        path: "/bkash-checkout",
+        element: <BkashCheckout />
       }
     ]
   },

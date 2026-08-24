@@ -1,12 +1,9 @@
 import { useContext, useState } from "react";
 import { NavLink } from "react-router-dom";
-import { AuthContex } from "../AuthProvider/AuthProvider";
+import { AuthContex } from "../AuthProvider";
+import DeliveryOrder from "./DeliveryOrder";
 
-import AdminOrders from "./Admin/AdminOrders";
-import AdminPets from "./Admin/AdminPets";
-import AdminProducts from "./Admin/AdminProducts";
-import AdminVaccines from "./Admin/AdminVaccines";
-import AdminUsers from "./Admin/AdminUsers";
+
 
 
 const menuItems = [
@@ -44,124 +41,35 @@ const menuItems = [
                 <path d="M8 8h8M8 12h8M8 16h5" />
             </svg>
         )
-    },
-
-
-    {
-        id: "pets",
-        label: "Pets",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-            >
-                <circle cx="7.5" cy="8" r="2" />
-                <circle cx="16.5" cy="8" r="2" />
-                <circle cx="5" cy="13" r="2" />
-                <circle cx="19" cy="13" r="2" />
-                <path d="M12 11c-3.2 0-5.5 2.2-5.5 5 0 2.5 2 4 5.5 4s5.5-1.5 5.5-4c0-2.8-2.3-5-5.5-5Z" />
-            </svg>
-        )
-    },
-
-
-    {
-        id: "products",
-        label: "Products",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-            >
-                <path d="M4 7h16v13H4z" />
-                <path d="M8 7V5a4 4 0 0 1 8 0v2" />
-            </svg>
-        )
-    },
-
-
-    {
-        id: "vaccines",
-        label: "Vaccines",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-            >
-                <path d="m14 4 6 6" />
-                <path d="m12 6 6 6" />
-                <path d="m4 20 5.5-1.5L18 10l-4-4-8.5 8.5L4 20Z" />
-                <path d="M7 17h.01" />
-            </svg>
-        )
-    },
-
-
-    {
-        id: "users",
-        label: "Users",
-        icon: (
-            <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-            >
-                <circle cx="9" cy="8" r="3" />
-                <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-                <path d="M16 11a3 3 0 1 0 0-6" />
-                <path d="M18 14c1.8.7 3 2.4 3 4.5" />
-            </svg>
-        )
     }
 
 ];
 
 
-const Admin = () => {
+const Delivery = () => {
 
-    const { handleSignOut } = useContext(AuthContex);
+    const {
+        user,
+        handleSignOut
+    } = useContext(AuthContex);
 
-    const [adminSection, setAdminSection] = useState("dashboard");
+
+    const [deliverySection, setDeliverySection] = useState("dashboard");
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
     const renderSection = () => {
 
-        if (adminSection === "orders") {
-            return <AdminOrders />;
-        }
-
-
-        if (adminSection === "pets") {
-            return <AdminPets />;
-        }
-
-
-        if (adminSection === "products") {
-            return <AdminProducts />;
-        }
-
-
-        if (adminSection === "vaccines") {
-            return <AdminVaccines />;
-        }
-
-
-        if (adminSection === "users") {
-            return <AdminUsers />;
+        if (deliverySection === "orders") {
+            return <DeliveryOrder />;
         }
 
 
         return (
 
             <div>
+
+                {/* HEADER */}
 
                 <div className="mb-8">
 
@@ -170,7 +78,7 @@ const Admin = () => {
                         font-medium
                         text-emerald-600
                     ">
-                        FURFRIENDZ ADMIN
+                        FURFRIENDZ DELIVERY
                     </p>
 
 
@@ -180,22 +88,24 @@ const Admin = () => {
                         text-slate-900
                         mt-1
                     ">
-                        Dashboard
+                        Delivery Dashboard
                     </h1>
 
 
                     <p className="text-slate-500 mt-2">
-                        Manage your store from one place.
+                        Manage your assigned deliveries.
                     </p>
 
                 </div>
 
 
+                {/* STATS */}
+
                 <div className="
                     grid
                     grid-cols-1
                     md:grid-cols-2
-                    xl:grid-cols-4
+                    xl:grid-cols-3
                     gap-5
                 ">
 
@@ -208,7 +118,7 @@ const Admin = () => {
                     ">
 
                         <p className="text-sm text-slate-500">
-                            Total Orders
+                            Delivery Pending
                         </p>
 
 
@@ -220,6 +130,15 @@ const Admin = () => {
                         ">
                             --
                         </h2>
+
+
+                        <p className="
+                            text-xs
+                            text-slate-400
+                            mt-2
+                        ">
+                            Confirmed orders waiting for delivery
+                        </p>
 
                     </div>
 
@@ -233,7 +152,7 @@ const Admin = () => {
                     ">
 
                         <p className="text-sm text-slate-500">
-                            Total Revenue
+                            Completed
                         </p>
 
 
@@ -245,6 +164,15 @@ const Admin = () => {
                         ">
                             --
                         </h2>
+
+
+                        <p className="
+                            text-xs
+                            text-slate-400
+                            mt-2
+                        ">
+                            Successfully delivered orders
+                        </p>
 
                     </div>
 
@@ -258,7 +186,7 @@ const Admin = () => {
                     ">
 
                         <p className="text-sm text-slate-500">
-                            Customers
+                            Total Assigned
                         </p>
 
 
@@ -271,35 +199,21 @@ const Admin = () => {
                             --
                         </h2>
 
-                    </div>
 
-
-                    <div className="
-                        bg-white
-                        border
-                        border-slate-200
-                        rounded-2xl
-                        p-6
-                    ">
-
-                        <p className="text-sm text-slate-500">
-                            Available Pets
-                        </p>
-
-
-                        <h2 className="
-                            text-3xl
-                            font-semibold
-                            text-slate-900
-                            mt-3
+                        <p className="
+                            text-xs
+                            text-slate-400
+                            mt-2
                         ">
-                            --
-                        </h2>
+                            Orders assigned to you
+                        </p>
 
                     </div>
 
                 </div>
 
+
+                {/* QUICK INFO */}
 
                 <div className="
                     mt-6
@@ -308,7 +222,7 @@ const Admin = () => {
                     border-slate-200
                     rounded-2xl
                     p-6
-                    min-h-[300px]
+                    min-h-[260px]
                 ">
 
                     <h2 className="
@@ -316,18 +230,46 @@ const Admin = () => {
                         font-semibold
                         text-slate-900
                     ">
-                        Recent Activity
+                        Welcome
                     </h2>
 
 
-                    <div className="
-                        flex
-                        items-center
-                        justify-center
-                        h-56
-                        text-slate-400
+                    <p className="
+                        text-sm
+                        text-slate-500
+                        mt-2
                     ">
-                        Dashboard activity will appear here.
+                        Your assigned orders will appear in the Orders section.
+                    </p>
+
+
+                    <div className="
+                        mt-6
+                        p-4
+                        rounded-xl
+                        bg-emerald-50
+                        border
+                        border-emerald-100
+                    ">
+
+                        <p className="
+                            text-xs
+                            text-emerald-600
+                            font-medium
+                        ">
+                            DELIVERY ACCOUNT
+                        </p>
+
+
+                        <p className="
+                            text-sm
+                            text-slate-800
+                            mt-1
+                            break-all
+                        ">
+                            {user?.email || "Delivery user"}
+                        </p>
+
                     </div>
 
                 </div>
@@ -366,13 +308,9 @@ const Admin = () => {
                     transition-all
                     duration-300
                     w-[76px]
-                    ${sidebarOpen
-                        ? "md:w-[250px]"
-                        : "md:w-[250px]"
-                    }
+                    md:w-[250px]
                 `}
             >
-
 
                 {/* LOGO */}
 
@@ -438,7 +376,7 @@ const Admin = () => {
                             text-slate-400
                             whitespace-nowrap
                         ">
-                            Admin Panel
+                            Delivery Panel
                         </p>
 
                     </div>
@@ -457,7 +395,7 @@ const Admin = () => {
                     {menuItems.map(item => {
 
                         const active =
-                            adminSection === item.id;
+                            deliverySection === item.id;
 
 
                         return (
@@ -466,7 +404,7 @@ const Admin = () => {
                                 key={item.id}
                                 onClick={() => {
 
-                                    setAdminSection(item.id);
+                                    setDeliverySection(item.id);
                                     setSidebarOpen(false);
 
                                 }}
@@ -478,7 +416,6 @@ const Admin = () => {
                                     rounded-xl
                                     transition
                                     duration-200
-                                    group
                                     ${active
                                         ? "bg-emerald-500 text-white"
                                         : "text-slate-400 hover:bg-slate-900 hover:text-white"
@@ -493,10 +430,7 @@ const Admin = () => {
                                     justify-center
                                 ">
 
-                                    <span className="
-                                        w-5
-                                        h-5
-                                    ">
+                                    <span className="w-5 h-5">
                                         {item.icon}
                                     </span>
 
@@ -530,7 +464,7 @@ const Admin = () => {
 
 
                 {/* ================================= */}
-                {/* BOTTOM ACTIONS */}
+                {/* BOTTOM */}
                 {/* ================================= */}
 
                 <div className="
@@ -667,18 +601,14 @@ const Admin = () => {
 
 
             {/* ================================= */}
-            {/* MAIN CONTENT */}
+            {/* MAIN */}
             {/* ================================= */}
 
-            <main
-                className="
-                    ml-[76px]
-                    md:ml-[250px]
-                    min-h-screen
-                    transition-all
-                    duration-300
-                "
-            >
+            <main className="
+                ml-[76px]
+                md:ml-[250px]
+                min-h-screen
+            ">
 
 
                 {/* TOP BAR */}
@@ -695,15 +625,11 @@ const Admin = () => {
                     md:px-8
                 ">
 
-
                     <div className="
                         flex
                         items-center
                         gap-3
                     ">
-
-
-                        {/* MOBILE MENU */}
 
                         <button
                             onClick={() =>
@@ -740,7 +666,7 @@ const Admin = () => {
                                 text-xs
                                 text-slate-400
                             ">
-                                Administration
+                                Delivery
                             </p>
 
 
@@ -751,7 +677,7 @@ const Admin = () => {
                                 {
                                     menuItems.find(
                                         item =>
-                                            item.id === adminSection
+                                            item.id === deliverySection
                                     )?.label || "Dashboard"
                                 }
                             </p>
@@ -761,7 +687,7 @@ const Admin = () => {
                     </div>
 
 
-                    {/* ADMIN PROFILE */}
+                    {/* PROFILE */}
 
                     <div className="
                         flex
@@ -780,7 +706,7 @@ const Admin = () => {
                                 font-medium
                                 text-slate-800
                             ">
-                                Admin
+                                Delivery
                             </p>
 
 
@@ -788,7 +714,7 @@ const Admin = () => {
                                 text-xs
                                 text-slate-400
                             ">
-                                Administrator
+                                Delivery Personnel
                             </p>
 
                         </div>
@@ -805,7 +731,7 @@ const Admin = () => {
                             justify-center
                             font-semibold
                         ">
-                            A
+                            {user?.displayName?.charAt(0)?.toUpperCase() || "D"}
                         </div>
 
                     </div>
@@ -833,4 +759,4 @@ const Admin = () => {
 };
 
 
-export default Admin;
+export default Delivery;

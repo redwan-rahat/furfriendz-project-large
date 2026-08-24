@@ -19,6 +19,7 @@ export default {
         'fifth' : '#C9E9D2',
 
   },
+  
   fontFamily:{
     'page' : 'Fredoka',
     'btn' : 'Readex Pro',

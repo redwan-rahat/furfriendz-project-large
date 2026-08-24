@@ -1,165 +1,555 @@
-import { FaRegHeart } from "react-icons/fa6";
 import { BsCart4 } from "react-icons/bs";
 import { NavLink } from "react-router-dom";
 import { useContext, useEffect, useRef, useState } from "react";
 import { AuthContex } from "../AuthProvider/AuthProvider";
-import LoadingOverlay from "../OtherPages/LoadingOverlay";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
 const Navbar = () => {
 
-    const {handleScrollToAllproduct,loader,pageload,user,handleSignOut,handleTotalCarts,settotalCart,totalCart} = useContext(AuthContex)
+    const {
+        pageload,
+        user,
+        handleSignOut,
+        handleTotalCarts,
+        totalCart,
+        setCartOpen,
+        handleCheckAdmin,
+        handleCheckDelivery
+    } = useContext(AuthContex);
 
-    const [isActive,useisActive] = useState(false)
-    const [menuOpen,setmenuOpen] = useState(false)
 
-    const menuRef = useRef(null)
-    const linkstyle = 'text-second font-medium'
-    const activelink = ''
-    
-    
-    const toggleMenu = ()=>{
-        setmenuOpen(!menuOpen)
-    }
+    const [menuOpen, setMenuOpen] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+    const [isDelivery, setIsDelivery] = useState(false);
 
-    useEffect(()=>{
-            
-        const handleClickOutside = (e)=>{
-                if(e && menuRef.current && !menuRef.current.contains(e.target)){
-                    setmenuOpen(false)
+    const menuRef = useRef(null);
+
+
+    // --------------------------------
+    // CHECK USER ROLES
+    // --------------------------------
+
+    useEffect(() => {
+
+        let mounted = true;
+
+
+        const checkRoles = async () => {
+
+            if (!user) {
+
+                if (mounted) {
+                    setIsAdmin(false);
+                    setIsDelivery(false);
                 }
+
+                return;
+            }
+
+
+            const [adminStatus, deliveryStatus] = await Promise.all([
+                handleCheckAdmin(),
+                handleCheckDelivery()
+            ]);
+
+
+            if (mounted) {
+
+                setIsAdmin(adminStatus);
+                setIsDelivery(deliveryStatus);
+
+            }
+        };
+
+
+        checkRoles();
+
+
+        return () => {
+            mounted = false;
+        };
+
+    }, [user, handleCheckAdmin, handleCheckDelivery]);
+
+
+    // --------------------------------
+    // CLOSE MOBILE MENU OUTSIDE CLICK
+    // --------------------------------
+
+    useEffect(() => {
+
+        const handleClickOutside = (e) => {
+
+            if (
+                menuRef.current &&
+                !menuRef.current.contains(e.target)
+            ) {
+                setMenuOpen(false);
+            }
+
+        };
+
+
+        document.addEventListener(
+            "mousedown",
+            handleClickOutside
+        );
+
+
+        return () => {
+
+            document.removeEventListener(
+                "mousedown",
+                handleClickOutside
+            );
+
+        };
+
+    }, []);
+
+
+    // --------------------------------
+    // GET CART TOTAL
+    // --------------------------------
+
+    useEffect(() => {
+
+        if (user) {
+            handleTotalCarts();
         }
 
-        document.addEventListener('mousedown',handleClickOutside())
-        return ()=> document.removeEventListener('mousedown',handleClickOutside)
-        
-    },[])
+    }, [user]);
 
 
-    useEffect(()=>{
-        handleTotalCarts()
-    },[settotalCart,user])
+    // --------------------------------
+    // TOGGLE MENU
+    // --------------------------------
 
- 
-
-
-
-
-    const middlelinks = <>
-
-        <NavLink to={'/'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300'  } ><li className="mt-1 tab:mt-4">Home</li></NavLink>
-        <NavLink to={'/shop'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300'  } ><li className="mt-1 tab:mt-4">Pets & Products</li></NavLink>
-       
-{
-    user? 
-    <NavLink to={'/petcare'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Pet care</li></NavLink>
-    : ''
-
-}
-        <NavLink to={'/blog'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Blog</li></NavLink>
-        {/* <NavLink to={'/blogs'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Blog</li></NavLink> */}
-        <NavLink to={'/contactus'} className={({isActive})=> isActive ? 'linkactive duration-200 ease-out': 'hover:text-primary duration-300' } ><li className="mt-1 tab:mt-4">Contact Us</li></NavLink>
-       
-    </>
-    
-    const lastlinks = <>
-    {
-        user ? 
-    <NavLink to={'/profile'}><li className="mt-1 tab:mt-4 text-primary"  >Profile</li></NavLink>:
-    ''
-
-    // <NavLink to={'/'}><li className="mt-1 tab:mt-4 text-primary"  >Profile</li></NavLink>
-    
-    }
-    {/* {
-
-    <NavLink to={'/'} className={`text-primary` } ><li className="mt-1 tab:mt-4">Login</li></NavLink>
-    
-    } */}
+    const toggleMenu = () => {
+        setMenuOpen(prev => !prev);
+    };
 
 
-    {
-        user ? 
-    <NavLink><li className="mt-1 tab:mt-4 text-primary" onClick={()=>handleSignOut()}>Sign Out</li></NavLink>:
-    <NavLink to={'/login'} className={`text-primary` } ><li className="mt-1 tab:mt-4">Login</li></NavLink>
-    
-    }
+    // --------------------------------
+    // NAVIGATION LINKS
+    // --------------------------------
+
+    const middlelinks = (
+        <>
+            <NavLink
+                to="/"
+                className={({ isActive }) =>
+                    isActive
+                        ? "linkactive duration-200 ease-out"
+                        : "hover:text-primary duration-300"
+                }
+            >
+                <li className="mt-1 tab:mt-4">
+                    Home
+                </li>
+            </NavLink>
 
 
-    {/* <NavLink to={'/'} className={`text-primary ` } ><li className="mt-1 tab:mt-4 text-xl flex items-center" ><BsCart4 /><h1 className="lap:text-lg text-[16px] bg-orange-500 text-white items-center rounded-full w-5 h-5 lap:w-7 lap:h-7 "><h2 className="-mt-[5px]  lap:ml-[8px] lap:mt-0 ml-[5.5px]">{0}</h2></h1></li></NavLink> */}
+            <NavLink
+                to="/shop"
+                className={({ isActive }) =>
+                    isActive
+                        ? "linkactive duration-200 ease-out"
+                        : "hover:text-primary duration-300"
+                }
+            >
+                <li className="mt-1 tab:mt-4">
+                    Furr Shop
+                </li>
+            </NavLink>
 
-    <NavLink to={'/mycart'} className={`text-primary ` } ><li className="mt-1 tab:mt-4 text-xl flex items-center" ><BsCart4 /><h1 className="lap:text-lg text-[16px] bg-orange-500 text-white items-center rounded-full w-5 h-5 lap:w-7 lap:h-7 "><h2 className="-mt-[5px]  lap:ml-[8px] lap:mt-0 ml-[5.5px]">{totalCart ? totalCart : 0}</h2></h1></li></NavLink>
-    </>
 
+            <NavLink
+                to="/blog"
+                className={({ isActive }) =>
+                    isActive
+                        ? "linkactive duration-200 ease-out"
+                        : "hover:text-primary duration-300"
+                }
+            >
+                <li className="mt-1 tab:mt-4">
+                    Blog
+                </li>
+            </NavLink>
+
+
+            <NavLink
+                to="/contactus"
+                className={({ isActive }) =>
+                    isActive
+                        ? "linkactive duration-200 ease-out"
+                        : "hover:text-primary duration-300"
+                }
+            >
+                <li className="mt-1 tab:mt-4">
+                    Contact Us
+                </li>
+            </NavLink>
+
+
+            {/* My Orders */}
+
+            {user && (
+
+                <NavLink
+                    to="/myorders"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "linkactive duration-200 ease-out"
+                            : "hover:text-primary duration-300"
+                    }
+                >
+                    <li className="mt-1 tab:mt-4">
+                        My Orders
+                    </li>
+                </NavLink>
+
+            )}
+
+
+            {/* Admin */}
+
+            {user && isAdmin && (
+
+                <NavLink
+                    to="/admin"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "linkactive duration-200 ease-out"
+                            : "hover:text-primary duration-300"
+                    }
+                >
+                    <li className="mt-1 tab:mt-4">
+                        Admin
+                    </li>
+                </NavLink>
+
+            )}
+
+
+            {/* Delivery */}
+
+            {user && isDelivery && (
+
+                <NavLink
+                    to="/delivery"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "linkactive duration-200 ease-out"
+                            : "hover:text-primary duration-300"
+                    }
+                >
+                    <li className="mt-1 tab:mt-4">
+                        Delivery
+                    </li>
+                </NavLink>
+
+            )}
+        </>
+    );
+
+
+    // --------------------------------
+    // RIGHT SIDE LINKS
+    // --------------------------------
+
+    const lastlinks = (
+        <>
+
+            {/* Profile */}
+
+            {user && (
+
+                <NavLink
+                    to="/profile"
+                    className={"text-second hover:text-primary duration-300"}
+                >
+                    <li className="mt-1 tab:mt-4 font-medium">
+                        Profile
+                    </li>
+                </NavLink>
+
+            )}
+
+
+            {/* Sign Out / Login */}
+
+            {user ? (
+
+                <button
+                    type="button"
+                    onClick={handleSignOut}
+                    className="
+                    mt-1
+                    tab:mt-4
+                    font-medium
+                    text-second
+                    hover:text-primary
+                    duration-300
+                "
+                >
+                    Sign Out
+                </button>
+
+            ) : (
+
+                <NavLink
+                    to="/login"
+                    className={({ isActive }) =>
+                        isActive
+                            ? "linkactive duration-200 ease-out"
+                            : "hover:text-primary duration-300"
+                    }
+                >
+                    <li className="mt-1 tab:mt-4 font-medium">
+                        Login
+                    </li>
+                </NavLink>
+
+            )}
+
+
+            {/* Cart */}
+
+            <button
+                type="button"
+                onClick={() => setCartOpen(true)}
+                className="
+                text-second
+                hover:text-primary
+                duration-300
+            "
+            >
+
+                <li className="mt-1 tab:mt-4 text-xl flex items-center">
+
+                    <BsCart4 />
+
+                    <span
+                        className="
+                        ml-1
+                        lap:text-sm
+                        text-xs
+                        bg-orange-500
+                        text-white
+                        flex
+                        items-center
+                        justify-center
+                        rounded-full
+                        w-5
+                        h-5
+                        lap:w-6
+                        lap:h-6
+                        font-medium
+                    "
+                    >
+                        {totalCart || 0}
+                    </span>
+
+                </li>
+
+            </button>
+
+        </>
+    );
 
 
     return (
-        <div className={` font-page  ${pageload ? 'hidden' : 'flex'} z-10 lap:w-11/12 m-auto`}>
-      
-            {/* for larger device = navbar  */}
 
-            <div className={`justify-between lap:text-sm des:text-[16px] w-full hidden lap:flex  items-center `}>
-               <NavLink to={'/'}> 
-               <div className="w-36 h-36 hover:cursor-pointer">
-                    <img src={'https://i.ibb.co.com/84VQ3Vs/Logo-5.webp'}  alt="photo cannot be loaded" />
-                    
-                </div>
-                </NavLink>
+        <div
+            className={`
+                font-page
+                ${pageload ? "hidden" : "flex"}
+                z-10
+                lap:w-11/12
+                m-auto
+            `}
+        >
 
 
-                <div>
-                    <ul className={`flex space-x-10 ${linkstyle}`}>
-                        {middlelinks}
-                    </ul>
-                </div>
-                
-                <div>
-                    <ul className={`flex space-x-6 items-center ${linkstyle}`}>
-                        {lastlinks}
-                    </ul>
-                </div>
+            {/* ================================= */}
+            {/* DESKTOP NAVBAR */}
+            {/* ================================= */}
 
-            </div>
+            <div
+                className="
+                    justify-between
+                    lap:text-sm
+                    des:text-[16px]
+                    w-full
+                    hidden
+                    lap:flex
+                    items-center
+                "
+            >
 
-            {/* with burger */}
-            <div className="flex tab:flex relative  w-full justify-between lap:hidden">
 
-               
-                <div className="items-center  flex text-xl tab:text-2xl ">
+                {/* Logo */}
 
-               
-                <button onClick={toggleMenu} className="text-primary left-6 absolute" >
+                <NavLink to="/">
 
-                {
-                    menuOpen ? 
-                <Icon icon="line-md:menu-to-close-alt-transition"  /> : 
-                <Icon icon="line-md:close-to-menu-alt-transition"  className="" />
+                    <div className="w-36 h-36 hover:cursor-pointer">
 
-                }
-                </button>
+                        <img
+                            src="https://i.ibb.co.com/84VQ3Vs/Logo-5.webp"
+                            alt="FurFriendz"
+                        />
 
-                <div ref={menuRef} className={`absolute top-24 h-screen tab:top-32 text-[10px] mob:text-[12px] tab:text-sm bg-fifth  transform transition-transform duration-200 
-                    ${menuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-                     
-                     <div className="list-none mx-6 tab:mx-10  text-second font-medium ">
-
-                     
-                     {middlelinks}
-                     {lastlinks}
-                     </div>
-                </div>
-                </div>
-                <NavLink to={'/'}>
-                <div className="m-auto" >
-                    <div className="tab:w-32 tab:h-32 w-24 h-24">
-                        <img src="https://i.ibb.co.com/84VQ3Vs/Logo-5.webp" alt="" />
                     </div>
-                </div>
+
                 </NavLink>
-                
-                
+
+
+                {/* Main Navigation */}
+
+                <div>
+
+                    <ul className="flex space-x-10 text-second font-medium">
+
+                        {middlelinks}
+
+                    </ul>
+
+                </div>
+
+
+                {/* Account Navigation */}
+
+                <div>
+
+                    <ul className="flex space-x-6 items-center">
+
+                        {lastlinks}
+
+                    </ul>
+
+                </div>
+
             </div>
 
+
+            {/* ================================= */}
+            {/* MOBILE / TABLET NAVBAR */}
+            {/* ================================= */}
+
+            <div
+                className="
+                    flex
+                    tab:flex
+                    relative
+                    w-full
+                    justify-between
+                    lap:hidden
+                "
+            >
+
+
+                {/* Menu */}
+
+                <div className="items-center flex text-xl tab:text-2xl">
+
+                    <button
+                        type="button"
+                        onClick={toggleMenu}
+                        className="
+                            text-primary
+                            left-6
+                            absolute
+                            z-20
+                        "
+                    >
+
+                        {menuOpen ? (
+
+                            <Icon icon="line-md:menu-to-close-alt-transition" />
+
+                        ) : (
+
+                            <Icon icon="line-md:close-to-menu-alt-transition" />
+
+                        )}
+
+                    </button>
+
+
+                    {/* Mobile Menu */}
+
+                    <div
+                        ref={menuRef}
+                        className={`
+                            absolute
+                            top-24
+                            tab:top-32
+                            text-[10px]
+                            mob:text-[12px]
+                            tab:text-sm
+                            bg-fifth
+                            rounded-r-xl
+                            shadow-[6px_8px_20px_rgba(0,103,105,0.12)]
+                            transform
+                            transition-transform
+                            duration-200
+                            z-10
+                            ${menuOpen
+                                ? "translate-x-0"
+                                : "-translate-x-full"
+                            }
+                        `}
+                    >
+
+                        <div
+                            className="
+                                list-none
+                                mx-6
+                                tab:mx-10
+                                text-second
+                                font-medium
+                                py-5
+                                space-y-1
+                            "
+                        >
+
+                            {middlelinks}
+
+                            <div className="pt-2 border-t border-primary/10 mt-3">
+
+                                {lastlinks}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                {/* Mobile Logo */}
+
+                <NavLink to="/">
+
+                    <div className="m-auto">
+
+                        <div className="tab:w-32 tab:h-32 w-24 h-24">
+
+                            <img
+                                src="https://i.ibb.co.com/84VQ3Vs/Logo-5.webp"
+                                alt="FurFriendz"
+                            />
+
+                        </div>
+
+                    </div>
+
+                </NavLink>
+
+
+            </div>
 
         </div>
     );

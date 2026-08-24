@@ -5,7 +5,7 @@ const DeleteModal = ({ isOpen, onClose, onConfirm }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center  justify-center bg-gray-900 bg-opacity-75 z-50">
+    <div className="fixed inset-0 flex items-center  justify-center bg-gray-900 bg-opacity-75 z-[200]">
       <div className="bg-white scale-75 mob:scale-95 tab:scale-100 rounded-md tab:rounded-lg  p-6 w-full max-w-sm lap:max-w-md text-center shadow-lg">
         <h2 className="text-base lap:text-xl font-semibold text-gray-800">Confirm Delete</h2>
         <p className="text-gray-600 text-sm lap:text-base mt-2">

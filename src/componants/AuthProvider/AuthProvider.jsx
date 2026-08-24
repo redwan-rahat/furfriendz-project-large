@@ -2,6 +2,7 @@ import { createContext, useEffect, useRef, useState } from "react";
 import app from "../../firebase.config";
 import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import supabase from "../../supabase.config";
+import Admin from "./Admin";
 
 
 
@@ -20,7 +21,8 @@ const AuthProvider = ({ children }) => {
     const [special, setspecial] = useState(true)
     const [myCart, setmyCart] = useState({
         pets: [],
-        products: []
+        products: [],
+        vaccines: []
     })
     const [totalCart, settotalCart] = useState(0)
     const [emaiUsername, setemailUsername] = useState(null)
@@ -31,9 +33,15 @@ const AuthProvider = ({ children }) => {
     const [navigating, setnavigate] = useState(false)
     const [favItem, setfavItems] = useState(null)
     const [adminOrders, setadminOrders] = useState({
-        pets: [],
-        products: []
+        orders: []
     })
+    const [myOrders, setMyOrders] = useState([])
+    const [deliveryUsers, setDeliveryUsers] = useState([])
+    const [adminPets, setAdminPets] = useState([])
+    const [adminProducts, setAdminProducts] = useState([])
+    const [adminVaccines, setAdminVaccines] = useState([])
+    const [adminUsers, setAdminUsers] = useState([])
+    const [cartOpen, setCartOpen] = useState(false);
 
 
 
@@ -106,49 +114,49 @@ const AuthProvider = ({ children }) => {
     }
 
 
+    const getUserData = async () => {
 
-    // supabase codes
+        if (!user) return null;
 
-    // reading all pet data from database
+        const { data, error } = await supabase
+            .from('userdata')
+            .select('*')
+            .eq('user_id', user.uid)
+            .maybeSingle();
 
-    // const handleFetch = async (query) => {
+        if (error) {
+            console.log('Get user data error:', error);
+            return null;
+        }
 
+        return data;
+    };
 
-    //     const selectFetch = 'pet_id,photo_url,breeds(breed_name),category'
-    //     const selectFetch2 = 'product_id, photo_url, product_name,category'
-
-
-
-
-    //     const select = query == 'pet_products' ? selectFetch2 : selectFetch
-    //     const orderItem = query == 'pet_products' ? 'product_id' : 'pet_id'
-
-    //     const { data, error } = await supabase
-    //         .from(query)
-    //         .select(select)
-    //         .order(orderItem, { ascending: true })
-
-
-    //     if (error) console.log(error)
-
-    //     else {
-
-
-    //         setfetchedData(data)
-
-    //     }
-
-
-    // }
 
     const handleFetch = async (query) => {
         console.log('querry', query)
+
         if (query === 'products') {
 
             const { data, error } = await supabase
                 .from('products')
-                .select('product_id, photo_url, product_name,type')
+                .select('product_id, photo_url, product_name, type')
                 .order('product_id', { ascending: true })
+
+            if (error) {
+                console.log(error)
+            } else {
+                setfetchedData(data)
+            }
+
+        }
+
+        else if (query === 'vaccine') {
+
+            const { data, error } = await supabase
+                .from('vaccines')
+                .select('vaccine_id, photo_url, vaccine_name, type, price, dose_count')
+                .order('vaccine_id', { ascending: true })
 
             if (error) {
                 console.log(error)
@@ -173,45 +181,30 @@ const AuthProvider = ({ children }) => {
             }
         }
     }
-    // reading data of a specific item
 
-    // const handleDetailsData = async (type, id) => {
-    //     setloading(true)
-    //     let query = ''
-
-
-
-    //     if (type == 'cat') query = 'cats'
-    //     if (type == 'dog') query = 'dogs'
-    //     if (type == 'bird') query = 'birds'
-    //     if (type == 'product') query = 'pet_products'
-
-
-    //     const selectValue = '*,breeds(breed_name,breed_location)'
-    //     const selectValue2 = '*'
-    //     const whereValue = type == 'product' ? 'product_id' : 'pet_id'
-
-
-
-    //     const { data, error } = await supabase
-    //         .from(query)
-    //         .select(type == 'product' ? selectValue2 : selectValue)
-    //         .eq(whereValue, id)
-
-    //     setDetailsFetch(data)
-
-    //     data ? setloading(false) : ''
-
-
-
-
-    // }
 
     const handleDetailsData = async (type, id) => {
+
         setloading(true)
 
-        const table = type === 'pet' ? 'pets' : 'products'
-        const idColumn = type === 'pet' ? 'pet_id' : 'product_id'
+        let table
+        let idColumn
+
+        if (type === 'pet') {
+            table = 'pets'
+            idColumn = 'pet_id'
+        } else if (type === 'product') {
+            table = 'products'
+            idColumn = 'product_id'
+        } else if (type === 'vaccine') {
+            table = 'vaccines'
+            idColumn = 'vaccine_id'
+        } else {
+            console.log('Invalid item type:', type)
+            setDetailsFetch(null)
+            setloading(false)
+            return
+        }
 
         const { data, error } = await supabase
             .from(table)
@@ -229,74 +222,7 @@ const AuthProvider = ({ children }) => {
         setloading(false)
     }
 
-    // const handleSearch = async (category,searchVal)=>{
 
-    //     const  selectFetch = 'pet_id,photo_url,breeds(breed_name),category'
-    //     const selectFetch2 = 'product_id, photo_url, product_name,category'
-
-
-
-
-    //   const select =   category == 'pet_products' ?  selectFetch2   :  '*' 
-
-    //     if(category == 'pet_products'){
-    //    
-
-    //         const {data,error} = await supabase
-    //         .from(category)
-    //         .select(select)
-    //         .ilike('product_name',`%${searchVal}%`)
-
-
-
-    //         if(error) console.log(error)
-
-    //     }
-
-    //     else{
-
-    //         const {data,error} = await supabase 
-    //         .from('breeds')
-    //         .select('breed_id')
-    //         .ilike('breed_name',`%${searchVal}%`)
-
-
-    //         if(data) {
-    //            console.log(data)
-    //         }
-
-    //         if(error) console.log(error)
-
-    //     }
-
-
-
-
-
-    // }
-
-
-
-    // inserting userdata logged in with email
-
-    // old supabase 
-    // const insertRegisterDB =async(email,username,login_type,password)=>{
-
-    //     const {data,error} = await supabase
-    //     .from('users')
-    //     .insert([
-    //         {  
-    //             username:username,
-    //             email:email,
-    //             password:password,
-    //             login_type:login_type
-    //         }
-    //     ])
-
-    //     if(error) console.log(error)
-
-
-    // }
 
     const insertRegisterDB = async (email, username, login_type, user_id) => {
 
@@ -315,36 +241,7 @@ const AuthProvider = ({ children }) => {
     }
 
 
-    //  inserting userdata logged in google
-    // old supabase 
-    // const  insertGoogleDB = async(username,email,login_type)=>{
 
-    //         const {data,error} = await supabase
-    //         .from('users')
-    //         .select('email,user_id')
-    //         .eq('email',email)
-    //         .single()
-
-    //         if(error)
-    //         {
-
-    //             const password = null
-    //             const {data,error} = await supabase
-
-    //                 .from('users')
-    //                 .insert([{
-    //                     username,
-    //                     email,
-    //                     login_type,
-    //                     password,
-
-    //                 }])
-
-    //             if(error) console.log(error)
-    //         }
-
-
-    // }
 
     const insertGoogleDB = async (username, email, login_type, user_id) => {
 
@@ -417,204 +314,111 @@ const AuthProvider = ({ children }) => {
     }
 
 
-    // inserting data into cart
-    // const handleCartIN = async (item_id, category) => {
 
-
-
-    //     const userData = await getUID(user.email)
-
-    //     const pet_data = await handleDetailsData(category, item_id)
-
-
-    //     if (userData && detailsFetch) {
-
-
-    //         const user_id = userData
-    //         const name = detailsFetch[0].category == 'product' ? detailsFetch[0].product_name : detailsFetch[0].breeds.breed_name
-    //         const availability = detailsFetch[0].availability
-    //         const price = detailsFetch[0].price
-    //         const photo_url = detailsFetch[0].photo_url
-
-
-
-    //         const { data, error } = await supabase
-    //             .from('cart')
-    //             .insert(
-    //                 [{
-    //                     item_id,
-    //                     category,
-    //                     user_id,
-    //                     name,
-    //                     availability,
-    //                     price,
-    //                     photo_url
-
-    //                 }])
-    //         if (!error) {
-    //             settotalCart(totalCart + 1)
-
-
-    //             setVisible(true)
-    //             setMessage('Successfully Added To Cart')
-    //             setType('success')
-    //         }
-
-
-
-
-
-    //     }
-    // }
 
     const handleCartIN = async (type, id) => {
 
         console.log('handlecartid', type, id)
 
-        if (!user) return
+        if (!user) return false
 
-        if (type === 'pet') {
+        const { data, error } = await supabase
+            .from('unified_cart')
+            .select('cart_id, quantity')
+            .eq('user_id', user.uid)
+            .eq('item_type', type)
+            .eq('item_id', id)
+            .maybeSingle()
 
-            // Check if this pet is already in the user's cart
-            const { data, error } = await supabase
-                .from('pet_cart')
-                .select('cart_id')
+        if (error) {
+            console.log('Cart check error:', error)
+            return false
+        }
+
+        if (data) {
+
+            const { error: updateError } = await supabase
+                .from('unified_cart')
+                .update({
+                    quantity: Number(data.quantity) + 1
+                })
+                .eq('cart_id', data.cart_id)
                 .eq('user_id', user.uid)
-                .eq('pet_id', id)
-                .maybeSingle()
 
-            if (error) {
-                console.log('Pet cart check error:', error)
-                return
+            if (updateError) {
+                console.log('Cart quantity update error:', updateError)
+                return false
             }
 
-            // Pet already exists
-            if (data) {
-                setVisible(true)
-                setMessage('Pet is already in your cart')
-                setType('error')
-                return
-            }
+        } else {
 
-            // Add pet
             const { error: insertError } = await supabase
-                .from('pet_cart')
+                .from('unified_cart')
                 .insert([
                     {
                         user_id: user.uid,
-                        pet_id: id
+                        item_type: type,
+                        item_id: id,
+                        quantity: 1
                     }
                 ])
 
             if (insertError) {
-                console.log('Pet cart insert error:', insertError)
-                return
-            }
-
-            settotalCart(totalCart + 1)
-
-        } else if (type === 'product') {
-
-            // Check if product already exists
-            const { data, error } = await supabase
-                .from('product_cart')
-                .select('cart_id, quantity')
-                .eq('user_id', user.uid)
-                .eq('product_id', id)
-                .maybeSingle()
-
-            if (error) {
-                console.log('Product cart check error:', error)
-                return
-            }
-
-            if (data) {
-
-                // Product already exists, increase quantity
-                const { error: updateError } = await supabase
-                    .from('product_cart')
-                    .update({
-                        quantity: data.quantity + 1
-                    })
-                    .eq('cart_id', data.cart_id)
-
-                if (updateError) {
-                    console.log('Product quantity update error:', updateError)
-                    return
-                }
-
-            } else {
-
-                // Product doesn't exist, add it with quantity 1
-                const { error: insertError } = await supabase
-                    .from('product_cart')
-                    .insert([
-                        {
-                            user_id: user.uid,
-                            product_id: id,
-                            quantity: 1
-                        }
-                    ])
-
-                if (insertError) {
-                    console.log('Product cart insert error:', insertError)
-                    return
-                }
-
-                settotalCart(totalCart + 1)
+                console.log('Cart insert error:', insertError)
+                return false
             }
         }
+
+        await handleGetCart()
+        await handleTotalCarts()
 
         setVisible(true)
         setMessage('Successfully Added To Cart')
         setType('success')
+
+        return true
     }
 
 
-    // reading cart data 
-    // const handleGetCart = async () => {
 
-    //     const userData = await getUID(user.email)
-
-
-    //     const { data, error } = await supabase
-    //         .from('cart')
-    //         .select('*')
-    //         .eq('user_id', userData)
-
-    //     setmyCart(data)
-    //     return data
-
-    // }
 
     const handleGetCart = async () => {
 
-        if (!user) return
+        if (!user) return {
+            pets: [],
+            products: [],
+            vaccines: []
+        }
 
-        // Get user's pet cart
-        const { data: petCart, error: petCartError } = await supabase
-            .from('pet_cart')
-            .select('cart_id, pet_id, created_at')
+        const { data: cart, error: cartError } = await supabase
+            .from('unified_cart')
+            .select('*')
             .eq('user_id', user.uid)
+            .order('created_at', { ascending: true })
 
-        if (petCartError) {
-            console.log('Pet cart error:', petCartError)
+        if (cartError) {
+            console.log('Unified cart error:', cartError)
             return
         }
 
-        // Get user's product cart
-        const { data: productCart, error: productCartError } = await supabase
-            .from('product_cart')
-            .select('cart_id, product_id, quantity, created_at')
-            .eq('user_id', user.uid)
+        const petsCart = (cart || []).filter(
+            item => item.item_type === 'pet'
+        )
 
-        if (productCartError) {
-            console.log('Product cart error:', productCartError)
-            return
-        }
+        const productsCart = (cart || []).filter(
+            item => item.item_type === 'product'
+        )
 
-        // Get actual pet information
-        const petIds = petCart?.map(item => item.pet_id) || []
+        const vaccinesCart = (cart || []).filter(
+            item => item.item_type === 'vaccine'
+        )
+
+
+        // -------------------------
+        // PETS
+        // -------------------------
+
+        const petIds = petsCart.map(item => item.item_id)
 
         let pets = []
 
@@ -633,8 +437,12 @@ const AuthProvider = ({ children }) => {
             pets = data || []
         }
 
-        // Get actual product information
-        const productIds = productCart?.map(item => item.product_id) || []
+
+        // -------------------------
+        // PRODUCTS
+        // -------------------------
+
+        const productIds = productsCart.map(item => item.item_id)
 
         let products = []
 
@@ -653,11 +461,39 @@ const AuthProvider = ({ children }) => {
             products = data || []
         }
 
-        // Combine cart information with actual item information
-        const petCartData = petCart.map(cartItem => {
+
+        // -------------------------
+        // VACCINES
+        // -------------------------
+
+        const vaccineIds = vaccinesCart.map(item => item.item_id)
+
+        let vaccines = []
+
+        if (vaccineIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from('vaccines')
+                .select('*')
+                .in('vaccine_id', vaccineIds)
+
+            if (error) {
+                console.log('Vaccines fetch error:', error)
+                return
+            }
+
+            vaccines = data || []
+        }
+
+
+        // -------------------------
+        // MERGE CART + ITEM DATA
+        // -------------------------
+
+        const petCartData = petsCart.map(cartItem => {
 
             const pet = pets.find(
-                pet => pet.pet_id === cartItem.pet_id
+                pet => pet.pet_id === cartItem.item_id
             )
 
             return {
@@ -666,10 +502,11 @@ const AuthProvider = ({ children }) => {
             }
         })
 
-        const productCartData = productCart.map(cartItem => {
+
+        const productCartData = productsCart.map(cartItem => {
 
             const product = products.find(
-                product => product.product_id === cartItem.product_id
+                product => product.product_id === cartItem.item_id
             )
 
             return {
@@ -678,72 +515,86 @@ const AuthProvider = ({ children }) => {
             }
         })
 
-        setmyCart({
-            pets: petCartData,
-            products: productCartData
+
+        const vaccineCartData = vaccinesCart.map(cartItem => {
+
+            const vaccine = vaccines.find(
+                vaccine => vaccine.vaccine_id === cartItem.item_id
+            )
+
+            return {
+                ...cartItem,
+                ...vaccine
+            }
         })
 
-        return {
+
+        const result = {
             pets: petCartData,
-            products: productCartData
+            products: productCartData,
+            vaccines: vaccineCartData
         }
+
+        setmyCart(result)
+
+        return result
     }
 
 
-    // remove item from the cart
-    // const handleCartDelete = async (cart_id) => {
 
 
-    //     const { data, error } = await supabase
-    //         .from('cart')
-    //         .delete()
-    //         .eq('cart_id', cart_id)
 
-    //     if (!error) {
-    //         totalCart >= 0 ? settotalCart(totalCart - 1) : ''
-    //         setmyCart(myCart.filter(data => data.cart_id != cart_id))
+    const handleCartDelete = async (cart_id) => {
 
-    //     }
-
-    //     if (error) console.log(error)
-
-    // }
-
-    const handleCartDelete = async (type, cart_id) => {
-
-        const table = type === 'pet'
-            ? 'pet_cart'
-            : 'product_cart'
+        if (!user) return false
 
         const { error } = await supabase
-            .from(table)
+            .from('unified_cart')
             .delete()
             .eq('cart_id', cart_id)
             .eq('user_id', user.uid)
 
         if (error) {
             console.log('Cart delete error:', error)
-            return
+            return false
         }
 
-        setmyCart(prev => ({
-            pets: type === 'pet'
-                ? prev.pets.filter(item => item.cart_id !== cart_id)
-                : prev.pets,
-
-            products: type === 'product'
-                ? prev.products.filter(item => item.cart_id !== cart_id)
-                : prev.products
-        }))
-
-        settotalCart(prev => Math.max(0, prev - 1))
+        await handleGetCart()
+        await handleTotalCarts()
 
         setVisible(true)
         setMessage('Removed From Cart')
         setType('success')
+
+        return true
     }
 
     //new fucntion
+
+    const handleCartQuantity = async (cart_id, quantity) => {
+
+        if (!user) return false
+
+        if (quantity < 1) return false
+
+        const { error } = await supabase
+            .from('unified_cart')
+            .update({
+                quantity: quantity
+            })
+            .eq('cart_id', cart_id)
+            .eq('user_id', user.uid)
+
+        if (error) {
+            console.log('Cart quantity update error:', error)
+            return false
+        }
+
+        await handleGetCart()
+        await handleTotalCarts()
+
+        return true
+    }
 
     const handleProductQuantity = async (cart_id, quantity) => {
 
@@ -773,59 +624,73 @@ const AuthProvider = ({ children }) => {
         }))
     }
 
-    // counting cart items of specific user
+    const handlePetQuantity = async (cart_id, quantity) => {
 
-    // use of aggregate function
+        if (!user) return false;
 
-    // const handleTotalCarts = async () => {
+        if (quantity < 1) return false;
+
+        const { data, error } = await supabase
+            .from('pet_cart')
+            .update({
+                quantity: quantity
+            })
+            .eq('cart_id', cart_id)
+            .eq('user_id', user.uid)
+            .select();
+
+        if (error) {
+            console.log('Pet quantity update error:', error);
+            return false;
+        }
+
+        console.log('Updated pet cart:', data);
+
+        setmyCart(prev => ({
+            ...prev,
+
+            pets: prev.pets.map(item =>
+                item.cart_id === cart_id
+                    ? {
+                        ...item,
+                        quantity: quantity
+                    }
+                    : item
+            )
+        }));
+
+        return true;
+    };
 
 
-    //     const user_id = await getUID(user?.email)
-
-
-    //     const { data, count, error } = await supabase
-    //         .from('cart')
-    //         .select('item_id', { count: 'exact' })
-    //         .eq('user_id', user_id)
-
-    //     if (data) {
-
-    //         settotalCart(count)
-    //     }
-    //     if (error) console.log(error)
-
-
-    // }
 
 
     const handleTotalCarts = async () => {
 
-        if (!user) return
-
-        const { count: petCount, error: petError } = await supabase
-            .from('pet_cart')
-            .select('cart_id', { count: 'exact', head: true })
-            .eq('user_id', user.uid)
-
-        if (petError) {
-            console.log('Pet cart count error:', petError)
+        if (!user) {
+            settotalCart(0)
             return
         }
 
-        const { count: productCount, error: productError } = await supabase
-            .from('product_cart')
-            .select('cart_id', { count: 'exact', head: true })
+        const { data, error } = await supabase
+            .from('unified_cart')
+            .select('quantity')
             .eq('user_id', user.uid)
 
-        if (productError) {
-            console.log('Product cart count error:', productError)
+        if (error) {
+            console.log('Unified cart count error:', error)
             return
         }
 
-        settotalCart((petCount || 0) + (productCount || 0))
+        const total = (data || []).reduce(
+            (sum, item) => sum + Number(item.quantity || 0),
+            0
+        )
+
+        settotalCart(total)
     }
 
-    const handleCheckout = async (checkoutData, type, cartData) => {
+    const handleCheckout = async (checkoutData, { pets, products, vaccines }) => {
 
         if (!user) return false
 
@@ -845,130 +710,159 @@ const AuthProvider = ({ children }) => {
             return false
         }
 
+        const allItems = [
+            ...(pets || []).map(item => ({
+                item_type: 'pet',
+                item_id: item.pet_id,
+                quantity: Number(item.quantity || 1),
+                price: Number(item.price || 0),
+                cart_id: item.cart_id
+            })),
+
+            ...(products || []).map(item => ({
+                item_type: 'product',
+                item_id: item.product_id,
+                quantity: Number(item.quantity || 1),
+                price: Number(item.price || 0),
+                cart_id: item.cart_id
+            })),
+
+            ...(vaccines || []).map(item => ({
+                item_type: 'vaccine',
+                item_id: item.vaccine_id,
+                quantity: Number(item.quantity || 1),
+                price: Number(item.price || 0),
+                cart_id: item.cart_id
+            }))
+        ]
+
+        if (allItems.length === 0) {
+            return false
+        }
+
+
+        // -------------------------
+        // CALCULATE TOTAL
+        // -------------------------
+
+        const subtotal = allItems.reduce(
+            (total, item) =>
+                total +
+                item.price * item.quantity,
+            0
+        )
+
+        const codFee = cash_on_delivery ? 10 : 0
+
+        const totalAmount = subtotal + codFee
+
         const payment_method = cash_on_delivery
             ? 'cod'
             : 'online'
 
-        const extraCharge = cash_on_delivery ? 10 : 0
 
-        if (type === 'pet') {
+        // -------------------------
+        // CREATE ONE ORDER
+        // -------------------------
 
-            for (const pet of cartData) {
-
-                const finalPrice =
-                    Number(pet.price) + extraCharge
-
-                const { error } = await supabase
-                    .from('pet_orders')
-                    .insert([
-                        {
-                            user_id: user.uid,
-                            pet_id: pet.pet_id,
-                            full_name,
-                            email,
-                            shipping_address,
-                            transaction_id: cash_on_delivery
-                                ? null
-                                : transaction_id,
-                            payment_method,
-                            price: finalPrice,
-                            status: 'pending'
-                        }
-                    ])
-
-                if (error) {
-                    console.log('Pet order error:', error)
-                    return false
+        const { data: order, error: orderError } = await supabase
+            .from('unified_orders')
+            .insert([
+                {
+                    user_id: user.uid,
+                    full_name,
+                    email,
+                    shipping_address,
+                    transaction_id: cash_on_delivery
+                        ? null
+                        : transaction_id,
+                    payment_method,
+                    subtotal,
+                    cod_fee: codFee,
+                    total_amount: totalAmount,
+                    status: 'pending'
                 }
+            ])
+            .select('order_id')
+            .single()
 
-                await supabase
-                    .from('pet_cart')
-                    .delete()
-                    .eq('cart_id', pet.cart_id)
-                    .eq('user_id', user.uid)
-            }
+        if (orderError) {
 
-        } else if (type === 'product') {
+            console.log('Unified order error:', orderError)
 
-            const totalAmount =
-                cartData.reduce(
-                    (total, item) =>
-                        total +
-                        Number(item.price) *
-                        Number(item.quantity),
-                    0
-                ) + extraCharge
+            setVisible(true)
+            setMessage('Failed to place order')
+            setType('error')
 
-            const { data: order, error: orderError } = await supabase
-                .from('product_orders')
-                .insert([
-                    {
-                        user_id: user.uid,
-                        full_name,
-                        email,
-                        shipping_address,
-                        transaction_id: cash_on_delivery
-                            ? null
-                            : transaction_id,
-                        payment_method,
-                        total_amount: totalAmount,
-                        status: 'pending'
-                    }
-                ])
-                .select('order_id')
-                .single()
-
-            if (orderError) {
-                console.log('Product order error:', orderError)
-                return false
-            }
-
-            const orderItems = cartData.map(item => ({
-                order_id: order.order_id,
-                product_id: item.product_id,
-                quantity: item.quantity,
-                price: item.price
-            }))
-
-            const { error: itemError } = await supabase
-                .from('product_order_items')
-                .insert(orderItems)
-
-            if (itemError) {
-                console.log('Product order items error:', itemError)
-                return false
-            }
-
-            const cartIds = cartData.map(item => item.cart_id)
-
-            const { error: deleteError } = await supabase
-                .from('product_cart')
-                .delete()
-                .in('cart_id', cartIds)
-                .eq('user_id', user.uid)
-
-            if (deleteError) {
-                console.log('Product cart delete error:', deleteError)
-                return false
-            }
+            return false
         }
 
-        await handleGetCart()
 
-        const { data: petCart } = await supabase
-            .from('pet_cart')
-            .select('cart_id')
-            .eq('user_id', user.uid)
+        // -------------------------
+        // CREATE ORDER ITEMS
+        // -------------------------
 
-        const { data: productCart } = await supabase
-            .from('product_cart')
-            .select('cart_id')
-            .eq('user_id', user.uid)
+        const orderItems = allItems.map(item => ({
+            order_id: order.order_id,
+            item_type: item.item_type,
+            item_id: item.item_id,
+            quantity: item.quantity,
+            price: item.price
+        }))
 
-        settotalCart(
-            (petCart?.length || 0) +
-            (productCart?.length || 0)
+        const { error: itemError } = await supabase
+            .from('unified_order_items')
+            .insert(orderItems)
+
+        if (itemError) {
+
+            console.log('Unified order items error:', itemError)
+
+            // Remove incomplete order
+            await supabase
+                .from('unified_orders')
+                .delete()
+                .eq('order_id', order.order_id)
+
+            setVisible(true)
+            setMessage('Failed to place order')
+            setType('error')
+
+            return false
+        }
+
+
+        // -------------------------
+        // DELETE CART ITEMS
+        // -------------------------
+
+        const cartIds = allItems.map(
+            item => item.cart_id
         )
+
+        const { error: cartDeleteError } = await supabase
+            .from('unified_cart')
+            .delete()
+            .in('cart_id', cartIds)
+            .eq('user_id', user.uid)
+
+        if (cartDeleteError) {
+
+            console.log(
+                'Unified cart delete error:',
+                cartDeleteError
+            )
+
+            return false
+        }
+
+
+        // -------------------------
+        // REFRESH CART
+        // -------------------------
+
+        await handleGetCart()
+        await handleTotalCarts()
 
         setVisible(true)
         setMessage('Order placed successfully')
@@ -976,7 +870,6 @@ const AuthProvider = ({ children }) => {
 
         return true
     }
-
     // updating the username in supabase
     const handlenameUpdate = async (newUsername) => {
 
@@ -997,32 +890,6 @@ const AuthProvider = ({ children }) => {
 
 
 
-    // const handleObjectToArray = async (user_id) => {
-    //     const { data, error } = await supabase
-    //       .from('cart')
-    //       .select('item_id')
-    //       .eq('user_id', user_id);
-
-    //     if (error) return [];
-    //     if(data)
-    //     {
-    //      return data.map(item => item.item_id);
-
-    //     }
-    //   }
-
-    //   const handleFavourite = async () => {
-    //     const user_id = await getUID(user?.email);
-    //     const itemIds = await handleObjectToArray(user_id);
-
-    //     const { data, error } = await supabase
-    //       .from('pet_products')
-    //       .select('*')
-    //       .in('product_id', itemIds);
-
-
-    //     if (error) console.log(error);
-    //   }
 
     const handleCheckAdmin = async () => {
 
@@ -1043,31 +910,89 @@ const AuthProvider = ({ children }) => {
     }
 
 
-    const handleGetOrders = async () => {
 
-        const { data: petOrders, error: petError } = await supabase
-            .from('pet_orders')
+
+
+
+
+
+    const fetchFormattedOrders = async (userId = null) => {
+
+        let query = supabase
+            .from('unified_orders')
             .select('*')
             .order('created_at', { ascending: false })
 
-        if (petError) {
-            console.log('Pet orders error:', petError)
-            return
+        if (userId) {
+            query = query.eq('user_id', userId)
+        }
+
+        const { data: orders, error: orderError } = await query
+
+        if (orderError) {
+            console.log('Unified orders error:', orderError)
+            return []
+        }
+
+        if (!orders || orders.length === 0) {
+            return []
         }
 
 
-        const { data: productOrders, error: productError } = await supabase
-            .from('product_orders')
+        // -------------------------
+        // GET ORDER ITEMS
+        // -------------------------
+
+        const orderIds = orders.map(
+            order => order.order_id
+        )
+
+        const { data: orderItems, error: itemError } = await supabase
+            .from('unified_order_items')
             .select('*')
-            .order('created_at', { ascending: false })
+            .in('order_id', orderIds)
 
-        if (productError) {
-            console.log('Product orders error:', productError)
-            return
+        if (itemError) {
+            console.log('Unified order items error:', itemError)
+            return []
         }
 
 
-        const petIds = petOrders?.map(order => order.pet_id) || []
+        const items = orderItems || []
+
+
+        // -------------------------
+        // SEPARATE ITEM IDS
+        // -------------------------
+
+        const petIds = [
+            ...new Set(
+                items
+                    .filter(item => item.item_type === 'pet')
+                    .map(item => item.item_id)
+            )
+        ]
+
+        const productIds = [
+            ...new Set(
+                items
+                    .filter(item => item.item_type === 'product')
+                    .map(item => item.item_id)
+            )
+        ]
+
+        const vaccineIds = [
+            ...new Set(
+                items
+                    .filter(item => item.item_type === 'vaccine')
+                    .map(item => item.item_id)
+            )
+        ]
+
+
+        // -------------------------
+        // GET PETS
+        // -------------------------
 
         let pets = []
 
@@ -1075,43 +1000,27 @@ const AuthProvider = ({ children }) => {
 
             const { data, error } = await supabase
                 .from('pets')
-                .select('pet_id, name, breed, category, photo_url, price')
+                .select(`
+                pet_id,
+                breed,
+                category,
+                photo_url,
+                price
+            `)
                 .in('pet_id', petIds)
 
             if (error) {
                 console.log('Order pets error:', error)
-                return
+                return []
             }
 
             pets = data || []
         }
 
 
-        const productOrderIds =
-            productOrders?.map(order => order.order_id) || []
-
-
-        let productItems = []
-
-        if (productOrderIds.length > 0) {
-
-            const { data, error } = await supabase
-                .from('product_order_items')
-                .select('*')
-                .in('order_id', productOrderIds)
-
-            if (error) {
-                console.log('Product order items error:', error)
-                return
-            }
-
-            productItems = data || []
-        }
-
-
-        const productIds =
-            productItems.map(item => item.product_id) || []
-
+        // -------------------------
+        // GET PRODUCTS
+        // -------------------------
 
         let products = []
 
@@ -1119,131 +1028,195 @@ const AuthProvider = ({ children }) => {
 
             const { data, error } = await supabase
                 .from('products')
-                .select('product_id, product_name, type, photo_url, price, weight')
+                .select(`
+                product_id,
+                product_name,
+                type,
+                photo_url,
+                price,
+                weight
+            `)
                 .in('product_id', productIds)
 
             if (error) {
                 console.log('Order products error:', error)
-                return
+                return []
             }
 
             products = data || []
         }
 
 
-        const formattedPetOrders = petOrders.map(order => {
+        // -------------------------
+        // GET VACCINES
+        // -------------------------
 
-            const pet = pets.find(
-                pet => pet.pet_id === order.pet_id
+        let vaccines = []
+
+        if (vaccineIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from('vaccines')
+                .select(`
+                vaccine_id,
+                vaccine_name,
+                type,
+                price,
+                dose_count,
+                photo_url
+            `)
+                .in('vaccine_id', vaccineIds)
+
+            if (error) {
+                console.log('Order vaccines error:', error)
+                return []
+            }
+
+            vaccines = data || []
+        }
+
+
+        // -------------------------
+        // ATTACH ITEM DATA
+        // -------------------------
+
+        const formattedItems = items.map(orderItem => {
+
+            let item = null
+
+            if (orderItem.item_type === 'pet') {
+                item = pets.find(
+                    pet => pet.pet_id === orderItem.item_id
+                )
+            }
+
+            if (orderItem.item_type === 'product') {
+                item = products.find(
+                    product => product.product_id === orderItem.item_id
+                )
+            }
+
+            if (orderItem.item_type === 'vaccine') {
+                item = vaccines.find(
+                    vaccine => vaccine.vaccine_id === orderItem.item_id
+                )
+            }
+
+            return {
+                ...orderItem,
+                item
+            }
+        })
+
+
+        // -------------------------
+        // ATTACH ITEMS TO ORDERS
+        // -------------------------
+
+        return orders.map(order => {
+
+            const orderItemsForOrder = formattedItems.filter(
+                item => item.order_id === order.order_id
             )
 
             return {
                 ...order,
-                pet
+                items: orderItemsForOrder
             }
-        })
-
-
-        const formattedProductOrders = productOrders.map(order => {
-
-            const items = productItems
-                .filter(item => item.order_id === order.order_id)
-                .map(item => {
-
-                    const product = products.find(
-                        product => product.product_id === item.product_id
-                    )
-
-                    return {
-                        ...item,
-                        product
-                    }
-                })
-
-            return {
-                ...order,
-                items
-            }
-        })
-
-
-        setadminOrders({
-            pets: formattedPetOrders,
-            products: formattedProductOrders
         })
     }
 
-    const handleUpdateOrder = async (type, order_id, status) => {
 
-        const table =
-            type === 'pet'
-                ? 'pet_orders'
-                : 'product_orders'
+    const handleGetOrders = async () => {
+
+        const formattedOrders = await fetchFormattedOrders()
+
+        setadminOrders({
+            orders: formattedOrders
+        })
+
+        return formattedOrders
+    }
+
+
+    const handleGetMyOrders = async () => {
+
+        if (!user) {
+            setMyOrders([])
+            return []
+        }
+
+        const formattedOrders = await fetchFormattedOrders(user.uid)
+
+        setMyOrders(formattedOrders)
+
+        return formattedOrders
+    }
+
+
+    const handleUpdateOrder = async (order_id, status) => {
+
+        const allowedStatuses = [
+            "pending",
+            "confirmed",
+            "completed",
+            "cancelled"
+        ];
+
+
+        if (!allowedStatuses.includes(status)) {
+
+            console.log("Invalid order status:", status);
+
+            return false;
+        }
 
 
         const { error } = await supabase
-            .from(table)
+            .from("unified_orders")
             .update({
                 status: status,
                 updated_at: new Date().toISOString()
             })
-            .eq('order_id', order_id)
+            .eq("order_id", order_id);
 
 
         if (error) {
 
-            console.log('Update order error:', error)
+            console.log("Order status update error:", error);
 
-            setVisible(true)
-            setMessage('Failed to update order')
-            setType('error')
+            setVisible(true);
+            setMessage("Failed to update order status");
+            setType("error");
 
-            return false
+            return false;
         }
 
 
-        setadminOrders(prev => {
+        // Update the local admin order immediately
 
-            if (type === 'pet') {
+        setadminOrders(prev => ({
+            ...prev,
 
-                return {
-                    ...prev,
-
-                    pets: prev.pets.map(order =>
-                        order.order_id === order_id
-                            ? {
-                                ...order,
-                                status
-                            }
-                            : order
-                    )
-                }
-
-            }
+            orders: prev.orders.map(order =>
+                order.order_id === order_id
+                    ? {
+                        ...order,
+                        status: status
+                    }
+                    : order
+            )
+        }));
 
 
-            return {
-                ...prev,
-
-                products: prev.products.map(order =>
-                    order.order_id === order_id
-                        ? {
-                            ...order,
-                            status
-                        }
-                        : order
-                )
-            }
-
-        })
+        setVisible(true);
+        setMessage("Order status updated");
+        setType("success");
 
 
-        setVisible(true)
-        setMessage('Order status updated')
-        setType('success')
-
-        return true
+        return true;
     }
+
 
     const handleAdminDeleteOrder = async (type, order_id) => {
 
@@ -1298,7 +1271,716 @@ const AuthProvider = ({ children }) => {
         return true
     }
 
+    const handleCheckDelivery = async () => {
+        if (!user) return false;
+
+        const { data, error } = await supabase
+            .from("userdata")
+            .select("is_delivery")
+            .eq("user_id", user.uid)
+            .single();
+
+        if (error) {
+            console.error(error);
+            return false;
+        }
+
+        return data?.is_delivery === true;
+    };
+
     // use of subquery in supabase
+
+    const handleGetDeliveryUsers = async () => {
+
+        const { data, error } = await supabase
+            .from('userdata')
+            .select('user_id, full_name, email')
+            .eq('is_delivery', true)
+            .order('full_name', { ascending: true })
+
+        if (error) {
+
+            console.log('Delivery users error:', error)
+
+            return false
+        }
+
+        setDeliveryUsers(data || [])
+
+        return true
+    }
+
+
+    const handleAssignDelivery = async (order_id, deliveryUserId) => {
+
+        const { error } = await supabase
+            .from('unified_orders')
+            .update({
+                delivered_by: deliveryUserId || null,
+                updated_at: new Date().toISOString()
+            })
+            .eq('order_id', order_id)
+
+
+        if (error) {
+
+            console.log('Delivery assignment error:', error)
+
+            setVisible(true)
+            setMessage('Failed to assign delivery')
+            setType('error')
+
+            return false
+        }
+
+
+        setadminOrders(prev => ({
+            ...prev,
+
+            orders: prev.orders.map(order =>
+                order.order_id === order_id
+                    ? {
+                        ...order,
+                        delivered_by: deliveryUserId || null
+                    }
+                    : order
+            )
+        }))
+
+
+        setVisible(true)
+        setMessage(
+            deliveryUserId
+                ? 'Delivery person assigned'
+                : 'Delivery person removed'
+        )
+        setType('success')
+
+        return true
+    }
+
+
+    // Admin
+
+    const handleGetPets = async () => {
+
+        const { data, error } = await supabase
+            .from("pets")
+            .select("*")
+            .order("pet_id", { ascending: true })
+
+        if (error) {
+
+            console.log("Pets fetch error:", error)
+
+            return false
+        }
+
+        setAdminPets(data || [])
+
+        return true
+    }
+
+    const handleUpdatePet = async (petId, updatedPet) => {
+
+        const { data, error } = await supabase
+            .from("pets")
+            .update(updatedPet)
+            .eq("pet_id", petId)
+            .select()
+            .single();
+
+        if (error) {
+
+            console.log("Pet update error:", error);
+
+            setVisible(true);
+            setMessage("Failed to update pet");
+            setType("error");
+
+            return false;
+        }
+
+        setAdminPets(prev =>
+            prev.map(pet =>
+                pet.pet_id === petId
+                    ? data
+                    : pet
+            )
+        );
+
+        setVisible(true);
+        setMessage("Pet updated successfully");
+        setType("success");
+
+        return data;
+    };
+
+
+    const handleDeletePet = async (petId) => {
+
+        const { error } = await supabase
+            .from("pets")
+            .delete()
+            .eq("pet_id", petId);
+
+
+        if (error) {
+
+            console.log("Pet delete error:", error);
+
+            setVisible(true);
+            setMessage("Failed to delete pet");
+            setType("error");
+
+            return false;
+        }
+
+
+        setAdminPets(prev =>
+            prev.filter(pet => pet.pet_id !== petId)
+        );
+
+
+        setVisible(true);
+        setMessage("Pet deleted successfully");
+        setType("success");
+
+        return true;
+    };
+
+    const handleCreatePet = async (newPet) => {
+
+        const { data, error } = await supabase
+            .from("pets")
+            .insert(newPet)
+            .select()
+            .single();
+
+
+        if (error) {
+
+            console.log("Pet create error:", error);
+
+            setVisible(true);
+            setMessage("Failed to add pet");
+            setType("error");
+
+            return false;
+        }
+
+
+        setAdminPets(prev => [
+            ...prev,
+            data
+        ]);
+
+
+        setVisible(true);
+        setMessage("Pet added successfully");
+        setType("success");
+
+        return data;
+    };
+
+
+
+
+    const handleGetProducts = async () => {
+
+        const { data, error } = await supabase
+            .from("products")
+            .select("*")
+            .order("product_id", { ascending: true })
+
+        if (error) {
+
+            console.log("Products fetch error:", error)
+
+            return false
+        }
+
+        setAdminProducts(data || [])
+
+        return true
+    }
+
+    const handleUpdateProduct = async (productId, updatedProduct) => {
+
+        const { data, error } = await supabase
+            .from("products")
+            .update(updatedProduct)
+            .eq("product_id", productId)
+            .select()
+            .single()
+
+        if (error) {
+
+            console.log("Product update error:", error)
+
+            setVisible(true)
+            setMessage("Failed to update product")
+            setType("error")
+
+            return false
+        }
+
+        setAdminProducts(prev =>
+            prev.map(product =>
+                product.product_id === productId
+                    ? data
+                    : product
+            )
+        )
+
+        setVisible(true)
+        setMessage("Product updated successfully")
+        setType("success")
+
+        return data
+    }
+
+    const handleDeleteProduct = async (productId) => {
+
+        const { error } = await supabase
+            .from("products")
+            .delete()
+            .eq("product_id", productId)
+
+        if (error) {
+
+            console.log("Product delete error:", error)
+
+            setVisible(true)
+            setMessage("Failed to delete product")
+            setType("error")
+
+            return false
+        }
+
+        setAdminProducts(prev =>
+            prev.filter(product =>
+                product.product_id !== productId
+            )
+        )
+
+        setVisible(true)
+        setMessage("Product deleted successfully")
+        setType("success")
+
+        return true
+    }
+
+    const handleCreateProduct = async (newProduct) => {
+
+        const { data, error } = await supabase
+            .from("products")
+            .insert(newProduct)
+            .select()
+            .single()
+
+        if (error) {
+
+            console.log("Product create error:", error)
+
+            setVisible(true)
+            setMessage("Failed to add product")
+            setType("error")
+
+            return false
+        }
+
+        setAdminProducts(prev => [
+            ...prev,
+            data
+        ])
+
+        setVisible(true)
+        setMessage("Product added successfully")
+        setType("success")
+
+        return data
+    }
+
+
+
+    const handleGetVaccines = async () => {
+
+        const { data, error } = await supabase
+            .from("vaccines")
+            .select("*")
+            .order("vaccine_id", { ascending: true })
+
+        if (error) {
+
+            console.log("Vaccines fetch error:", error)
+
+            return false
+        }
+
+        setAdminVaccines(data || [])
+
+        return true
+    }
+
+
+    const handleUpdateVaccine = async (vaccineId, updatedVaccine) => {
+
+        const { data, error } = await supabase
+            .from("vaccines")
+            .update(updatedVaccine)
+            .eq("vaccine_id", vaccineId)
+            .select()
+            .single()
+
+        if (error) {
+
+            console.log("Vaccine update error:", error)
+
+            setVisible(true)
+            setMessage("Failed to update vaccine")
+            setType("error")
+
+            return false
+        }
+
+        setAdminVaccines(prev =>
+            prev.map(vaccine =>
+                vaccine.vaccine_id === vaccineId
+                    ? data
+                    : vaccine
+            )
+        )
+
+        setVisible(true)
+        setMessage("Vaccine updated successfully")
+        setType("success")
+
+        return data
+    }
+
+
+    const handleDeleteVaccine = async (vaccineId) => {
+
+        const { error } = await supabase
+            .from("vaccines")
+            .delete()
+            .eq("vaccine_id", vaccineId)
+
+        if (error) {
+
+            console.log("Vaccine delete error:", error)
+
+            setVisible(true)
+            setMessage("Failed to delete vaccine")
+            setType("error")
+
+            return false
+        }
+
+        setAdminVaccines(prev =>
+            prev.filter(vaccine =>
+                vaccine.vaccine_id !== vaccineId
+            )
+        )
+
+        setVisible(true)
+        setMessage("Vaccine deleted successfully")
+        setType("success")
+
+        return true
+    }
+
+
+    const handleCreateVaccine = async (newVaccine) => {
+
+        const { data, error } = await supabase
+            .from("vaccines")
+            .insert(newVaccine)
+            .select()
+            .single()
+
+        if (error) {
+
+            console.log("Vaccine create error:", error)
+
+            setVisible(true)
+            setMessage("Failed to add vaccine")
+            setType("error")
+
+            return false
+        }
+
+        setAdminVaccines(prev => [
+            ...prev,
+            data
+        ])
+
+        setVisible(true)
+        setMessage("Vaccine added successfully")
+        setType("success")
+
+        return data
+    }
+
+    const handleGetUsers = async () => {
+
+        const { data, error } = await supabase
+            .from("userdata")
+            .select("*")
+            .order("created_at", { ascending: false })
+
+        if (error) {
+
+            console.log("Users fetch error:", error)
+
+            return false
+        }
+
+        setAdminUsers(data || [])
+
+        return true
+    }
+
+
+    const handleMakeDelivery = async (userId) => {
+
+        const { data, error } = await supabase
+            .from("userdata")
+            .update({
+                is_delivery: true,
+                updated_at: new Date().toISOString()
+            })
+            .eq("user_id", userId)
+            .select()
+            .single()
+
+        if (error) {
+
+            console.log("Make delivery error:", error)
+
+            setVisible(true)
+            setMessage("Failed to make user a delivery person")
+            setType("error")
+
+            return false
+        }
+
+        setAdminUsers(prev =>
+            prev.map(user =>
+                user.user_id === userId
+                    ? data
+                    : user
+            )
+        )
+
+        setVisible(true)
+        setMessage("User is now a delivery person")
+        setType("success")
+
+        return data
+    }
+
+
+    const handleGetUserDetails = async (userId) => {
+
+        // -------------------------
+        // USER
+        // -------------------------
+
+        const { data: userData, error: userError } = await supabase
+            .from("userdata")
+            .select("*")
+            .eq("user_id", userId)
+            .single()
+
+        if (userError) {
+
+            console.log("User details error:", userError)
+
+            return null
+        }
+
+
+        // -------------------------
+        // CART
+        // -------------------------
+
+        const { data: cart, error: cartError } = await supabase
+            .from("unified_cart")
+            .select("*")
+            .eq("user_id", userId)
+            .order("created_at", { ascending: true })
+
+        if (cartError) {
+
+            console.log("User cart error:", cartError)
+
+            return null
+        }
+
+
+        const cartItems = cart || []
+
+
+        // -------------------------
+        // SEPARATE CART IDS
+        // -------------------------
+
+        const petIds = [
+            ...new Set(
+                cartItems
+                    .filter(item => item.item_type === "pet")
+                    .map(item => item.item_id)
+            )
+        ]
+
+        const productIds = [
+            ...new Set(
+                cartItems
+                    .filter(item => item.item_type === "product")
+                    .map(item => item.item_id)
+            )
+        ]
+
+        const vaccineIds = [
+            ...new Set(
+                cartItems
+                    .filter(item => item.item_type === "vaccine")
+                    .map(item => item.item_id)
+            )
+        ]
+
+
+        // -------------------------
+        // FETCH CART PETS
+        // -------------------------
+
+        let pets = []
+
+        if (petIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from("pets")
+                .select("*")
+                .in("pet_id", petIds)
+
+            if (error) {
+
+                console.log("User cart pets error:", error)
+
+            } else {
+
+                pets = data || []
+            }
+        }
+
+
+        // -------------------------
+        // FETCH CART PRODUCTS
+        // -------------------------
+
+        let products = []
+
+        if (productIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from("products")
+                .select("*")
+                .in("product_id", productIds)
+
+            if (error) {
+
+                console.log("User cart products error:", error)
+
+            } else {
+
+                products = data || []
+            }
+        }
+
+
+        // -------------------------
+        // FETCH CART VACCINES
+        // -------------------------
+
+        let vaccines = []
+
+        if (vaccineIds.length > 0) {
+
+            const { data, error } = await supabase
+                .from("vaccines")
+                .select("*")
+                .in("vaccine_id", vaccineIds)
+
+            if (error) {
+
+                console.log("User cart vaccines error:", error)
+
+            } else {
+
+                vaccines = data || []
+            }
+        }
+
+
+        // -------------------------
+        // ATTACH CART ITEM DATA
+        // -------------------------
+
+        const formattedCart = cartItems.map(cartItem => {
+
+            let item = null
+
+
+            if (cartItem.item_type === "pet") {
+
+                item = pets.find(
+                    pet => pet.pet_id === cartItem.item_id
+                )
+
+            }
+
+
+            if (cartItem.item_type === "product") {
+
+                item = products.find(
+                    product => product.product_id === cartItem.item_id
+                )
+
+            }
+
+
+            if (cartItem.item_type === "vaccine") {
+
+                item = vaccines.find(
+                    vaccine => vaccine.vaccine_id === cartItem.item_id
+                )
+
+            }
+
+
+            return {
+                ...cartItem,
+                item
+            }
+        })
+
+
+        // -------------------------
+        // ORDERS
+        // -------------------------
+
+        const orders = await fetchFormattedOrders(userId)
+
+
+        return {
+            user: userData,
+            cart: formattedCart,
+            orders
+        }
+    }
+
 
     const handleFavourite = async () => {
 
@@ -1324,7 +2006,6 @@ const AuthProvider = ({ children }) => {
     };
 
 
-
     // unscubsribe
 
     useEffect(() => {
@@ -1344,14 +2025,53 @@ const AuthProvider = ({ children }) => {
         user, handleRegister, handleSignIn, loader, setloader, setpageload, pageload, handleFetch,
         fetchedData, detailsFetch, handleDetailsData, handleSignOut, handleGoogleSignIn, loading,
         special, setspecial, insertRegisterDB, myCart, setmyCart, handleCartIN, handleGetCart,
-        handleCartDelete, handleProductQuantity, handleTotalCarts, totalCart, emaiUsername, getUID, getUsername,
+        handleCartDelete,
+        handleProductQuantity,
+        handlePetQuantity,
+        handleCartQuantity,
+        handleTotalCarts,
+        totalCart, emaiUsername, getUID, getUsername,
         handlenameUpdate, handleFavourite, sectionRef, handleScrollToAllproduct,
         setVisible, visible, setType, type, message, setMessage, navigating, favItem, handleCheckout, handleCheckAdmin,
 
         handleGetOrders,
+        handleGetMyOrders,
         handleUpdateOrder,
         handleAdminDeleteOrder,
         adminOrders,
+        myOrders,
+
+        handleGetDeliveryUsers,
+        handleCheckDelivery,
+        handleAssignDelivery,
+        deliveryUsers,
+
+        cartOpen,
+        setCartOpen,
+
+        adminPets,
+        handleGetPets,
+        handleUpdatePet,
+        handleDeletePet,
+        handleCreatePet,
+
+        adminProducts,
+        handleGetProducts,
+        handleUpdateProduct,
+        handleDeleteProduct,
+        handleCreateProduct,
+
+        adminVaccines,
+        handleGetVaccines,
+        handleUpdateVaccine,
+        handleDeleteVaccine,
+        handleCreateVaccine,
+
+        adminUsers,
+        handleGetUsers,
+        handleGetUserDetails,
+        handleMakeDelivery,
+
     }
 
     return (
