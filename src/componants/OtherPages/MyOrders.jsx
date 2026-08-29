@@ -110,7 +110,7 @@ const MyOrders = () => {
                 return "bg-red-100 text-red-600";
 
             default:
-                return "bg-orange-100 text-orange-600";
+                return "bg-slate-100 text-slate-600";
         }
     };
 
@@ -301,17 +301,20 @@ const MyOrders = () => {
                                 <div>
 
                                     <span className={`
-                                        inline-flex
-                                        px-4
-                                        py-2
-                                        rounded-full
-                                        text-xs
-                                        tab:text-sm
-                                        font-medium
-                                        capitalize
-                                        ${getStatusStyle(order.status)}
-                                    `}>
-                                        {order.status}
+    inline-flex
+    px-4
+    py-2
+    rounded-full
+    text-xs
+    tab:text-sm
+    font-medium
+    capitalize
+    ${getStatusStyle(order.status)}
+`}>
+                                        {order.status === "cancelled"
+                                            ? "Cancelled / Refunded"
+                                            : order.status
+                                        }
                                     </span>
 
                                 </div>

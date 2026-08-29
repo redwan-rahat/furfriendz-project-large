@@ -176,7 +176,7 @@ const DeliveryOrder = () => {
         },
         {
             id: "cancelled",
-            label: "Cancelled"
+            label: "Cancelled / Refunded"
         }
     ];
 
@@ -237,11 +237,10 @@ const DeliveryOrder = () => {
                                 type="button"
                                 key={tab.id}
                                 onClick={() => setActiveTab(tab.id)}
-                                className={`relative shrink-0 px-4 py-3 text-sm font-medium transition ${
-                                    active
+                                className={`relative shrink-0 px-4 py-3 text-sm font-medium transition ${active
                                         ? "text-emerald-600"
                                         : "text-slate-500 hover:text-slate-800"
-                                }`}
+                                    }`}
                             >
 
                                 {tab.label}
@@ -328,7 +327,9 @@ const DeliveryOrder = () => {
                                         >
                                             {order.status === "confirmed"
                                                 ? "Delivery Pending"
-                                                : order.status
+                                                : order.status === "cancelled"
+                                                    ? "Cancelled / Refunded"
+                                                    : order.status
                                             }
                                         </span>
 

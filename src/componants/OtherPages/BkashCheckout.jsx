@@ -6,8 +6,10 @@ const BkashCheckout = () => {
 
     const navigate = useNavigate();
 
+
     const {
-        handleCheckout
+        handleCheckout,
+        handleGetCart
     } = useContext(AuthContex);
 
 
@@ -30,14 +32,20 @@ const BkashCheckout = () => {
             'furfriendz_bkash_checkout'
         );
 
+
         if (!storedData) {
+
             navigate("/");
+
             return;
         }
 
+
         try {
 
-            const parsedData = JSON.parse(storedData);
+            const parsedData =
+                JSON.parse(storedData);
+
 
             setCheckoutInfo(parsedData);
 
@@ -48,7 +56,9 @@ const BkashCheckout = () => {
                 error
             );
 
+
             navigate("/");
+
         }
 
     }, [navigate]);
@@ -81,15 +91,96 @@ const BkashCheckout = () => {
     const handleConfirm = async () => {
 
         if (!amountIsCorrect || loading) {
+
             return;
         }
 
+
         if (!checkoutInfo) {
+
             return;
         }
+
 
         setLoading(true);
 
+
+        // --------------------------------
+        // REFRESH CART
+        // --------------------------------
+
+        const freshCart =
+            await handleGetCart();
+
+
+        if (!freshCart) {
+
+            setLoading(false);
+
+            return;
+        }
+
+
+        const freshPets =
+            freshCart.pets || [];
+
+
+        const freshProducts =
+            freshCart.products || [];
+
+
+        const freshVaccines =
+            freshCart.vaccines || [];
+
+
+        const allItems = [
+            ...freshPets,
+            ...freshProducts,
+            ...freshVaccines
+        ];
+
+
+        // --------------------------------
+        // CHECK UNAVAILABLE ITEMS
+        // --------------------------------
+
+        const unavailableItem =
+            allItems.find(
+                item =>
+                    item.stockStatus === "unavailable"
+            );
+
+
+        if (unavailableItem) {
+
+            setLoading(false);
+
+            return;
+        }
+
+
+        // --------------------------------
+        // CHECK INSUFFICIENT ITEMS
+        // --------------------------------
+
+        const insufficientItem =
+            allItems.find(
+                item =>
+                    item.isInsufficient
+            );
+
+
+        if (insufficientItem) {
+
+            setLoading(false);
+
+            return;
+        }
+
+
+        // --------------------------------
+        // PAYMENT DATA
+        // --------------------------------
 
         const paymentData = {
 
@@ -104,25 +195,31 @@ const BkashCheckout = () => {
 
         const paymentCart = {
 
-            pets: checkoutInfo.pets || [],
+            pets: freshPets,
 
-            products: checkoutInfo.products || [],
+            products: freshProducts,
 
-            vaccines: checkoutInfo.vaccines || []
+            vaccines: freshVaccines
 
         };
 
 
-        const orderSuccess = await handleCheckout(
-            paymentData,
-            paymentCart
-        );
+        // --------------------------------
+        // FINAL CHECK + CREATE ORDER
+        // --------------------------------
+
+        const orderSuccess =
+            await handleCheckout(
+                paymentData,
+                paymentCart
+            );
 
 
         setLoading(false);
 
 
         if (!orderSuccess) {
+
             return;
         }
 
@@ -177,6 +274,7 @@ const BkashCheckout = () => {
             'furfriendz_bkash_checkout'
         );
 
+
         window.close();
 
     };
@@ -189,6 +287,7 @@ const BkashCheckout = () => {
     if (!checkoutInfo) {
 
         return (
+
             <div className="min-h-screen bg-white flex items-center justify-center">
 
                 <p className="text-gray-600">
@@ -196,6 +295,7 @@ const BkashCheckout = () => {
                 </p>
 
             </div>
+
         );
 
     }
@@ -208,6 +308,7 @@ const BkashCheckout = () => {
     if (success) {
 
         return (
+
             <div className="min-h-screen bg-white flex items-center justify-center">
 
                 <div className="w-full max-w-[480px] text-center px-8">
@@ -218,13 +319,16 @@ const BkashCheckout = () => {
                         className="w-64 mx-auto mb-8"
                     />
 
+
                     <div className="text-[#e2136e] text-3xl font-semibold">
                         Order placed successfully
                     </div>
 
+
                     <p className="text-gray-500 mt-4">
                         Your payment was successful.
                     </p>
+
 
                     <p className="text-gray-400 text-sm mt-2">
                         This window will close automatically.
@@ -233,6 +337,7 @@ const BkashCheckout = () => {
                 </div>
 
             </div>
+
         );
 
     }
@@ -349,6 +454,7 @@ const BkashCheckout = () => {
                                             /^(\d*\.\d{0,2}).*$/,
                                             "$1"
                                         );
+
 
                                 setPaymentAmount(value);
 

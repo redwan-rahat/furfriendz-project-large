@@ -97,15 +97,7 @@ const AdminOrders = () => {
         let filtered = [...orders];
 
 
-        if (activeTab === "pending") {
-
-            filtered = filtered.filter(
-                order => order.status === "pending"
-            );
-
-        }
-
-        else if (activeTab === "confirmed") {
+        if (activeTab === "confirmed") {
 
             filtered = filtered.filter(
                 order => order.status === "confirmed"
@@ -245,10 +237,6 @@ const AdminOrders = () => {
             label: "All"
         },
         {
-            id: "pending",
-            label: "Pending"
-        },
-        {
             id: "confirmed",
             label: "Confirmed"
         },
@@ -262,7 +250,7 @@ const AdminOrders = () => {
         },
         {
             id: "cancelled",
-            label: "Cancelled"
+            label: "Cancelled / Refunded"
         }
     ];
 
@@ -519,7 +507,10 @@ const AdminOrders = () => {
                                                 ${getStatusStyle(order.status)}
                                             `}
                                         >
-                                            {order.status}
+                                            {order.status === "cancelled"
+                                                ? "Cancelled / Refunded"
+                                                : order.status
+                                            }
                                         </span>
 
                                     </div>

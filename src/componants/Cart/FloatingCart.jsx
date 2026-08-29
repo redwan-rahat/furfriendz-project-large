@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { AuthContex } from "../AuthProvider/AuthProvider";
 
 const FloatingCart = () => {
@@ -15,7 +15,9 @@ const FloatingCart = () => {
         user
     } = useContext(AuthContex);
 
+
     const [checkoutOpen, setCheckoutOpen] = useState(false);
+
 
     const [checkoutData, setCheckoutData] = useState({
         full_name: '',
@@ -25,14 +27,12 @@ const FloatingCart = () => {
         cash_on_delivery: false
     });
 
+
     const [myCart, setMyCart] = useState({
         pets: [],
         products: [],
         vaccines: []
     });
-
-
-    const navigate = useNavigate();
 
 
     // --------------------------------
@@ -78,6 +78,24 @@ const FloatingCart = () => {
     const products = myCart?.products || [];
     const vaccines = myCart?.vaccines || [];
 
+
+    const allCartItems = [
+        ...pets,
+        ...products,
+        ...vaccines
+    ];
+
+    const hasUnavailableItems = allCartItems.some(
+        item => item.stockStatus === "unavailable"
+    );
+
+    const hasInsufficientItems = allCartItems.some(
+        item => item.isInsufficient
+    );
+
+    const hasStockProblem =
+        hasUnavailableItems ||
+        hasInsufficientItems;
 
     // --------------------------------
     // ITEM COUNTS
@@ -163,6 +181,37 @@ const FloatingCart = () => {
 
 
     // --------------------------------
+    // STOCK MESSAGE
+    // --------------------------------
+
+    const getStockMessage = (item) => {
+
+        if (item.stockStatus === "unavailable") {
+
+            return "This item is not available";
+
+        }
+
+
+        if (item.isInsufficient) {
+
+            return `Not enough items available. Only ${item.stock_quantity} available.`;
+
+        }
+
+
+        if (item.stockStatus === "low") {
+
+            return `Only ${item.stock_quantity} left`;
+
+        }
+
+
+        return null;
+    };
+
+
+    // --------------------------------
     // UPDATE ANY CART ITEM
     // --------------------------------
 
@@ -170,10 +219,12 @@ const FloatingCart = () => {
 
         if (quantity < 1) return;
 
+
         const success = await handleCartQuantity(
             cartId,
             quantity
         );
+
 
         if (!success) return;
 
@@ -209,6 +260,7 @@ const FloatingCart = () => {
 
 
         await handleTotalCarts();
+
     };
 
 
@@ -219,6 +271,7 @@ const FloatingCart = () => {
     const deleteItem = async (cartId) => {
 
         const success = await handleCartDelete(cartId);
+
 
         if (!success) return;
 
@@ -239,6 +292,7 @@ const FloatingCart = () => {
 
 
         await handleTotalCarts();
+
     };
 
 
@@ -252,6 +306,7 @@ const FloatingCart = () => {
             name,
             value
         } = e.target;
+
 
         setCheckoutData(prev => ({
             ...prev,
@@ -286,6 +341,75 @@ const FloatingCart = () => {
 
 
         // -----------------------------
+        // REFRESH STOCK BEFORE CHECKOUT
+        // -----------------------------
+
+        const updatedCart = await handleGetCart();
+
+
+        if (!updatedCart) {
+            return;
+        }
+
+
+        setMyCart(updatedCart);
+
+
+        const freshPets =
+            updatedCart.pets || [];
+
+        const freshProducts =
+            updatedCart.products || [];
+
+        const freshVaccines =
+            updatedCart.vaccines || [];
+
+
+        const freshCart = {
+            pets: freshPets,
+            products: freshProducts,
+            vaccines: freshVaccines
+        };
+
+
+        // -----------------------------
+        // CHECK FOR STOCK PROBLEMS
+        // -----------------------------
+
+        const allItems = [
+            ...freshPets,
+            ...freshProducts,
+            ...freshVaccines
+        ];
+
+
+        const unavailableItem =
+            allItems.find(
+                item =>
+                    item.stockStatus === "unavailable"
+            );
+
+
+        if (unavailableItem) {
+
+            return;
+        }
+
+
+        const insufficientItem =
+            allItems.find(
+                item =>
+                    item.isInsufficient
+            );
+
+
+        if (insufficientItem) {
+
+            return;
+        }
+
+
+        // -----------------------------
         // CASH ON DELIVERY
         // -----------------------------
 
@@ -293,16 +417,14 @@ const FloatingCart = () => {
 
             const success = await handleCheckout(
                 checkoutData,
-                {
-                    pets,
-                    products,
-                    vaccines
-                }
+                freshCart
             );
+
 
             if (success) {
 
                 setCheckoutOpen(false);
+
 
                 setCheckoutData({
                     full_name: '',
@@ -312,14 +434,30 @@ const FloatingCart = () => {
                     cash_on_delivery: false
                 });
 
-                const updatedCart = await handleGetCart();
 
-                if (updatedCart) {
-                    setMyCart(updatedCart);
+                const finalCart =
+                    await handleGetCart();
+
+
+                if (finalCart) {
+
+                    setMyCart(finalCart);
+
+                } else {
+
+                    setMyCart({
+                        pets: [],
+                        products: [],
+                        vaccines: []
+                    });
+
                 }
 
+
                 await handleTotalCarts();
+
             }
+
 
             return;
         }
@@ -330,23 +468,32 @@ const FloatingCart = () => {
         // -----------------------------
 
         const checkoutPayload = {
+
             checkoutData,
-            pets,
-            products,
-            vaccines,
+
+            pets: freshPets,
+
+            products: freshProducts,
+
+            vaccines: freshVaccines,
+
             checkoutTotal
+
         };
+
 
         localStorage.setItem(
             'furfriendz_bkash_checkout',
             JSON.stringify(checkoutPayload)
         );
 
+
         window.open(
             '/bkash-checkout',
             '_blank',
             'noopener,noreferrer'
         );
+
     };
 
 
@@ -361,6 +508,10 @@ const FloatingCart = () => {
 
     };
 
+
+    // --------------------------------
+    // BKASH SUCCESS LISTENER
+    // --------------------------------
 
     useEffect(() => {
 
@@ -379,7 +530,9 @@ const FloatingCart = () => {
             setCheckoutOpen(false);
 
 
-            const updatedCart = await handleGetCart();
+            const updatedCart =
+                await handleGetCart();
+
 
             if (updatedCart) {
 
@@ -478,7 +631,6 @@ const FloatingCart = () => {
                 `}
             >
 
-
                 {/* -------------------------------- */}
                 {/* HEADER */}
                 {/* -------------------------------- */}
@@ -546,11 +698,9 @@ const FloatingCart = () => {
                     "
                 >
 
-
                     {!checkoutOpen ? (
 
                         <>
-
 
                             {/* ================================= */}
                             {/* PETS */}
@@ -610,7 +760,6 @@ const FloatingCart = () => {
 
                                                 <div className="flex gap-3">
 
-
                                                     <NavLink
                                                         to={`/details/pet/${item.pet_id}`}
                                                         onClick={() =>
@@ -639,19 +788,47 @@ const FloatingCart = () => {
                                                             {item.breed}
                                                         </h3>
 
+
                                                         <p className="text-sm text-primary/55">
                                                             {item.category}
                                                         </p>
+
 
                                                         <p className="text-second text-sm mt-1 font-medium">
                                                             ৳{Number(item.price || 0).toFixed(2)}
                                                         </p>
 
 
+                                                        {/* STOCK MESSAGE */}
+
+                                                        {getStockMessage(item) && (
+
+                                                            <p
+                                                                className={`
+                                                                    text-xs
+                                                                    mt-1
+                                                                    ${item.stockStatus === "low" &&
+                                                                        !item.isInsufficient
+                                                                        ? "text-orange-600"
+                                                                        : "text-red-500"
+                                                                    }
+                                                                `}
+                                                            >
+                                                                {getStockMessage(item)}
+                                                            </p>
+
+                                                        )}
+
+
+                                                        {/* QUANTITY */}
+
                                                         <div className="flex items-center gap-2 mt-2">
 
                                                             <button
                                                                 type="button"
+                                                                disabled={
+                                                                    item.stockStatus === "unavailable"
+                                                                }
                                                                 onClick={() =>
                                                                     updateQuantity(
                                                                         item.cart_id,
@@ -672,6 +849,10 @@ const FloatingCart = () => {
                                                                     hover:bg-second
                                                                     hover:text-white
                                                                     transition-all
+                                                                    disabled:opacity-40
+                                                                    disabled:cursor-not-allowed
+                                                                    disabled:hover:bg-white
+                                                                    disabled:hover:text-primary
                                                                 "
                                                             >
                                                                 -
@@ -685,6 +866,11 @@ const FloatingCart = () => {
 
                                                             <button
                                                                 type="button"
+                                                                disabled={
+                                                                    item.stockStatus === "unavailable" ||
+                                                                    Number(item.quantity) >=
+                                                                    Number(item.stock_quantity || 0)
+                                                                }
                                                                 onClick={() =>
                                                                     updateQuantity(
                                                                         item.cart_id,
@@ -702,6 +888,10 @@ const FloatingCart = () => {
                                                                     hover:bg-second
                                                                     hover:text-white
                                                                     transition-all
+                                                                    disabled:opacity-40
+                                                                    disabled:cursor-not-allowed
+                                                                    disabled:hover:bg-white
+                                                                    disabled:hover:text-primary
                                                                 "
                                                             >
                                                                 +
@@ -839,19 +1029,47 @@ const FloatingCart = () => {
                                                             {item.product_name}
                                                         </h3>
 
+
                                                         <p className="text-sm text-primary/55">
                                                             {item.type}
                                                         </p>
 
+
                                                         <p className="text-second text-sm mt-1 font-medium">
-                                                           ৳{Number(item.price || 0).toFixed(2)}
+                                                            ৳{Number(item.price || 0).toFixed(2)}
                                                         </p>
 
+
+                                                        {/* STOCK MESSAGE */}
+
+                                                        {getStockMessage(item) && (
+
+                                                            <p
+                                                                className={`
+                                                                    text-xs
+                                                                    mt-1
+                                                                    ${item.stockStatus === "low" &&
+                                                                        !item.isInsufficient
+                                                                        ? "text-orange-600"
+                                                                        : "text-red-500"
+                                                                    }
+                                                                `}
+                                                            >
+                                                                {getStockMessage(item)}
+                                                            </p>
+
+                                                        )}
+
+
+                                                        {/* QUANTITY */}
 
                                                         <div className="flex items-center gap-2 mt-2">
 
                                                             <button
                                                                 type="button"
+                                                                disabled={
+                                                                    item.stockStatus === "unavailable"
+                                                                }
                                                                 onClick={() =>
                                                                     updateQuantity(
                                                                         item.cart_id,
@@ -872,6 +1090,10 @@ const FloatingCart = () => {
                                                                     hover:bg-second
                                                                     hover:text-white
                                                                     transition-all
+                                                                    disabled:opacity-40
+                                                                    disabled:cursor-not-allowed
+                                                                    disabled:hover:bg-white
+                                                                    disabled:hover:text-primary
                                                                 "
                                                             >
                                                                 -
@@ -885,6 +1107,11 @@ const FloatingCart = () => {
 
                                                             <button
                                                                 type="button"
+                                                                disabled={
+                                                                    item.stockStatus === "unavailable" ||
+                                                                    Number(item.quantity) >=
+                                                                    Number(item.stock_quantity || 0)
+                                                                }
                                                                 onClick={() =>
                                                                     updateQuantity(
                                                                         item.cart_id,
@@ -902,6 +1129,10 @@ const FloatingCart = () => {
                                                                     hover:bg-second
                                                                     hover:text-white
                                                                     transition-all
+                                                                    disabled:opacity-40
+                                                                    disabled:cursor-not-allowed
+                                                                    disabled:hover:bg-white
+                                                                    disabled:hover:text-primary
                                                                 "
                                                             >
                                                                 +
@@ -1039,19 +1270,47 @@ const FloatingCart = () => {
                                                             {item.vaccine_name}
                                                         </h3>
 
+
                                                         <p className="text-sm text-primary/55">
                                                             {item.type}
                                                         </p>
+
 
                                                         <p className="text-second text-sm mt-1 font-medium">
                                                             ৳{Number(item.price || 0).toFixed(2)}
                                                         </p>
 
 
+                                                        {/* STOCK MESSAGE */}
+
+                                                        {getStockMessage(item) && (
+
+                                                            <p
+                                                                className={`
+                                                                    text-xs
+                                                                    mt-1
+                                                                    ${item.stockStatus === "low" &&
+                                                                        !item.isInsufficient
+                                                                        ? "text-orange-600"
+                                                                        : "text-red-500"
+                                                                    }
+                                                                `}
+                                                            >
+                                                                {getStockMessage(item)}
+                                                            </p>
+
+                                                        )}
+
+
+                                                        {/* QUANTITY */}
+
                                                         <div className="flex items-center gap-2 mt-2">
 
                                                             <button
                                                                 type="button"
+                                                                disabled={
+                                                                    item.stockStatus === "unavailable"
+                                                                }
                                                                 onClick={() =>
                                                                     updateQuantity(
                                                                         item.cart_id,
@@ -1072,6 +1331,10 @@ const FloatingCart = () => {
                                                                     hover:bg-second
                                                                     hover:text-white
                                                                     transition-all
+                                                                    disabled:opacity-40
+                                                                    disabled:cursor-not-allowed
+                                                                    disabled:hover:bg-white
+                                                                    disabled:hover:text-primary
                                                                 "
                                                             >
                                                                 -
@@ -1085,6 +1348,11 @@ const FloatingCart = () => {
 
                                                             <button
                                                                 type="button"
+                                                                disabled={
+                                                                    item.stockStatus === "unavailable" ||
+                                                                    Number(item.quantity) >=
+                                                                    Number(item.stock_quantity || 0)
+                                                                }
                                                                 onClick={() =>
                                                                     updateQuantity(
                                                                         item.cart_id,
@@ -1102,6 +1370,10 @@ const FloatingCart = () => {
                                                                     hover:bg-second
                                                                     hover:text-white
                                                                     transition-all
+                                                                    disabled:opacity-40
+                                                                    disabled:cursor-not-allowed
+                                                                    disabled:hover:bg-white
+                                                                    disabled:hover:text-primary
                                                                 "
                                                             >
                                                                 +
@@ -1185,30 +1457,36 @@ const FloatingCart = () => {
                                         setCheckoutOpen(true)
                                     }
                                     disabled={
-                                        pets.length === 0 &&
-                                        products.length === 0 &&
-                                        vaccines.length === 0
+                                        allCartItems.length === 0 ||
+                                        hasStockProblem
                                     }
                                     className="
-                                        w-full
-                                        mt-5
-                                        py-3
-                                        rounded-xl
-                                        bg-primary
-                                        text-white
-                                        font-semibold
-                                        shadow-[0_5px_15px_rgba(0,103,105,0.18)]
-                                        hover:bg-second
-                                        hover:-translate-y-0.5
-                                        hover:shadow-[0_8px_20px_rgba(0,103,105,0.22)]
-                                        transition-all
-                                        duration-200
-                                        disabled:opacity-40
-                                        disabled:cursor-not-allowed
-                                        disabled:hover:translate-y-0
-                                    "
+        w-full
+        mt-5
+        py-3
+        rounded-xl
+        bg-primary
+        text-white
+        font-semibold
+        shadow-[0_5px_15px_rgba(0,103,105,0.18)]
+        hover:bg-second
+        hover:-translate-y-0.5
+        hover:shadow-[0_8px_20px_rgba(0,103,105,0.22)]
+        transition-all
+        duration-200
+        disabled:opacity-40
+        disabled:cursor-not-allowed
+        disabled:hover:bg-primary
+        disabled:hover:translate-y-0
+        disabled:hover:shadow-[0_5px_15px_rgba(0,103,105,0.18)]
+    "
                                 >
-                                    Checkout
+                                    {hasUnavailableItems
+                                        ? "Some Items Unavailable"
+                                        : hasInsufficientItems
+                                            ? "Some Items Not Available"
+                                            : "Checkout"
+                                    }
                                 </button>
 
                             </div>
@@ -1225,7 +1503,6 @@ const FloatingCart = () => {
                             onSubmit={submitCheckout}
                             className="space-y-5"
                         >
-
 
                             <div>
 

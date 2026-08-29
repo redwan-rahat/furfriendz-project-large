@@ -166,7 +166,10 @@ const AdminOrderDetails = ({
                                     ${getStatusStyle(order.status)}
                                 `}
                             >
-                                {order.status}
+                                {order.status === "cancelled"
+                                    ? "Cancelled / Refunded"
+                                    : order.status
+                                }
                             </span>
 
                         </div>
@@ -593,25 +596,21 @@ const AdminOrderDetails = ({
                                     onUpdateStatus(e.target.value)
                                 }
                                 className="
-                w-full
-                px-3
-                py-2.5
-                rounded-lg
-                border
-                border-slate-200
-                bg-white
-                text-sm
-                text-slate-800
-                outline-none
-                focus:border-emerald-500
-                focus:ring-1
-                focus:ring-emerald-500
-            "
+        w-full
+        px-3
+        py-2.5
+        rounded-lg
+        border
+        border-slate-200
+        bg-white
+        text-sm
+        text-slate-800
+        outline-none
+        focus:border-emerald-500
+        focus:ring-1
+        focus:ring-emerald-500
+    "
                             >
-
-                                <option value="pending">
-                                    Pending
-                                </option>
 
                                 <option value="confirmed">
                                     Confirmed
@@ -622,7 +621,7 @@ const AdminOrderDetails = ({
                                 </option>
 
                                 <option value="cancelled">
-                                    Cancelled
+                                    Cancelled / Refunded
                                 </option>
 
                             </select>

@@ -173,7 +173,9 @@ const DeliveryOrderDetails = ({
 
                                 {order.status === "confirmed"
                                     ? "Delivery Pending"
-                                    : order.status
+                                    : order.status === "cancelled"
+                                        ? "Cancelled / Refunded"
+                                        : order.status
                                 }
 
                             </span>
@@ -643,7 +645,9 @@ const DeliveryOrderDetails = ({
                                 >
                                     {order.status === "confirmed"
                                         ? "Delivery Pending"
-                                        : order.status
+                                        : order.status === "cancelled"
+                                            ? "Cancelled / Refunded"
+                                            : order.status
                                     }
                                 </span>
 

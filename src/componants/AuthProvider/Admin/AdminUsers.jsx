@@ -8,7 +8,8 @@ const AdminUsers = () => {
         adminUsers,
         handleGetUsers,
         handleGetUserDetails,
-        handleMakeDelivery
+        handleMakeDelivery,
+        handleRemoveDelivery
     } = useContext(AuthContex);
 
 
@@ -18,6 +19,7 @@ const AdminUsers = () => {
     const [loadingDetails, setLoadingDetails] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
     const [makingDelivery, setMakingDelivery] = useState(false);
+    const [removingDelivery, setRemovingDelivery] = useState(false);
 
 
     useEffect(() => {
@@ -111,6 +113,47 @@ const AdminUsers = () => {
         setMakingDelivery(false);
     };
 
+
+    const handleRemoveDeliveryStatus = async () => {
+
+        if (!selectedUser) return;
+
+        if (!selectedUser.is_delivery) return;
+
+
+        const confirmed = window.confirm(
+            `Remove delivery status from ${selectedUser.full_name || "this user"}?`
+        );
+
+        if (!confirmed) return;
+
+
+        setRemovingDelivery(true);
+
+
+        const updated = await handleRemoveDelivery(
+            selectedUser.user_id
+        );
+
+
+        if (updated) {
+
+            setSelectedUser(updated);
+
+            setUserDetails(prev => {
+
+                if (!prev) return prev;
+
+                return {
+                    ...prev,
+                    user: updated
+                };
+            });
+        }
+
+
+        setRemovingDelivery(false);
+    };
 
     // --------------------------------
     // DATE
@@ -898,10 +941,9 @@ const AdminUsers = () => {
                                                     text-xs
                                                     font-medium
                                                     border
-                                                    ${
-                                                        userDetails.user.is_admin
-                                                            ? "bg-purple-50 text-purple-700 border-purple-200"
-                                                            : "bg-slate-50 text-slate-500 border-slate-200"
+                                                    ${userDetails.user.is_admin
+                                                        ? "bg-purple-50 text-purple-700 border-purple-200"
+                                                        : "bg-slate-50 text-slate-500 border-slate-200"
                                                     }
                                                 `}>
                                                     {userDetails.user.is_admin
@@ -918,10 +960,9 @@ const AdminUsers = () => {
                                                     text-xs
                                                     font-medium
                                                     border
-                                                    ${
-                                                        userDetails.user.is_delivery
-                                                            ? "bg-emerald-50 text-emerald-700 border-emerald-200"
-                                                            : "bg-slate-50 text-slate-500 border-slate-200"
+                                                    ${userDetails.user.is_delivery
+                                                        ? "bg-emerald-50 text-emerald-700 border-emerald-200"
+                                                        : "bg-slate-50 text-slate-500 border-slate-200"
                                                     }
                                                 `}>
                                                     {userDetails.user.is_delivery
@@ -933,29 +974,57 @@ const AdminUsers = () => {
                                             </div>
 
 
-                                            {!userDetails.user.is_delivery && (
+                                            {!userDetails.user.is_delivery ? (
 
                                                 <button
                                                     onClick={handleDelivery}
-                                                    disabled={makingDelivery}
+                                                    disabled={makingDelivery || removingDelivery}
                                                     className="
-                                                        w-full
-                                                        mt-4
-                                                        px-4
-                                                        py-2.5
-                                                        rounded-xl
-                                                        bg-emerald-500
-                                                        text-white
-                                                        text-sm
-                                                        font-medium
-                                                        hover:bg-emerald-600
-                                                        transition
-                                                        disabled:opacity-50
-                                                    "
+            w-full
+            mt-4
+            px-4
+            py-2.5
+            rounded-xl
+            bg-emerald-500
+            text-white
+            text-sm
+            font-medium
+            hover:bg-emerald-600
+            transition
+            disabled:opacity-50
+        "
                                                 >
                                                     {makingDelivery
                                                         ? "Making Delivery..."
                                                         : "Make Delivery"
+                                                    }
+                                                </button>
+
+                                            ) : (
+
+                                                <button
+                                                    onClick={handleRemoveDeliveryStatus}
+                                                    disabled={makingDelivery || removingDelivery}
+                                                    className="
+            w-full
+            mt-4
+            px-4
+            py-2.5
+            rounded-xl
+            border
+            border-red-200
+            bg-red-50
+            text-red-600
+            text-sm
+            font-medium
+            hover:bg-red-100
+            transition
+            disabled:opacity-50
+        "
+                                                >
+                                                    {removingDelivery
+                                                        ? "Removing Delivery..."
+                                                        : "Remove Delivery"
                                                     }
                                                 </button>
 

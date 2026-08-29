@@ -313,7 +313,20 @@ const AuthProvider = ({ children }) => {
 
     }
 
+    const getStockStatus = (stockQuantity) => {
 
+        const stock = Number(stockQuantity || 0)
+
+        if (stock <= 0) {
+            return "unavailable"
+        }
+
+        if (stock < 3) {
+            return "low"
+        }
+
+        return "available"
+    }
 
 
     const handleCartIN = async (type, id) => {
@@ -321,6 +334,71 @@ const AuthProvider = ({ children }) => {
         console.log('handlecartid', type, id)
 
         if (!user) return false
+
+
+        // -------------------------
+        // GET CURRENT ITEM STOCK
+        // -------------------------
+
+        let table
+        let idColumn
+
+        if (type === 'pet') {
+
+            table = 'pets'
+            idColumn = 'pet_id'
+
+        } else if (type === 'product') {
+
+            table = 'products'
+            idColumn = 'product_id'
+
+        } else if (type === 'vaccine') {
+
+            table = 'vaccines'
+            idColumn = 'vaccine_id'
+
+        } else {
+
+            return false
+        }
+
+
+        const { data: item, error: itemError } = await supabase
+            .from(table)
+            .select(`${idColumn}, stock_quantity`)
+            .eq(idColumn, id)
+            .single()
+
+
+        if (itemError || !item) {
+
+            console.log('Stock check error:', itemError)
+
+            setVisible(true)
+            setMessage('Item is not available')
+            setType('error')
+
+            return false
+        }
+
+
+        const stock = Number(item.stock_quantity || 0)
+
+
+        if (stock <= 0) {
+
+            setVisible(true)
+            setMessage('Item is not available')
+            setType('error')
+
+            return false
+        }
+
+
+        // -------------------------
+        // CHECK EXISTING CART ITEM
+        // -------------------------
 
         const { data, error } = await supabase
             .from('unified_cart')
@@ -330,23 +408,49 @@ const AuthProvider = ({ children }) => {
             .eq('item_id', id)
             .maybeSingle()
 
+
         if (error) {
+
             console.log('Cart check error:', error)
+
             return false
         }
 
+
         if (data) {
+
+            const newQuantity =
+                Number(data.quantity) + 1
+
+
+            if (newQuantity > stock) {
+
+                setVisible(true)
+                setMessage(
+                    `Not enough items available. Only ${stock} available.`
+                )
+                setType('error')
+
+                return false
+            }
+
 
             const { error: updateError } = await supabase
                 .from('unified_cart')
                 .update({
-                    quantity: Number(data.quantity) + 1
+                    quantity: newQuantity
                 })
                 .eq('cart_id', data.cart_id)
                 .eq('user_id', user.uid)
 
+
             if (updateError) {
-                console.log('Cart quantity update error:', updateError)
+
+                console.log(
+                    'Cart quantity update error:',
+                    updateError
+                )
+
                 return false
             }
 
@@ -363,18 +467,27 @@ const AuthProvider = ({ children }) => {
                     }
                 ])
 
+
             if (insertError) {
-                console.log('Cart insert error:', insertError)
+
+                console.log(
+                    'Cart insert error:',
+                    insertError
+                )
+
                 return false
             }
         }
 
+
         await handleGetCart()
         await handleTotalCarts()
+
 
         setVisible(true)
         setMessage('Successfully Added To Cart')
         setType('success')
+
 
         return true
     }
@@ -384,11 +497,19 @@ const AuthProvider = ({ children }) => {
 
     const handleGetCart = async () => {
 
-        if (!user) return {
-            pets: [],
-            products: [],
-            vaccines: []
+        if (!user) {
+
+            return {
+                pets: [],
+                products: [],
+                vaccines: []
+            }
         }
+
+
+        // -------------------------
+        // GET CART
+        // -------------------------
 
         const { data: cart, error: cartError } = await supabase
             .from('unified_cart')
@@ -396,10 +517,17 @@ const AuthProvider = ({ children }) => {
             .eq('user_id', user.uid)
             .order('created_at', { ascending: true })
 
+
         if (cartError) {
-            console.log('Unified cart error:', cartError)
+
+            console.log(
+                'Unified cart error:',
+                cartError
+            )
+
             return
         }
+
 
         const petsCart = (cart || []).filter(
             item => item.item_type === 'pet'
@@ -418,9 +546,12 @@ const AuthProvider = ({ children }) => {
         // PETS
         // -------------------------
 
-        const petIds = petsCart.map(item => item.item_id)
+        const petIds = petsCart.map(
+            item => item.item_id
+        )
 
         let pets = []
+
 
         if (petIds.length > 0) {
 
@@ -429,10 +560,17 @@ const AuthProvider = ({ children }) => {
                 .select('*')
                 .in('pet_id', petIds)
 
+
             if (error) {
-                console.log('Pets fetch error:', error)
+
+                console.log(
+                    'Pets fetch error:',
+                    error
+                )
+
                 return
             }
+
 
             pets = data || []
         }
@@ -442,9 +580,12 @@ const AuthProvider = ({ children }) => {
         // PRODUCTS
         // -------------------------
 
-        const productIds = productsCart.map(item => item.item_id)
+        const productIds = productsCart.map(
+            item => item.item_id
+        )
 
         let products = []
+
 
         if (productIds.length > 0) {
 
@@ -453,10 +594,17 @@ const AuthProvider = ({ children }) => {
                 .select('*')
                 .in('product_id', productIds)
 
+
             if (error) {
-                console.log('Products fetch error:', error)
+
+                console.log(
+                    'Products fetch error:',
+                    error
+                )
+
                 return
             }
+
 
             products = data || []
         }
@@ -466,9 +614,12 @@ const AuthProvider = ({ children }) => {
         // VACCINES
         // -------------------------
 
-        const vaccineIds = vaccinesCart.map(item => item.item_id)
+        const vaccineIds = vaccinesCart.map(
+            item => item.item_id
+        )
 
         let vaccines = []
+
 
         if (vaccineIds.length > 0) {
 
@@ -477,17 +628,24 @@ const AuthProvider = ({ children }) => {
                 .select('*')
                 .in('vaccine_id', vaccineIds)
 
+
             if (error) {
-                console.log('Vaccines fetch error:', error)
+
+                console.log(
+                    'Vaccines fetch error:',
+                    error
+                )
+
                 return
             }
+
 
             vaccines = data || []
         }
 
 
         // -------------------------
-        // MERGE CART + ITEM DATA
+        // MERGE PET CART
         // -------------------------
 
         const petCartData = petsCart.map(cartItem => {
@@ -496,38 +654,88 @@ const AuthProvider = ({ children }) => {
                 pet => pet.pet_id === cartItem.item_id
             )
 
+
+            const stock = Number(
+                pet?.stock_quantity || 0
+            )
+
+
             return {
                 ...cartItem,
-                ...pet
+                ...pet,
+
+                stockStatus:
+                    getStockStatus(stock),
+
+                isInsufficient:
+                    Number(cartItem.quantity || 0) > stock
             }
         })
 
+
+        // -------------------------
+        // MERGE PRODUCT CART
+        // -------------------------
 
         const productCartData = productsCart.map(cartItem => {
 
             const product = products.find(
-                product => product.product_id === cartItem.item_id
+                product =>
+                    product.product_id === cartItem.item_id
             )
+
+
+            const stock = Number(
+                product?.stock_quantity || 0
+            )
+
 
             return {
                 ...cartItem,
-                ...product
+                ...product,
+
+                stockStatus:
+                    getStockStatus(stock),
+
+                isInsufficient:
+                    Number(cartItem.quantity || 0) > stock
             }
         })
 
+
+        // -------------------------
+        // MERGE VACCINE CART
+        // -------------------------
 
         const vaccineCartData = vaccinesCart.map(cartItem => {
 
             const vaccine = vaccines.find(
-                vaccine => vaccine.vaccine_id === cartItem.item_id
+                vaccine =>
+                    vaccine.vaccine_id === cartItem.item_id
             )
+
+
+            const stock = Number(
+                vaccine?.stock_quantity || 0
+            )
+
 
             return {
                 ...cartItem,
-                ...vaccine
+                ...vaccine,
+
+                stockStatus:
+                    getStockStatus(stock),
+
+                isInsufficient:
+                    Number(cartItem.quantity || 0) > stock
             }
         })
 
+
+        // -------------------------
+        // FINAL CART
+        // -------------------------
 
         const result = {
             pets: petCartData,
@@ -535,7 +743,9 @@ const AuthProvider = ({ children }) => {
             vaccines: vaccineCartData
         }
 
+
         setmyCart(result)
+
 
         return result
     }
@@ -577,6 +787,119 @@ const AuthProvider = ({ children }) => {
 
         if (quantity < 1) return false
 
+
+        // -------------------------
+        // GET CART ITEM
+        // -------------------------
+
+        const { data: cartItem, error: cartError } = await supabase
+            .from('unified_cart')
+            .select('item_type, item_id')
+            .eq('cart_id', cart_id)
+            .eq('user_id', user.uid)
+            .single()
+
+
+        if (cartError || !cartItem) {
+
+            console.log(
+                'Cart item fetch error:',
+                cartError
+            )
+
+            return false
+        }
+
+
+        // -------------------------
+        // DETERMINE TABLE
+        // -------------------------
+
+        let table
+        let idColumn
+
+        if (cartItem.item_type === 'pet') {
+
+            table = 'pets'
+            idColumn = 'pet_id'
+
+        } else if (cartItem.item_type === 'product') {
+
+            table = 'products'
+            idColumn = 'product_id'
+
+        } else if (cartItem.item_type === 'vaccine') {
+
+            table = 'vaccines'
+            idColumn = 'vaccine_id'
+
+        } else {
+
+            return false
+        }
+
+
+        // -------------------------
+        // GET CURRENT STOCK
+        // -------------------------
+
+        const { data: item, error: itemError } = await supabase
+            .from(table)
+            .select('stock_quantity')
+            .eq(idColumn, cartItem.item_id)
+            .single()
+
+
+        if (itemError || !item) {
+
+            console.log(
+                'Stock check error:',
+                itemError
+            )
+
+            return false
+        }
+
+
+        const stock = Number(
+            item.stock_quantity || 0
+        )
+
+
+        // -------------------------
+        // UNAVAILABLE
+        // -------------------------
+
+        if (stock <= 0) {
+
+            setVisible(true)
+            setMessage('Item is not available')
+            setType('error')
+
+            return false
+        }
+
+
+        // -------------------------
+        // TOO MANY
+        // -------------------------
+
+        if (quantity > stock) {
+
+            setVisible(true)
+            setMessage(
+                `Not enough items available. Only ${stock} available.`
+            )
+            setType('error')
+
+            return false
+        }
+
+
+        // -------------------------
+        // UPDATE CART
+        // -------------------------
+
         const { error } = await supabase
             .from('unified_cart')
             .update({
@@ -585,13 +908,21 @@ const AuthProvider = ({ children }) => {
             .eq('cart_id', cart_id)
             .eq('user_id', user.uid)
 
+
         if (error) {
-            console.log('Cart quantity update error:', error)
+
+            console.log(
+                'Cart quantity update error:',
+                error
+            )
+
             return false
         }
 
+
         await handleGetCart()
         await handleTotalCarts()
+
 
         return true
     }
@@ -702,15 +1033,19 @@ const AuthProvider = ({ children }) => {
             cash_on_delivery
         } = checkoutData
 
+
         if (!full_name || !email || !shipping_address) {
             return false
         }
+
 
         if (!cash_on_delivery && !transaction_id) {
             return false
         }
 
+
         const allItems = [
+
             ...(pets || []).map(item => ({
                 item_type: 'pet',
                 item_id: item.pet_id,
@@ -734,16 +1069,133 @@ const AuthProvider = ({ children }) => {
                 price: Number(item.price || 0),
                 cart_id: item.cart_id
             }))
+
         ]
+
 
         if (allItems.length === 0) {
             return false
         }
 
 
-        // -------------------------
+        // ==========================================
+        // FINAL STOCK CHECK
+        // ==========================================
+
+        const stockItems = []
+
+
+        for (const item of allItems) {
+
+            let table
+            let idColumn
+            let nameColumn
+
+
+            if (item.item_type === 'pet') {
+
+                table = 'pets'
+                idColumn = 'pet_id'
+                nameColumn = 'breed'
+
+            }
+
+            else if (item.item_type === 'product') {
+
+                table = 'products'
+                idColumn = 'product_id'
+                nameColumn = 'product_name'
+
+            }
+
+            else if (item.item_type === 'vaccine') {
+
+                table = 'vaccines'
+                idColumn = 'vaccine_id'
+                nameColumn = 'vaccine_name'
+
+            }
+
+            else {
+
+                setVisible(true)
+                setMessage('Invalid item type')
+                setType('error')
+
+                return false
+            }
+
+
+            const { data: stockItem, error: stockError } =
+                await supabase
+                    .from(table)
+                    .select(`${idColumn}, ${nameColumn}, stock_quantity`)
+                    .eq(idColumn, item.item_id)
+                    .single()
+
+
+            if (stockError || !stockItem) {
+
+                console.log(
+                    'Stock check error:',
+                    stockError
+                )
+
+                setVisible(true)
+                setMessage(
+                    'An item in your cart is no longer available.'
+                )
+                setType('error')
+
+                return false
+            }
+
+
+            const stock = Number(
+                stockItem.stock_quantity || 0
+            )
+
+
+            if (stock <= 0) {
+
+                setVisible(true)
+                setMessage(
+                    `${stockItem[nameColumn]} is not available.`
+                )
+                setType('error')
+
+                return false
+            }
+
+
+            if (item.quantity > stock) {
+
+                setVisible(true)
+                setMessage(
+                    `${stockItem[nameColumn]}: only ${stock} available.`
+                )
+                setType('error')
+
+                return false
+            }
+
+
+            // Save the CURRENT stock.
+            // We use this later when decreasing it.
+
+            stockItems.push({
+                ...item,
+                table,
+                idColumn,
+                currentStock: stock
+            })
+
+        }
+
+
+        // ==========================================
         // CALCULATE TOTAL
-        // -------------------------
+        // ==========================================
 
         const subtotal = allItems.reduce(
             (total, item) =>
@@ -752,43 +1204,55 @@ const AuthProvider = ({ children }) => {
             0
         )
 
-        const codFee = cash_on_delivery ? 10 : 0
 
-        const totalAmount = subtotal + codFee
-
-        const payment_method = cash_on_delivery
-            ? 'cod'
-            : 'online'
+        const codFee = cash_on_delivery
+            ? 10
+            : 0
 
 
-        // -------------------------
-        // CREATE ONE ORDER
-        // -------------------------
+        const totalAmount =
+            subtotal + codFee
 
-        const { data: order, error: orderError } = await supabase
-            .from('unified_orders')
-            .insert([
-                {
-                    user_id: user.uid,
-                    full_name,
-                    email,
-                    shipping_address,
-                    transaction_id: cash_on_delivery
-                        ? null
-                        : transaction_id,
-                    payment_method,
-                    subtotal,
-                    cod_fee: codFee,
-                    total_amount: totalAmount,
-                    status: 'pending'
-                }
-            ])
-            .select('order_id')
-            .single()
+
+        const payment_method =
+            cash_on_delivery
+                ? 'cod'
+                : 'online'
+
+
+        // ==========================================
+        // CREATE ORDER
+        // ==========================================
+
+        const { data: order, error: orderError } =
+            await supabase
+                .from('unified_orders')
+                .insert([
+                    {
+                        user_id: user.uid,
+                        full_name,
+                        email,
+                        shipping_address,
+                        transaction_id: cash_on_delivery
+                            ? null
+                            : transaction_id,
+                        payment_method,
+                        subtotal,
+                        cod_fee: codFee,
+                        total_amount: totalAmount,
+                        status: 'confirmed'
+                    }
+                ])
+                .select('order_id')
+                .single()
+
 
         if (orderError) {
 
-            console.log('Unified order error:', orderError)
+            console.log(
+                'Unified order error:',
+                orderError
+            )
 
             setVisible(true)
             setMessage('Failed to place order')
@@ -798,9 +1262,9 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
+        // ==========================================
         // CREATE ORDER ITEMS
-        // -------------------------
+        // ==========================================
 
         const orderItems = allItems.map(item => ({
             order_id: order.order_id,
@@ -810,19 +1274,28 @@ const AuthProvider = ({ children }) => {
             price: item.price
         }))
 
-        const { error: itemError } = await supabase
-            .from('unified_order_items')
-            .insert(orderItems)
+
+        const { error: itemError } =
+            await supabase
+                .from('unified_order_items')
+                .insert(orderItems)
+
 
         if (itemError) {
 
-            console.log('Unified order items error:', itemError)
+            console.log(
+                'Unified order items error:',
+                itemError
+            )
+
 
             // Remove incomplete order
+
             await supabase
                 .from('unified_orders')
                 .delete()
                 .eq('order_id', order.order_id)
+
 
             setVisible(true)
             setMessage('Failed to place order')
@@ -832,19 +1305,81 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
+        // ==========================================
+        // DECREASE STOCK
+        // ==========================================
+
+        for (const item of stockItems) {
+
+            const newStock =
+                item.currentStock - item.quantity
+
+
+            const { error: stockUpdateError } =
+                await supabase
+                    .from(item.table)
+                    .update({
+                        stock_quantity: newStock
+                    })
+                    .eq(item.idColumn, item.item_id)
+
+
+            if (stockUpdateError) {
+
+                console.log(
+                    'Stock update error:',
+                    stockUpdateError
+                )
+
+
+                // ----------------------------------
+                // REMOVE ORDER ITEMS
+                // ----------------------------------
+
+                await supabase
+                    .from('unified_order_items')
+                    .delete()
+                    .eq('order_id', order.order_id)
+
+
+                // ----------------------------------
+                // REMOVE ORDER
+                // ----------------------------------
+
+                await supabase
+                    .from('unified_orders')
+                    .delete()
+                    .eq('order_id', order.order_id)
+
+
+                setVisible(true)
+                setMessage(
+                    'Failed to update item stock. Order was not placed.'
+                )
+                setType('error')
+
+                return false
+            }
+
+        }
+
+
+        // ==========================================
         // DELETE CART ITEMS
-        // -------------------------
+        // ==========================================
 
         const cartIds = allItems.map(
             item => item.cart_id
         )
 
-        const { error: cartDeleteError } = await supabase
-            .from('unified_cart')
-            .delete()
-            .in('cart_id', cartIds)
-            .eq('user_id', user.uid)
+
+        const { error: cartDeleteError } =
+            await supabase
+                .from('unified_cart')
+                .delete()
+                .in('cart_id', cartIds)
+                .eq('user_id', user.uid)
+
 
         if (cartDeleteError) {
 
@@ -853,20 +1388,32 @@ const AuthProvider = ({ children }) => {
                 cartDeleteError
             )
 
+            setVisible(true)
+            setMessage(
+                'Order placed, but cart cleanup failed.'
+            )
+            setType('error')
+
             return false
         }
 
 
-        // -------------------------
+        // ==========================================
         // REFRESH CART
-        // -------------------------
+        // ==========================================
 
         await handleGetCart()
         await handleTotalCarts()
 
+
+        // ==========================================
+        // SUCCESS
+        // ==========================================
+
         setVisible(true)
         setMessage('Order placed successfully')
         setType('success')
+
 
         return true
     }
@@ -1157,7 +1704,6 @@ const AuthProvider = ({ children }) => {
     const handleUpdateOrder = async (order_id, status) => {
 
         const allowedStatuses = [
-            "pending",
             "confirmed",
             "completed",
             "cancelled"
@@ -1781,6 +2327,43 @@ const AuthProvider = ({ children }) => {
         return data
     }
 
+    const handleRemoveDelivery = async (userId) => {
+
+        const { data, error } = await supabase
+            .from("userdata")
+            .update({
+                is_delivery: false,
+                updated_at: new Date().toISOString()
+            })
+            .eq("user_id", userId)
+            .select()
+            .single()
+
+        if (error) {
+
+            console.log("Remove delivery error:", error)
+
+            setVisible(true)
+            setMessage("Failed to remove delivery status")
+            setType("error")
+
+            return false
+        }
+
+        setAdminUsers(prev =>
+            prev.map(user =>
+                user.user_id === userId
+                    ? data
+                    : user
+            )
+        )
+
+        setVisible(true)
+        setMessage("Delivery status removed")
+        setType("success")
+
+        return data
+    }
 
     const handleGetUserDetails = async (userId) => {
 
@@ -2071,6 +2654,7 @@ const AuthProvider = ({ children }) => {
         handleGetUsers,
         handleGetUserDetails,
         handleMakeDelivery,
+        handleRemoveDelivery,
         getUserData,
 
     }

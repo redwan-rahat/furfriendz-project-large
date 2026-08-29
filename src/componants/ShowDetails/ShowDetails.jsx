@@ -99,12 +99,30 @@ const ShowDetails = () => {
         detailsFetch?.description;
 
 
+    // --------------------------------
+    // STOCK STATUS
+    // --------------------------------
+
+    const stockQuantity = Number(
+        detailsFetch?.stock_quantity || 0
+    );
+
+
+    const stockStatus =
+        stockQuantity <= 0
+            ? "unavailable"
+            : stockQuantity < 3
+                ? "low"
+                : "available";
+
+
     const isAvailable =
-        Boolean(detailsFetch?.availability) &&
-        Number(detailsFetch?.stock_quantity) > 0;
+        stockQuantity > 0;
 
 
-    const price = Number(detailsFetch?.price || 0).toFixed(2);
+    const price = Number(
+        detailsFetch?.price || 0
+    ).toFixed(2);
 
 
     // --------------------------------
@@ -254,16 +272,14 @@ const ShowDetails = () => {
                     "
                 >
 
-                    <div
-                      className="space-y-4"
-                    >
+                    <div className="space-y-4">
 
 
                         {/* -------------------------------- */}
                         {/* TITLE */}
                         {/* -------------------------------- */}
 
-                        <div className="">
+                        <div>
 
                             <h1
                                 className="
@@ -278,17 +294,16 @@ const ShowDetails = () => {
                                 {itemName}
                             </h1>
 
+
                             {itemDescription && (
 
                                 <p
                                     className="
                                         mt-4
-                                       
                                         text-primary/65
                                         text-sm
                                         tab:text-base
                                         leading-relaxed
-                                        
                                     "
                                 >
                                     {itemDescription}
@@ -312,7 +327,6 @@ const ShowDetails = () => {
                                 tab:gap-12
                                 p-6
                                 tab:p-10
-                                
                             "
                         >
 
@@ -330,7 +344,6 @@ const ShowDetails = () => {
                                         aspect-square
                                         rounded-full
                                         bg-[#C9E9D2]
-                                        
                                         flex
                                         items-center
                                         justify-center
@@ -396,7 +409,12 @@ const ShowDetails = () => {
                                 >
 
                                     {detailItems
-                                        .filter(item => item.value !== null && item.value !== undefined && item.value !== "")
+                                        .filter(
+                                            item =>
+                                                item.value !== null &&
+                                                item.value !== undefined &&
+                                                item.value !== ""
+                                        )
                                         .map((item) => (
 
                                             <div
@@ -463,41 +481,44 @@ const ShowDetails = () => {
                                                 Availability
                                             </p>
 
+
                                             <p
                                                 className={`
                                                     text-sm
                                                     tab:text-base
                                                     font-semibold
-                                                    ${
-                                                        isAvailable
-                                                            ? "text-second"
+                                                    ${stockStatus === "available"
+                                                        ? "text-second"
+                                                        : stockStatus === "low"
+                                                            ? "text-orange-500"
                                                             : "text-red-500"
                                                     }
                                                 `}
                                             >
-                                                {isAvailable
+
+                                                {stockStatus === "available"
                                                     ? "Available"
-                                                    : "Currently Unavailable"}
+                                                    : stockStatus === "low"
+                                                        ? "Low Stock"
+                                                        : "Unavailable"
+                                                }
+
                                             </p>
 
                                         </div>
 
 
-                                        {detailsFetch?.stock_quantity !== undefined && (
+                                        <div className="text-right">
 
-                                            <div className="text-right">
+                                            <p className="text-xs text-primary/55 font-medium">
+                                                In Stock
+                                            </p>
 
-                                                <p className="text-xs text-primary/55 font-medium">
-                                                    In Stock
-                                                </p>
+                                            <p className="text-sm tab:text-base font-semibold text-primary">
+                                                {stockQuantity}
+                                            </p>
 
-                                                <p className="text-sm tab:text-base font-semibold text-primary">
-                                                    {detailsFetch.stock_quantity}
-                                                </p>
-
-                                            </div>
-
-                                        )}
+                                        </div>
 
                                     </div>
 
@@ -559,16 +580,15 @@ const ShowDetails = () => {
                                             text-base
                                             transition-all
                                             duration-200
-                                            ${
-                                                isAvailable
-                                                    ? `
+                                            ${isAvailable
+                                                ? `
                                                         bg-primary
                                                         text-white
                                                         hover:bg-second
                                                         hover:-translate-y-0.5
                                                         hover:shadow-lg
                                                       `
-                                                    : `
+                                                : `
                                                         bg-gray-200
                                                         text-gray-400
                                                         cursor-not-allowed
@@ -576,9 +596,12 @@ const ShowDetails = () => {
                                             }
                                         `}
                                     >
+
                                         {isAvailable
                                             ? "Add to Cart"
-                                            : "Unavailable"}
+                                            : "Unavailable"
+                                        }
+
                                     </button>
 
                                 </div>
