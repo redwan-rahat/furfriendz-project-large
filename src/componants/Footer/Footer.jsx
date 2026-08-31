@@ -5,7 +5,7 @@ const Footer = () => {
     <div className=" font-page" data-theme='night'>
 
 
-      <footer className="footer bg-base-200 justify-center tab:justify-normal   des:text-base text-base-content pt-32 pb-44 tab:pl-20 lap:pl-32 des:pl-44" >
+      <footer className="footer bg-base-200 justify-center tab:justify-normal   des:text-base text-base-content pt-24 pb-32 tab:pl-20 lap:pl-32 des:pl-44" >
         <aside>
           <img className="w-28 -mt-12 -ml-6" src="https://i.ibb.co.com/84VQ3Vs/Logo-5.webp" alt="" />
           <p className="">
@@ -41,15 +41,18 @@ const Footer = () => {
         <p className="text-center text-sm mb-2">
           © 2024–2026 FurFriendz. All rights reserved.
         </p>
+        <p className="text-sm space-x-1">
+          <span>Designed & Developed by</span>
 
-        <a
-          className="text-center underline text-sm"
-          href="https://redwanrahat.com"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Designed & Developed by Md. Redwan Hasan Rahat
-        </a>
+          <a
+            className="text-center underline text-sm"
+            href="https://redwanrahat.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+          Redwan Hasan Rahat
+          </a>
+        </p>
       </div>
     </div>
   );
