@@ -317,7 +317,7 @@ const Navbar = () => {
 "
                 >
 
-                    <li className="mt-1 tab:mt-4 text-xl flex items-center">
+                    <li className="mt-4 text-xl flex items-center">
 
                         <BsCart4 />
 
@@ -472,9 +472,7 @@ const Navbar = () => {
                             absolute
                             top-24
                             tab:top-32
-                            text-[10px]
-                            mob:text-[12px]
-                            tab:text-sm
+                            text-sm
                             bg-fifth
                             rounded-r-xl
                             shadow-[6px_8px_20px_rgba(0,103,105,0.12)]
@@ -492,12 +490,14 @@ const Navbar = () => {
                         <div
                             className="
                                 list-none
+                                leading-8
                                 mx-6
                                 tab:mx-10
                                 text-second
                                 font-medium
                                 py-5
-                                space-y-1
+                                
+                                space-y-2
                             "
                         >
 
