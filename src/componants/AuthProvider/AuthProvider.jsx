@@ -1,6 +1,15 @@
 import { createContext, useEffect, useRef, useState } from "react";
 import app from "../../firebase.config";
-import { createUserWithEmailAndPassword, getAuth, GoogleAuthProvider, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
+import {
+    createUserWithEmailAndPassword,
+    getAuth,
+    GoogleAuthProvider,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    signInWithPopup,
+    signOut,
+    sendPasswordResetEmail
+} from "firebase/auth";
 import supabase from "../../supabase.config";
 import Admin from "./Admin";
 
@@ -55,6 +64,12 @@ const AuthProvider = ({ children }) => {
 
         setloader(true)
         return signInWithEmailAndPassword(auth, email, password)
+    }
+
+    const handleForgotPassword = (email) => {
+
+        return sendPasswordResetEmail(auth, email)
+
     }
 
 
@@ -2605,7 +2620,7 @@ const AuthProvider = ({ children }) => {
 
 
     const UserInfo = {
-        user, handleRegister, handleSignIn, loader, setloader, setpageload, pageload, handleFetch,
+        user, handleRegister, handleSignIn,handleForgotPassword, loader, setloader, setpageload, pageload, handleFetch,
         fetchedData, detailsFetch, handleDetailsData, handleSignOut, handleGoogleSignIn, loading,
         special, setspecial, insertRegisterDB, myCart, setmyCart, handleCartIN, handleGetCart,
         handleCartDelete,
