@@ -1,10 +1,10 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContex } from "../AuthProvider/AuthProvider";
+import {useState } from "react";
+
 import Section2Carousal from "./Section2Carousal";
 
 
 const Section2 = () => {
-            // const {handleFetch} = useContext(AuthContex)
+
         const [getdata,setgetData] = useState('cat')
         
         const handleClick = (name)=>{
@@ -20,7 +20,7 @@ const Section2 = () => {
         <div className="relative pb-12 pt-28 tab:pt-20  lap:-mt-10 bg-primary font-page text-fifth ">
 
             
-            {/* <button onClick={()=>handleFetch('cats','*')}>Click me</button> */}
+
             <div className="absolute -translate-y-1/2 left-1/2 transform -translate-x-1/2">
             
             <div className="">

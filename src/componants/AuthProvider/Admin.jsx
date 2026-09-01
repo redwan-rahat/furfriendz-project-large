@@ -137,9 +137,6 @@ const Admin = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
 
 
-    // --------------------------------
-    // FETCH DASHBOARD DATA
-    // --------------------------------
 
     useEffect(() => {
 
@@ -154,10 +151,6 @@ const Admin = () => {
     }, [adminSection]);
 
 
-    // --------------------------------
-    // CURRENT USER ROLE
-    // --------------------------------
-
     const currentAdminUser = adminUsers?.find(
         adminUser => adminUser.user_id === user?.uid
     );
@@ -165,10 +158,6 @@ const Admin = () => {
     const hasDeliveryAccess =
         currentAdminUser?.is_delivery === true;
 
-
-    // --------------------------------
-    // DASHBOARD DATA
-    // --------------------------------
 
     const orders = adminOrders?.orders || [];
 
@@ -187,9 +176,6 @@ const Admin = () => {
     const totalCustomers = adminUsers?.length || 0;
 
 
-    // --------------------------------
-    // RENDER SECTION
-    // --------------------------------
 
     const renderSection = () => {
 
@@ -232,7 +218,6 @@ const Admin = () => {
 
             <div>
 
-                {/* HEADER */}
 
                 <div className="mb-8">
 
@@ -262,17 +247,12 @@ const Admin = () => {
                 </div>
 
 
-                {/* STATS */}
-
                 <div className="
                     grid
                     grid-cols-1
                     md:grid-cols-3
                     gap-5
                 ">
-
-
-                    {/* TOTAL ORDERS */}
 
                     <div className="
                         bg-white
@@ -308,8 +288,6 @@ const Admin = () => {
                     </div>
 
 
-                    {/* TOTAL REVENUE */}
-
                     <div className="
                         bg-white
                         border
@@ -343,8 +321,6 @@ const Admin = () => {
 
                     </div>
 
-
-                    {/* CUSTOMERS */}
 
                     <div className="
                         bg-white
@@ -381,8 +357,6 @@ const Admin = () => {
 
                 </div>
 
-
-                {/* ADMIN ACCOUNT */}
 
                 <div className="
                     mt-6
@@ -459,10 +433,6 @@ const Admin = () => {
         ">
 
 
-            {/* ================================= */}
-            {/* SIDEBAR */}
-            {/* ================================= */}
-
             <aside
                 className={`
                     fixed
@@ -485,7 +455,6 @@ const Admin = () => {
             >
 
 
-                {/* LOGO */}
 
                 <div className="
                     h-[72px]
@@ -556,8 +525,6 @@ const Admin = () => {
 
                 </div>
 
-
-                {/* NAVIGATION */}
 
                 <nav className="
                     p-3
@@ -640,10 +607,6 @@ const Admin = () => {
                 </nav>
 
 
-                {/* ================================= */}
-                {/* BOTTOM ACTIONS */}
-                {/* ================================= */}
-
                 <div className="
                     absolute
                     bottom-0
@@ -655,8 +618,6 @@ const Admin = () => {
                     space-y-1
                 ">
 
-
-                    {/* GO TO DELIVERY */}
 
                     {hasDeliveryAccess && (
 
@@ -719,8 +680,6 @@ const Admin = () => {
                     )}
 
 
-                    {/* GO TO WEBSITE */}
-
                     <NavLink
                         to="/"
                         className="
@@ -776,8 +735,6 @@ const Admin = () => {
 
                     </NavLink>
 
-
-                    {/* LOGOUT */}
 
                     <button
                         type="button"
@@ -840,10 +797,6 @@ const Admin = () => {
             </aside>
 
 
-            {/* ================================= */}
-            {/* MAIN CONTENT */}
-            {/* ================================= */}
-
             <main
                 className="
                     ml-[76px]
@@ -854,8 +807,6 @@ const Admin = () => {
                 "
             >
 
-
-                {/* TOP BAR */}
 
                 <header className="
                     h-[72px]
@@ -876,8 +827,6 @@ const Admin = () => {
                         gap-3
                     ">
 
-
-                        {/* MOBILE MENU */}
 
                         <button
                             onClick={() =>
@@ -935,8 +884,6 @@ const Admin = () => {
                     </div>
 
 
-                    {/* ADMIN PROFILE */}
-
                     <div className="
                         flex
                         items-center
@@ -987,7 +934,6 @@ const Admin = () => {
                 </header>
 
 
-                {/* PAGE */}
 
                 <section className="
                     p-5

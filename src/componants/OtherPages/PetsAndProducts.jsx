@@ -107,7 +107,7 @@ const PetsAndProducts = () => {
 
         <div className="mt-12 font-page">
 
-            {/* Heading */}
+
 
             <div className="mb-20 w-10/12 tab:w-8/12 lap:w-9/12 des:w-11/12 m-auto">
 
@@ -118,7 +118,7 @@ const PetsAndProducts = () => {
             </div>
 
 
-            {/* Search + Categories */}
+
 
             <div className="w-11/12 bg-[#DEF2E3] rounded-t-2xl p-14 m-auto">
 
@@ -309,7 +309,7 @@ const PetsAndProducts = () => {
             </div>
 
 
-            {/* Results */}
+
 
             <div className="w-11/12 m-auto mb-20 rounded-b-2xl bg-[#EAF7EE]">
 

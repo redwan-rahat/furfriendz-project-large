@@ -11,7 +11,7 @@ import {
     sendPasswordResetEmail
 } from "firebase/auth";
 import supabase from "../../supabase.config";
-import Admin from "./Admin";
+
 
 
 
@@ -122,11 +122,6 @@ const AuthProvider = ({ children }) => {
             })
     }
 
-
-    const handleScrollToAllproduct = () => {
-
-        sectionRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
 
 
     const getUserData = async () => {
@@ -256,8 +251,6 @@ const AuthProvider = ({ children }) => {
     }
 
 
-
-
     const insertGoogleDB = async (username, email, login_type, user_id) => {
 
         const { data, error } = await supabase
@@ -291,42 +284,6 @@ const AuthProvider = ({ children }) => {
         }
     }
 
-    // normal fetch
-    const getUID = async (email) => {
-
-        const { data, error } = await supabase
-            .from('users')
-            .select('user_id')
-            .eq('email', email)
-
-
-
-        if (data) {
-
-
-
-            return data[0]?.user_id
-
-        }
-    }
-
-
-    // normal fetch
-    const getUsername = async (email) => {
-
-        const { data, error } = await supabase
-            .from('users')
-            .select('username')
-            .eq('email', email)
-
-        if (data) {
-
-
-            return data[0].username
-
-        }
-
-    }
 
     const getStockStatus = (stockQuantity) => {
 
@@ -350,10 +307,6 @@ const AuthProvider = ({ children }) => {
 
         if (!user) return false
 
-
-        // -------------------------
-        // GET CURRENT ITEM STOCK
-        // -------------------------
 
         let table
         let idColumn
@@ -410,10 +363,6 @@ const AuthProvider = ({ children }) => {
             return false
         }
 
-
-        // -------------------------
-        // CHECK EXISTING CART ITEM
-        // -------------------------
 
         const { data, error } = await supabase
             .from('unified_cart')
@@ -507,9 +456,6 @@ const AuthProvider = ({ children }) => {
         return true
     }
 
-
-
-
     const handleGetCart = async () => {
 
         if (!user) {
@@ -521,10 +467,6 @@ const AuthProvider = ({ children }) => {
             }
         }
 
-
-        // -------------------------
-        // GET CART
-        // -------------------------
 
         const { data: cart, error: cartError } = await supabase
             .from('unified_cart')
@@ -557,10 +499,6 @@ const AuthProvider = ({ children }) => {
         )
 
 
-        // -------------------------
-        // PETS
-        // -------------------------
-
         const petIds = petsCart.map(
             item => item.item_id
         )
@@ -591,9 +529,6 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
-        // PRODUCTS
-        // -------------------------
 
         const productIds = productsCart.map(
             item => item.item_id
@@ -625,9 +560,6 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
-        // VACCINES
-        // -------------------------
 
         const vaccineIds = vaccinesCart.map(
             item => item.item_id
@@ -659,9 +591,7 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
-        // MERGE PET CART
-        // -------------------------
+
 
         const petCartData = petsCart.map(cartItem => {
 
@@ -688,9 +618,7 @@ const AuthProvider = ({ children }) => {
         })
 
 
-        // -------------------------
-        // MERGE PRODUCT CART
-        // -------------------------
+
 
         const productCartData = productsCart.map(cartItem => {
 
@@ -718,9 +646,7 @@ const AuthProvider = ({ children }) => {
         })
 
 
-        // -------------------------
-        // MERGE VACCINE CART
-        // -------------------------
+
 
         const vaccineCartData = vaccinesCart.map(cartItem => {
 
@@ -748,10 +674,6 @@ const AuthProvider = ({ children }) => {
         })
 
 
-        // -------------------------
-        // FINAL CART
-        // -------------------------
-
         const result = {
             pets: petCartData,
             products: productCartData,
@@ -764,9 +686,6 @@ const AuthProvider = ({ children }) => {
 
         return result
     }
-
-
-
 
 
     const handleCartDelete = async (cart_id) => {
@@ -794,7 +713,6 @@ const AuthProvider = ({ children }) => {
         return true
     }
 
-    //new fucntion
 
     const handleCartQuantity = async (cart_id, quantity) => {
 
@@ -802,10 +720,6 @@ const AuthProvider = ({ children }) => {
 
         if (quantity < 1) return false
 
-
-        // -------------------------
-        // GET CART ITEM
-        // -------------------------
 
         const { data: cartItem, error: cartError } = await supabase
             .from('unified_cart')
@@ -826,9 +740,7 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
-        // DETERMINE TABLE
-        // -------------------------
+
 
         let table
         let idColumn
@@ -854,9 +766,6 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
-        // GET CURRENT STOCK
-        // -------------------------
 
         const { data: item, error: itemError } = await supabase
             .from(table)
@@ -881,10 +790,6 @@ const AuthProvider = ({ children }) => {
         )
 
 
-        // -------------------------
-        // UNAVAILABLE
-        // -------------------------
-
         if (stock <= 0) {
 
             setVisible(true)
@@ -894,10 +799,6 @@ const AuthProvider = ({ children }) => {
             return false
         }
 
-
-        // -------------------------
-        // TOO MANY
-        // -------------------------
 
         if (quantity > stock) {
 
@@ -910,10 +811,6 @@ const AuthProvider = ({ children }) => {
             return false
         }
 
-
-        // -------------------------
-        // UPDATE CART
-        // -------------------------
 
         const { error } = await supabase
             .from('unified_cart')
@@ -941,74 +838,6 @@ const AuthProvider = ({ children }) => {
 
         return true
     }
-
-    const handleProductQuantity = async (cart_id, quantity) => {
-
-        if (quantity < 1) return
-
-        const { error } = await supabase
-            .from('product_cart')
-            .update({
-                quantity: quantity
-            })
-            .eq('cart_id', cart_id)
-            .eq('user_id', user.uid)
-
-        if (error) {
-            console.log('Quantity update error:', error)
-            return
-        }
-
-        setmyCart(prev => ({
-            ...prev,
-
-            products: prev.products.map(item =>
-                item.cart_id === cart_id
-                    ? { ...item, quantity: quantity }
-                    : item
-            )
-        }))
-    }
-
-    const handlePetQuantity = async (cart_id, quantity) => {
-
-        if (!user) return false;
-
-        if (quantity < 1) return false;
-
-        const { data, error } = await supabase
-            .from('pet_cart')
-            .update({
-                quantity: quantity
-            })
-            .eq('cart_id', cart_id)
-            .eq('user_id', user.uid)
-            .select();
-
-        if (error) {
-            console.log('Pet quantity update error:', error);
-            return false;
-        }
-
-        console.log('Updated pet cart:', data);
-
-        setmyCart(prev => ({
-            ...prev,
-
-            pets: prev.pets.map(item =>
-                item.cart_id === cart_id
-                    ? {
-                        ...item,
-                        quantity: quantity
-                    }
-                    : item
-            )
-        }));
-
-        return true;
-    };
-
-
 
 
     const handleTotalCarts = async () => {
@@ -1091,11 +920,6 @@ const AuthProvider = ({ children }) => {
         if (allItems.length === 0) {
             return false
         }
-
-
-        // ==========================================
-        // FINAL STOCK CHECK
-        // ==========================================
 
         const stockItems = []
 
@@ -1194,10 +1018,6 @@ const AuthProvider = ({ children }) => {
                 return false
             }
 
-
-            // Save the CURRENT stock.
-            // We use this later when decreasing it.
-
             stockItems.push({
                 ...item,
                 table,
@@ -1206,11 +1026,6 @@ const AuthProvider = ({ children }) => {
             })
 
         }
-
-
-        // ==========================================
-        // CALCULATE TOTAL
-        // ==========================================
 
         const subtotal = allItems.reduce(
             (total, item) =>
@@ -1233,11 +1048,6 @@ const AuthProvider = ({ children }) => {
             cash_on_delivery
                 ? 'cod'
                 : 'online'
-
-
-        // ==========================================
-        // CREATE ORDER
-        // ==========================================
 
         const { data: order, error: orderError } =
             await supabase
@@ -1277,10 +1087,6 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // ==========================================
-        // CREATE ORDER ITEMS
-        // ==========================================
-
         const orderItems = allItems.map(item => ({
             order_id: order.order_id,
             item_type: item.item_type,
@@ -1304,8 +1110,6 @@ const AuthProvider = ({ children }) => {
             )
 
 
-            // Remove incomplete order
-
             await supabase
                 .from('unified_orders')
                 .delete()
@@ -1318,11 +1122,6 @@ const AuthProvider = ({ children }) => {
 
             return false
         }
-
-
-        // ==========================================
-        // DECREASE STOCK
-        // ==========================================
 
         for (const item of stockItems) {
 
@@ -1347,19 +1146,11 @@ const AuthProvider = ({ children }) => {
                 )
 
 
-                // ----------------------------------
-                // REMOVE ORDER ITEMS
-                // ----------------------------------
-
                 await supabase
                     .from('unified_order_items')
                     .delete()
                     .eq('order_id', order.order_id)
 
-
-                // ----------------------------------
-                // REMOVE ORDER
-                // ----------------------------------
 
                 await supabase
                     .from('unified_orders')
@@ -1378,10 +1169,6 @@ const AuthProvider = ({ children }) => {
 
         }
 
-
-        // ==========================================
-        // DELETE CART ITEMS
-        // ==========================================
 
         const cartIds = allItems.map(
             item => item.cart_id
@@ -1413,17 +1200,12 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // ==========================================
-        // REFRESH CART
-        // ==========================================
 
         await handleGetCart()
         await handleTotalCarts()
 
 
-        // ==========================================
-        // SUCCESS
-        // ==========================================
+
 
         setVisible(true)
         setMessage('Order placed successfully')
@@ -1432,26 +1214,6 @@ const AuthProvider = ({ children }) => {
 
         return true
     }
-    // updating the username in supabase
-    const handlenameUpdate = async (newUsername) => {
-
-
-
-        const { data, error } = await supabase
-            .from('users')
-            .update({ username: newUsername })
-            .eq('email', user.email)
-
-        if (!error) {
-            setVisible(true)
-            setMessage('Username Changed Successfully')
-            setType('success')
-        }
-        if (error) console.log(error)
-    }
-
-
-
 
     const handleCheckAdmin = async () => {
 
@@ -1470,13 +1232,6 @@ const AuthProvider = ({ children }) => {
 
         return data?.is_admin === true
     }
-
-
-
-
-
-
-
 
     const fetchFormattedOrders = async (userId = null) => {
 
@@ -1501,10 +1256,6 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
-        // GET ORDER ITEMS
-        // -------------------------
-
         const orderIds = orders.map(
             order => order.order_id
         )
@@ -1522,10 +1273,6 @@ const AuthProvider = ({ children }) => {
 
         const items = orderItems || []
 
-
-        // -------------------------
-        // SEPARATE ITEM IDS
-        // -------------------------
 
         const petIds = [
             ...new Set(
@@ -1552,10 +1299,6 @@ const AuthProvider = ({ children }) => {
         ]
 
 
-        // -------------------------
-        // GET PETS
-        // -------------------------
-
         let pets = []
 
         if (petIds.length > 0) {
@@ -1579,10 +1322,6 @@ const AuthProvider = ({ children }) => {
             pets = data || []
         }
 
-
-        // -------------------------
-        // GET PRODUCTS
-        // -------------------------
 
         let products = []
 
@@ -1608,11 +1347,6 @@ const AuthProvider = ({ children }) => {
             products = data || []
         }
 
-
-        // -------------------------
-        // GET VACCINES
-        // -------------------------
-
         let vaccines = []
 
         if (vaccineIds.length > 0) {
@@ -1637,10 +1371,6 @@ const AuthProvider = ({ children }) => {
             vaccines = data || []
         }
 
-
-        // -------------------------
-        // ATTACH ITEM DATA
-        // -------------------------
 
         const formattedItems = items.map(orderItem => {
 
@@ -1671,10 +1401,6 @@ const AuthProvider = ({ children }) => {
         })
 
 
-        // -------------------------
-        // ATTACH ITEMS TO ORDERS
-        // -------------------------
-
         return orders.map(order => {
 
             const orderItemsForOrder = formattedItems.filter(
@@ -1688,7 +1414,6 @@ const AuthProvider = ({ children }) => {
         })
     }
 
-
     const handleGetOrders = async () => {
 
         const formattedOrders = await fetchFormattedOrders()
@@ -1699,7 +1424,6 @@ const AuthProvider = ({ children }) => {
 
         return formattedOrders
     }
-
 
     const handleGetMyOrders = async () => {
 
@@ -1753,8 +1477,6 @@ const AuthProvider = ({ children }) => {
             return false;
         }
 
-
-        // Update the local admin order immediately
 
         setadminOrders(prev => ({
             ...prev,
@@ -1849,7 +1571,6 @@ const AuthProvider = ({ children }) => {
         return data?.is_delivery === true;
     };
 
-    // use of subquery in supabase
 
     const handleGetDeliveryUsers = async () => {
 
@@ -1920,8 +1641,6 @@ const AuthProvider = ({ children }) => {
         return true
     }
 
-
-    // Admin
 
     const handleGetPets = async () => {
 
@@ -2043,8 +1762,6 @@ const AuthProvider = ({ children }) => {
 
         return data;
     };
-
-
 
 
     const handleGetProducts = async () => {
@@ -2303,7 +2020,6 @@ const AuthProvider = ({ children }) => {
         return true
     }
 
-
     const handleMakeDelivery = async (userId) => {
 
         const { data, error } = await supabase
@@ -2382,9 +2098,6 @@ const AuthProvider = ({ children }) => {
 
     const handleGetUserDetails = async (userId) => {
 
-        // -------------------------
-        // USER
-        // -------------------------
 
         const { data: userData, error: userError } = await supabase
             .from("userdata")
@@ -2398,11 +2111,6 @@ const AuthProvider = ({ children }) => {
 
             return null
         }
-
-
-        // -------------------------
-        // CART
-        // -------------------------
 
         const { data: cart, error: cartError } = await supabase
             .from("unified_cart")
@@ -2420,10 +2128,6 @@ const AuthProvider = ({ children }) => {
 
         const cartItems = cart || []
 
-
-        // -------------------------
-        // SEPARATE CART IDS
-        // -------------------------
 
         const petIds = [
             ...new Set(
@@ -2450,10 +2154,6 @@ const AuthProvider = ({ children }) => {
         ]
 
 
-        // -------------------------
-        // FETCH CART PETS
-        // -------------------------
-
         let pets = []
 
         if (petIds.length > 0) {
@@ -2473,10 +2173,6 @@ const AuthProvider = ({ children }) => {
             }
         }
 
-
-        // -------------------------
-        // FETCH CART PRODUCTS
-        // -------------------------
 
         let products = []
 
@@ -2498,10 +2194,6 @@ const AuthProvider = ({ children }) => {
         }
 
 
-        // -------------------------
-        // FETCH CART VACCINES
-        // -------------------------
-
         let vaccines = []
 
         if (vaccineIds.length > 0) {
@@ -2521,10 +2213,6 @@ const AuthProvider = ({ children }) => {
             }
         }
 
-
-        // -------------------------
-        // ATTACH CART ITEM DATA
-        // -------------------------
 
         const formattedCart = cartItems.map(cartItem => {
 
@@ -2565,10 +2253,6 @@ const AuthProvider = ({ children }) => {
         })
 
 
-        // -------------------------
-        // ORDERS
-        // -------------------------
-
         const orders = await fetchFormattedOrders(userId)
 
 
@@ -2580,9 +2264,8 @@ const AuthProvider = ({ children }) => {
     }
 
 
+    //no work
     const handleFavourite = async () => {
-
-        const user_id = await getUID(user?.email);
 
         const cartData = await handleGetCart()
 
@@ -2620,16 +2303,13 @@ const AuthProvider = ({ children }) => {
 
 
     const UserInfo = {
-        user, handleRegister, handleSignIn,handleForgotPassword, loader, setloader, setpageload, pageload, handleFetch,
+        user, handleRegister, handleSignIn, handleForgotPassword, loader, setloader, setpageload, pageload, handleFetch,
         fetchedData, detailsFetch, handleDetailsData, handleSignOut, handleGoogleSignIn, loading,
         special, setspecial, insertRegisterDB, myCart, setmyCart, handleCartIN, handleGetCart,
         handleCartDelete,
-        handleProductQuantity,
-        handlePetQuantity,
         handleCartQuantity,
         handleTotalCarts,
-        totalCart, emaiUsername, getUID, getUsername,
-        handlenameUpdate, handleFavourite, sectionRef, handleScrollToAllproduct,
+        totalCart, emaiUsername, handleFavourite, sectionRef,
         setVisible, visible, setType, type, message, setMessage, navigating, favItem, handleCheckout, handleCheckAdmin,
 
         handleGetOrders,

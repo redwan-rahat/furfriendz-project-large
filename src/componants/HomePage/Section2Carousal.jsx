@@ -1,7 +1,5 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContex } from "../AuthProvider/AuthProvider";
-import { useQuery } from '@tanstack/react-query';
-import ShowDetails from "../ShowDetails/ShowDetails";
 import { NavLink } from "react-router-dom";
 
 
@@ -37,14 +35,6 @@ const Section2Carousal = ({getdata}) => {
 
 
 
-// useEffect(()=>{
-    
-
-//     handleFetch(getdata.replace(/'/g,''))
-    
-    
-//  },[getdata])
-
  useEffect(()=>{
     
 
@@ -74,7 +64,7 @@ const Section2Carousal = ({getdata}) => {
                     {
                      
                     }
-                    {/* <NavLink to={`/details/${data.category.toLowerCase()}/${data.pet_id ? data.pet_id: data.product_id}`} > */}
+                   
                     <NavLink to={`/details/${data.pet_id ? 'pet' : 'product'}/${data.pet_id ? data.pet_id: data.product_id}`} >
 
                     <div className={` text-center mt-5 grid-cols-1 space-y-4`}>

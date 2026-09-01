@@ -20,9 +20,7 @@ const AdminOrders = () => {
     const orders = adminOrders?.orders || [];
 
 
-    // --------------------------------
-    // FETCH ORDERS
-    // --------------------------------
+
 
     useEffect(() => {
 
@@ -71,9 +69,6 @@ const AdminOrders = () => {
         }
     };
 
-    // --------------------------------
-    // REFRESH
-    // --------------------------------
 
     const handleRefresh = async () => {
 
@@ -88,9 +83,6 @@ const AdminOrders = () => {
     };
 
 
-    // --------------------------------
-    // FILTER ORDERS LOCALLY
-    // --------------------------------
 
     const filteredOrders = useMemo(() => {
 
@@ -130,7 +122,7 @@ const AdminOrders = () => {
         }
 
 
-        // Newest → oldest
+  
 
         filtered.sort(
             (a, b) =>
@@ -144,9 +136,6 @@ const AdminOrders = () => {
     }, [orders, activeTab]);
 
 
-    // --------------------------------
-    // FORMAT DATE
-    // --------------------------------
 
     const formatDate = (date) => {
 
@@ -162,9 +151,7 @@ const AdminOrders = () => {
     };
 
 
-    // --------------------------------
-    // COUNT ITEMS
-    // --------------------------------
+   
 
     const getItemCount = (order) => {
 
@@ -177,9 +164,7 @@ const AdminOrders = () => {
     };
 
 
-    // --------------------------------
-    // PAYMENT LABEL
-    // --------------------------------
+
 
     const getPaymentLabel = (paymentMethod) => {
 
@@ -196,9 +181,7 @@ const AdminOrders = () => {
     };
 
 
-    // --------------------------------
-    // STATUS STYLE
-    // --------------------------------
+  
 
     const getStatusStyle = (status) => {
 
@@ -259,9 +242,7 @@ const AdminOrders = () => {
 
         <div>
 
-            {/* -------------------------------- */}
-            {/* PAGE HEADER */}
-            {/* -------------------------------- */}
+
 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 
@@ -320,9 +301,7 @@ const AdminOrders = () => {
             </div>
 
 
-            {/* -------------------------------- */}
-            {/* TABS */}
-            {/* -------------------------------- */}
+
 
             <div className="mt-8 border-b border-slate-200">
 
@@ -386,9 +365,7 @@ const AdminOrders = () => {
             </div>
 
 
-            {/* -------------------------------- */}
-            {/* ORDER COUNT */}
-            {/* -------------------------------- */}
+
 
             <div className="flex items-center justify-between mt-6 mb-4">
 
@@ -405,9 +382,7 @@ const AdminOrders = () => {
             </div>
 
 
-            {/* -------------------------------- */}
-            {/* ORDERS */}
-            {/* -------------------------------- */}
+ 
 
             <div className="space-y-4">
 
@@ -475,7 +450,7 @@ const AdminOrders = () => {
                             "
                         >
 
-                            {/* ORDER TOP */}
+                   
 
                             <div className="
                                 flex
@@ -538,7 +513,7 @@ const AdminOrders = () => {
                             </div>
 
 
-                            {/* CUSTOMER */}
+                 
 
                             <div className="
                                 mt-5
@@ -611,7 +586,6 @@ const AdminOrders = () => {
                             </div>
 
 
-                            {/* DELIVERY */}
 
                             <div className="
                                 mt-5

@@ -25,9 +25,7 @@ const Navbar = () => {
     const menuRef = useRef(null);
 
 
-    // --------------------------------
-    // CHECK USER ROLES
-    // --------------------------------
+
 
     useEffect(() => {
 
@@ -72,9 +70,7 @@ const Navbar = () => {
     }, [user, handleCheckAdmin, handleCheckDelivery]);
 
 
-    // --------------------------------
-    // CLOSE MOBILE MENU OUTSIDE CLICK
-    // --------------------------------
+
 
     useEffect(() => {
 
@@ -108,9 +104,7 @@ const Navbar = () => {
     }, []);
 
 
-    // --------------------------------
-    // GET CART TOTAL
-    // --------------------------------
+
 
     useEffect(() => {
 
@@ -121,18 +115,12 @@ const Navbar = () => {
     }, [user]);
 
 
-    // --------------------------------
-    // TOGGLE MENU
-    // --------------------------------
 
     const toggleMenu = () => {
         setMenuOpen(prev => !prev);
     };
 
 
-    // --------------------------------
-    // NAVIGATION LINKS
-    // --------------------------------
 
     const middlelinks = (
         <>
@@ -192,7 +180,6 @@ const Navbar = () => {
             </NavLink>
 
 
-            {/* My Orders */}
 
             {user && (
 
@@ -212,7 +199,7 @@ const Navbar = () => {
             )}
 
 
-            {/* Admin */}
+
 
             {user && isAdmin && (
 
@@ -232,7 +219,7 @@ const Navbar = () => {
             )}
 
 
-            {/* Delivery */}
+
 
             {user && isDelivery && (
 
@@ -254,14 +241,12 @@ const Navbar = () => {
     );
 
 
-    // --------------------------------
-    // RIGHT SIDE LINKS
-    // --------------------------------
+
 
     const lastlinks = (
         <>
 
-            {/* Profile */}
+
 
             {user && (
 
@@ -277,7 +262,7 @@ const Navbar = () => {
             )}
 
 
-            {/* Sign Out / Login */}
+
 
             {user ? (
 
@@ -285,13 +270,15 @@ const Navbar = () => {
                     type="button"
                     onClick={handleSignOut}
                     className="
-                    mt-1
-                    tab:mt-4
-                    font-medium
-                    text-second
-                    hover:text-primary
-                    duration-300
-                "
+    block
+    lap:inline
+    mt-1
+    tab:mt-4
+    font-medium
+    text-second
+    hover:text-primary
+    duration-300
+"
                 >
                     Sign Out
                 </button>
@@ -314,46 +301,52 @@ const Navbar = () => {
             )}
 
 
-            {/* Cart */}
 
-            <button
-                type="button"
-                onClick={() => setCartOpen(true)}
-                className="
-                text-second
-                hover:text-primary
-                duration-300
-            "
-            >
 
-                <li className="mt-1 tab:mt-4 text-xl flex items-center">
+            {user && (
 
-                    <BsCart4 />
+                <button
+                    type="button"
+                    onClick={() => setCartOpen(true)}
+                    className="
+    block
+    lap:inline
+    text-second
+    hover:text-primary
+    duration-300
+"
+                >
 
-                    <span
-                        className="
-                        ml-1
-                        lap:text-sm
-                        text-xs
-                        bg-orange-500
-                        text-white
-                        flex
-                        items-center
-                        justify-center
-                        rounded-full
-                        w-5
-                        h-5
-                        lap:w-6
-                        lap:h-6
-                        font-medium
-                    "
-                    >
-                        {totalCart || 0}
-                    </span>
+                    <li className="mt-1 tab:mt-4 text-xl flex items-center">
 
-                </li>
+                        <BsCart4 />
 
-            </button>
+                        <span
+                            className="
+                            ml-1
+                            lap:text-sm
+                            text-xs
+                            bg-orange-500
+                            text-white
+                            flex
+                            items-center
+                            justify-center
+                            rounded-full
+                            w-5
+                            h-5
+                            lap:w-6
+                            lap:h-6
+                            font-medium
+                        "
+                        >
+                            {totalCart || 0}
+                        </span>
+
+                    </li>
+
+                </button>
+
+            )}
 
         </>
     );
@@ -372,9 +365,7 @@ const Navbar = () => {
         >
 
 
-            {/* ================================= */}
-            {/* DESKTOP NAVBAR */}
-            {/* ================================= */}
+
 
             <div
                 className="
@@ -389,7 +380,7 @@ const Navbar = () => {
             >
 
 
-                {/* Logo */}
+
 
                 <NavLink to="/">
 
@@ -405,7 +396,7 @@ const Navbar = () => {
                 </NavLink>
 
 
-                {/* Main Navigation */}
+
 
                 <div>
 
@@ -418,7 +409,6 @@ const Navbar = () => {
                 </div>
 
 
-                {/* Account Navigation */}
 
                 <div>
 
@@ -433,9 +423,7 @@ const Navbar = () => {
             </div>
 
 
-            {/* ================================= */}
-            {/* MOBILE / TABLET NAVBAR */}
-            {/* ================================= */}
+
 
             <div
                 className="
@@ -449,7 +437,6 @@ const Navbar = () => {
             >
 
 
-                {/* Menu */}
 
                 <div className="items-center flex text-xl tab:text-2xl">
 
@@ -477,7 +464,7 @@ const Navbar = () => {
                     </button>
 
 
-                    {/* Mobile Menu */}
+
 
                     <div
                         ref={menuRef}
@@ -529,7 +516,6 @@ const Navbar = () => {
                 </div>
 
 
-                {/* Mobile Logo */}
 
                 <NavLink to="/">
 

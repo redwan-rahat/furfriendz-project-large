@@ -54,7 +54,7 @@ const Section1 = () => {
 
             <div className=" mt-[315px] tab:mt-[350px] lap:mt-[315px] des:mt-[400px] z-20">
                 <WaveSVG></WaveSVG>
-                {/* <img src="wavenew.svg" className="" alt="" /> */}
+         
             </div>
 
             

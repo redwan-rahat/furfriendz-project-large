@@ -44,7 +44,7 @@ const Blogs = () => {
 
             <main className="w-11/12 lap:w-10/12 des:w-9/12 mx-auto pt-12 tab:pt-16 lap:pt-20 pb-24 tab:pb-32">
 
-                {/* Page Header */}
+        
                 <header className="text-center max-w-3xl mx-auto mb-12 tab:mb-16 lap:mb-20">
 
                     <h1 className="text-[#075E63] text-4xl tab:text-5xl lap:text-6xl font-semibold tracking-tight">
@@ -59,7 +59,6 @@ const Blogs = () => {
                 </header>
 
 
-                {/* Main Blog Container */}
                 <section className="bg-[#dfece1] rounded-[2rem] tab:rounded-[2.5rem] lap:rounded-[3rem] px-6 py-10 tab:px-12 tab:py-14 lap:px-20 lap:py-20 border border-[#DCE9DE] shadow-[0_12px_40px_rgba(40,90,70,0.06)]">
 
                     <div className="space-y-12 tab:space-y-16 lap:space-y-20">
@@ -76,7 +75,7 @@ const Blogs = () => {
                                     }`}
                                 >
 
-                                    {/* Blog Visual */}
+                             
                                     <div className="w-full tab:w-[40%] lap:w-[38%] mb-8 tab:mb-0">
 
                                         <div className="h-60 tab:h-72 lap:h-80 rounded-3xl bg-[#d7e4d9] border border-[#D4E4D7] flex items-center justify-center overflow-hidden">
@@ -90,10 +89,10 @@ const Blogs = () => {
                                     </div>
 
 
-                                    {/* Blog Content */}
+                     
                                     <div className="w-full tab:w-[53%] lap:w-[55%]">
 
-                                        {/* Category */}
+                            
                                         <div className="flex items-center gap-3 mb-4">
 
                                             <span className="text-[#568078] text-xs font-medium">
@@ -109,13 +108,12 @@ const Blogs = () => {
                                         </div>
 
 
-                                        {/* Title */}
+                              
                                         <h2 className="text-[#075E63] text-2xl tab:text-3xl lap:text-4xl font-semibold leading-tight tracking-tight">
                                             {blog.title}
                                         </h2>
 
 
-                                        {/* Article Content */}
                                         <div className="mt-5 space-y-4 text-[#527A73] text-sm tab:text-base leading-7">
 
                                             {blog.paragraphs.map(
@@ -133,7 +131,7 @@ const Blogs = () => {
                                 </div>
 
 
-                                {/* Divider */}
+                   
                                 {index !== blogs.length - 1 && (
                                     <div className="mt-12 tab:mt-16 lap:mt-20 border-t border-[#D2E2D5]"></div>
                                 )}

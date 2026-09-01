@@ -1,5 +1,4 @@
 import DogHideCart from "../Animations/DogHideCart";
-import Wavesection4SVG from "../Animations/Wavesection4SVG";
 import WaveSVGsection4 from "../Animations/WaveSVGsection4";
 
 const Section4 = () => {

@@ -29,9 +29,6 @@ const AdminUsers = () => {
     }, []);
 
 
-    // --------------------------------
-    // REFRESH
-    // --------------------------------
 
     const handleRefresh = async () => {
 
@@ -43,9 +40,6 @@ const AdminUsers = () => {
     };
 
 
-    // --------------------------------
-    // OPEN USER
-    // --------------------------------
 
     const handleOpenUser = async (user) => {
 
@@ -64,9 +58,6 @@ const AdminUsers = () => {
     };
 
 
-    // --------------------------------
-    // CLOSE
-    // --------------------------------
 
     const handleClose = () => {
 
@@ -75,9 +66,7 @@ const AdminUsers = () => {
     };
 
 
-    // --------------------------------
-    // MAKE DELIVERY
-    // --------------------------------
+
 
     const handleDelivery = async () => {
 
@@ -155,9 +144,6 @@ const AdminUsers = () => {
         setRemovingDelivery(false);
     };
 
-    // --------------------------------
-    // DATE
-    // --------------------------------
 
     const formatDate = (date) => {
 
@@ -175,9 +161,7 @@ const AdminUsers = () => {
     };
 
 
-    // --------------------------------
-    // DATE + TIME
-    // --------------------------------
+
 
     const formatDateTime = (date) => {
 
@@ -197,9 +181,7 @@ const AdminUsers = () => {
     };
 
 
-    // --------------------------------
-    // CART ITEM NAME
-    // --------------------------------
+
 
     const getCartItemName = (cartItem) => {
 
@@ -230,9 +212,7 @@ const AdminUsers = () => {
     };
 
 
-    // --------------------------------
-    // ORDER ITEM NAME
-    // --------------------------------
+
 
     const getOrderItemName = (item) => {
 
@@ -262,10 +242,6 @@ const AdminUsers = () => {
         return "Unknown item";
     };
 
-
-    // --------------------------------
-    // STATUS STYLE
-    // --------------------------------
 
     const getStatusStyle = (status) => {
 
@@ -301,9 +277,6 @@ const AdminUsers = () => {
 
         <div>
 
-            {/* ================================= */}
-            {/* HEADER */}
-            {/* ================================= */}
 
             <div className="
                 flex
@@ -385,9 +358,7 @@ const AdminUsers = () => {
             </div>
 
 
-            {/* ================================= */}
-            {/* COUNT */}
-            {/* ================================= */}
+
 
             <div className="mt-8 mb-4">
 
@@ -404,10 +375,6 @@ const AdminUsers = () => {
 
             </div>
 
-
-            {/* ================================= */}
-            {/* USERS */}
-            {/* ================================= */}
 
             <div className="
                 bg-white
@@ -452,7 +419,7 @@ const AdminUsers = () => {
                                 "
                             >
 
-                                {/* USER */}
+
 
                                 <div className="
                                     flex
@@ -574,7 +541,7 @@ const AdminUsers = () => {
                                 </div>
 
 
-                                {/* ACTION */}
+
 
                                 <button
                                     onClick={() =>
@@ -610,9 +577,7 @@ const AdminUsers = () => {
             </div>
 
 
-            {/* ================================= */}
-            {/* USER DETAILS DRAWER */}
-            {/* ================================= */}
+
 
             {selectedUser && (
 
@@ -622,7 +587,7 @@ const AdminUsers = () => {
                     z-[100]
                 ">
 
-                    {/* BACKDROP */}
+
 
                     <div
                         onClick={handleClose}
@@ -635,7 +600,6 @@ const AdminUsers = () => {
                     />
 
 
-                    {/* DRAWER */}
 
                     <div className="
                         absolute
@@ -650,7 +614,7 @@ const AdminUsers = () => {
                         flex-col
                     ">
 
-                        {/* HEADER */}
+
 
                         <div className="
                             px-5
@@ -766,7 +730,7 @@ const AdminUsers = () => {
                         </div>
 
 
-                        {/* CONTENT */}
+
 
                         <div className="
                             flex-1
@@ -792,9 +756,7 @@ const AdminUsers = () => {
 
                                 <>
 
-                                    {/* ============================= */}
-                                    {/* ACCOUNT */}
-                                    {/* ============================= */}
+
 
                                     <section>
 
@@ -905,9 +867,7 @@ const AdminUsers = () => {
                                     </section>
 
 
-                                    {/* ============================= */}
-                                    {/* ROLE */}
-                                    {/* ============================= */}
+
 
                                     <section>
 
@@ -980,19 +940,19 @@ const AdminUsers = () => {
                                                     onClick={handleDelivery}
                                                     disabled={makingDelivery || removingDelivery}
                                                     className="
-            w-full
-            mt-4
-            px-4
-            py-2.5
-            rounded-xl
-            bg-emerald-500
-            text-white
-            text-sm
-            font-medium
-            hover:bg-emerald-600
-            transition
-            disabled:opacity-50
-        "
+                                                        w-full
+                                                        mt-4
+                                                        px-4
+                                                        py-2.5
+                                                        rounded-xl
+                                                        bg-emerald-500
+                                                        text-white
+                                                        text-sm
+                                                        font-medium
+                                                        hover:bg-emerald-600
+                                                        transition
+                                                        disabled:opacity-50
+                                                    "
                                                 >
                                                     {makingDelivery
                                                         ? "Making Delivery..."
@@ -1006,21 +966,21 @@ const AdminUsers = () => {
                                                     onClick={handleRemoveDeliveryStatus}
                                                     disabled={makingDelivery || removingDelivery}
                                                     className="
-            w-full
-            mt-4
-            px-4
-            py-2.5
-            rounded-xl
-            border
-            border-red-200
-            bg-red-50
-            text-red-600
-            text-sm
-            font-medium
-            hover:bg-red-100
-            transition
-            disabled:opacity-50
-        "
+                                                        w-full
+                                                        mt-4
+                                                        px-4
+                                                        py-2.5
+                                                        rounded-xl
+                                                        border
+                                                        border-red-200
+                                                        bg-red-50
+                                                        text-red-600
+                                                        text-sm
+                                                        font-medium
+                                                        hover:bg-red-100
+                                                        transition
+                                                        disabled:opacity-50
+                                                    "
                                                 >
                                                     {removingDelivery
                                                         ? "Removing Delivery..."
@@ -1034,156 +994,6 @@ const AdminUsers = () => {
 
                                     </section>
 
-
-                                    {/* ============================= */}
-                                    {/* PREFERENCES */}
-                                    {/* ============================= */}
-
-                                    <section>
-
-                                        <h3 className="
-                                            text-sm
-                                            font-semibold
-                                            text-slate-900
-                                            mb-3
-                                        ">
-                                            Preferences
-                                        </h3>
-
-
-                                        <div className="
-                                            border
-                                            border-slate-200
-                                            rounded-xl
-                                            p-4
-                                            grid
-                                            grid-cols-2
-                                            gap-4
-                                        ">
-
-                                            <div>
-
-                                                <p className="text-xs text-slate-400">
-                                                    Category
-                                                </p>
-
-                                                <p className="
-                                                    text-sm
-                                                    text-slate-800
-                                                    mt-1
-                                                    capitalize
-                                                ">
-                                                    {userDetails.user.preferred_category || "Not set"}
-                                                </p>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <p className="text-xs text-slate-400">
-                                                    Size
-                                                </p>
-
-                                                <p className="
-                                                    text-sm
-                                                    text-slate-800
-                                                    mt-1
-                                                    capitalize
-                                                ">
-                                                    {userDetails.user.preferred_size || "Not set"}
-                                                </p>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <p className="text-xs text-slate-400">
-                                                    Activity Level
-                                                </p>
-
-                                                <p className="
-                                                    text-sm
-                                                    text-slate-800
-                                                    mt-1
-                                                    capitalize
-                                                ">
-                                                    {userDetails.user.preferred_activity_level || "Not set"}
-                                                </p>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <p className="text-xs text-slate-400">
-                                                    Living Environment
-                                                </p>
-
-                                                <p className="
-                                                    text-sm
-                                                    text-slate-800
-                                                    mt-1
-                                                    capitalize
-                                                ">
-                                                    {userDetails.user.preferred_living_environment || "Not set"}
-                                                </p>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <p className="text-xs text-slate-400">
-                                                    Has Children
-                                                </p>
-
-                                                <p className="
-                                                    text-sm
-                                                    text-slate-800
-                                                    mt-1
-                                                ">
-                                                    {userDetails.user.has_children === null
-                                                        ? "Not set"
-                                                        : userDetails.user.has_children
-                                                            ? "Yes"
-                                                            : "No"
-                                                    }
-                                                </p>
-
-                                            </div>
-
-
-                                            <div>
-
-                                                <p className="text-xs text-slate-400">
-                                                    Has Other Pets
-                                                </p>
-
-                                                <p className="
-                                                    text-sm
-                                                    text-slate-800
-                                                    mt-1
-                                                ">
-                                                    {userDetails.user.has_other_pets === null
-                                                        ? "Not set"
-                                                        : userDetails.user.has_other_pets
-                                                            ? "Yes"
-                                                            : "No"
-                                                    }
-                                                </p>
-
-                                            </div>
-
-                                        </div>
-
-                                    </section>
-
-
-                                    {/* ============================= */}
-                                    {/* CART */}
-                                    {/* ============================= */}
 
                                     <section>
 
@@ -1352,9 +1162,6 @@ const AdminUsers = () => {
                                     </section>
 
 
-                                    {/* ============================= */}
-                                    {/* ORDERS */}
-                                    {/* ============================= */}
 
                                     <section>
 
@@ -1423,7 +1230,6 @@ const AdminUsers = () => {
                                                         "
                                                     >
 
-                                                        {/* ORDER HEADER */}
 
                                                         <div className="
                                                             p-4
@@ -1510,7 +1316,7 @@ const AdminUsers = () => {
                                                         </div>
 
 
-                                                        {/* ORDER ITEMS */}
+
 
                                                         <div className="
                                                             p-4
@@ -1600,9 +1406,6 @@ const AdminUsers = () => {
                                                             ))}
 
                                                         </div>
-
-
-                                                        {/* ORDER TOTAL */}
 
                                                         <div className="
                                                             px-4

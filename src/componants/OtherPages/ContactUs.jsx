@@ -105,7 +105,7 @@ const ContactUs = () => {
 
             <main className="w-11/12 lap:w-10/12 des:w-9/12 mx-auto pt-12 tab:pt-16 lap:pt-20 pb-24 tab:pb-32">
 
-                {/* Page Header */}
+        
                 <header className="text-center max-w-3xl mx-auto mb-12 tab:mb-16 lap:mb-20">
 
                     <h1 className="text-[#075E63] text-4xl tab:text-5xl lap:text-6xl font-semibold tracking-tight">
@@ -120,18 +120,17 @@ const ContactUs = () => {
                 </header>
 
 
-                {/* Main Contact Container */}
                 <section className="bg-[#EAF3EA] rounded-[2rem] tab:rounded-[2.5rem] lap:rounded-[3rem] p-6 tab:p-10 lap:p-14 border border-[#DCE9DE] shadow-[0_12px_40px_rgba(40,90,70,0.06)]">
 
                     <div className="tab:grid tab:grid-cols-2 gap-10 lap:gap-16">
 
 
-                        {/* LEFT SIDE */}
+             
                         <div className="flex flex-col justify-between">
 
                             <div>
 
-                                {/* Label */}
+                     
                                 <div className="flex items-center gap-3 mb-5">
 
                                     <span className="w-8 h-px bg-[#28706E]"></span>
@@ -143,13 +142,13 @@ const ContactUs = () => {
                                 </div>
 
 
-                                {/* Heading */}
+                
                                 <h2 className="max-w-96 text-[#075E63] text-2xl tab:text-3xl lap:text-4xl font-semibold leading-tight">
                                     We’re here to help you and your pet.
                                 </h2>
 
 
-                                {/* Description */}
+              
                                 <p className="max-w-96 mt-5 text-[#527A73] text-sm tab:text-base leading-7">
                                     Whether you have a question about our
                                     products, delivery, or
@@ -158,10 +157,9 @@ const ContactUs = () => {
                                 </p>
 
 
-                                {/* Contact Information */}
+   
                                 <div className="mt-8 tab:mt-10 space-y-6">
 
-                                    {/* Phone */}
                                     <div className="flex gap-4 items-start">
 
                                         <div className="w-11 h-11 shrink-0 rounded-xl bg-[#DFECE1] border border-[#D2E2D5] flex items-center justify-center text-[#075E63]">
@@ -183,7 +181,6 @@ const ContactUs = () => {
                                     </div>
 
 
-                                    {/* Location */}
                                     <div className="flex gap-4 items-start">
 
                                         <div className="w-11 h-11 shrink-0 rounded-xl bg-[#DFECE1] border border-[#D2E2D5] flex items-center justify-center text-[#075E63]">
@@ -206,7 +203,6 @@ const ContactUs = () => {
                                     </div>
 
 
-                                    {/* Email */}
                                     <div className="flex gap-4 items-start">
 
                                         <div className="w-11 h-11 shrink-0 rounded-xl bg-[#DFECE1] border border-[#D2E2D5] flex items-center justify-center text-[#075E63]">
@@ -228,7 +224,7 @@ const ContactUs = () => {
                                     </div>
 
 
-                                    {/* Jobs */}
+                               
                                     <div className="flex gap-4 items-start">
 
                                         <div className="w-11 h-11 shrink-0 rounded-xl bg-[#DFECE1] border border-[#D2E2D5] flex items-center justify-center text-[#075E63]">
@@ -255,7 +251,7 @@ const ContactUs = () => {
                             </div>
 
 
-                            {/* Social Links */}
+                 
                             <div className="mt-10 tab:mt-12">
 
                                 <p className="text-[#527A73] text-xs mb-4">
@@ -305,12 +301,11 @@ const ContactUs = () => {
                         </div>
 
 
-                        {/* RIGHT SIDE - FORM */}
                         <div className="mt-12 tab:mt-0">
 
                             <div className="bg-[#DFECE1] border border-[#D2E2D5] rounded-3xl p-6 tab:p-8 lap:p-10">
 
-                                {/* Form Header */}
+                       
                                 <div className="mb-7">
 
                                     <p className="text-[#28706E] text-[10px] tab:text-xs tracking-[0.18em] font-medium">
@@ -324,7 +319,7 @@ const ContactUs = () => {
                                 </div>
 
 
-                                {/* Contact Form */}
+                     
                                 <form
                                     ref={form}
                                     onSubmit={handleSubmit}
@@ -355,7 +350,7 @@ const ContactUs = () => {
                                     </div>
 
 
-                                    {/* Email */}
+                      
                                     <div>
 
                                         <label
@@ -379,7 +374,6 @@ const ContactUs = () => {
                                     </div>
 
 
-                                    {/* Problem */}
                                     <div>
 
                                         <label
@@ -434,7 +428,7 @@ const ContactUs = () => {
                                     </div>
 
 
-                                    {/* Description */}
+                        
                                     <div>
 
                                         <label
@@ -458,7 +452,7 @@ const ContactUs = () => {
                                     </div>
 
 
-                                    {/* Status Message */}
+                         
                                     {status.message && (
                                         <div
                                             className={`rounded-xl px-4 py-3 text-sm ${status.type === "success"
@@ -471,7 +465,7 @@ const ContactUs = () => {
                                     )}
 
 
-                                    {/* Submit */}
+                     
                                     <button
                                         type="submit"
                                         disabled={isSending}

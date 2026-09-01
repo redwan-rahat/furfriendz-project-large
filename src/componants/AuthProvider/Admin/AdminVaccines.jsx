@@ -33,9 +33,6 @@ const AdminVaccines = () => {
     }, []);
 
 
-    /* =========================
-       REFRESH
-    ========================= */
 
     const handleRefresh = async () => {
 
@@ -47,9 +44,6 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       PET TYPES
-    ========================= */
 
     const getPetTypes = (vaccine) => {
 
@@ -78,10 +72,6 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       ADD
-    ========================= */
-
     const handleStartAdd = () => {
 
         setSelectedVaccine(null);
@@ -103,10 +93,6 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       OPEN VIEW
-    ========================= */
-
     const handleOpenVaccine = (vaccine) => {
 
         setSelectedVaccine(vaccine);
@@ -115,9 +101,6 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       EDIT
-    ========================= */
 
     const handleStartEdit = () => {
 
@@ -142,10 +125,6 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       INPUT
-    ========================= */
-
     const handleVaccineInputChange = (e) => {
 
         const {
@@ -165,9 +144,7 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       PET TYPES INPUT
-    ========================= */
+
 
     const handlePetTypesChange = (e) => {
 
@@ -184,9 +161,7 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       SAVE
-    ========================= */
+
 
     const handleSaveVaccine = async () => {
 
@@ -235,9 +210,6 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       CREATE
-    ========================= */
 
     const handleCreateNewVaccine = async () => {
 
@@ -280,10 +252,6 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       DELETE
-    ========================= */
-
     const handleDelete = () => {
 
         if (!selectedVaccine) return;
@@ -312,9 +280,7 @@ const AdminVaccines = () => {
     };
 
 
-    /* =========================
-       CLOSE
-    ========================= */
+
 
     const handleCloseDrawer = () => {
 
@@ -330,7 +296,6 @@ const AdminVaccines = () => {
 
         <div>
 
-            {/* HEADER */}
 
             <div className="
                 flex
@@ -436,7 +401,6 @@ const AdminVaccines = () => {
             </div>
 
 
-            {/* VACCINE GRID */}
 
             <div className="
                 mt-8
@@ -463,7 +427,6 @@ const AdminVaccines = () => {
                         "
                     >
 
-                        {/* IMAGE */}
 
                         <div className="
                             aspect-[4/3]
@@ -486,8 +449,6 @@ const AdminVaccines = () => {
 
                         </div>
 
-
-                        {/* CONTENT */}
 
                         <div className="p-4">
 
@@ -621,8 +582,6 @@ const AdminVaccines = () => {
             </div>
 
 
-            {/* EMPTY */}
-
             {adminVaccines.length === 0 && (
 
                 <div className="
@@ -644,7 +603,6 @@ const AdminVaccines = () => {
             )}
 
 
-            {/* DRAWER */}
 
             {(selectedVaccine || addingVaccine) && (
 
@@ -654,7 +612,7 @@ const AdminVaccines = () => {
                     z-[100]
                 ">
 
-                    {/* BACKDROP */}
+
 
                     <div
                         onClick={handleCloseDrawer}
@@ -667,7 +625,6 @@ const AdminVaccines = () => {
                     />
 
 
-                    {/* DRAWER */}
 
                     <div className="
                         absolute
@@ -682,7 +639,6 @@ const AdminVaccines = () => {
                         flex-col
                     ">
 
-                        {/* HEADER */}
 
                         <div className="
                             px-5
@@ -757,7 +713,6 @@ const AdminVaccines = () => {
                         </div>
 
 
-                        {/* CONTENT */}
 
                         <div className="
                             flex-1
@@ -767,13 +722,13 @@ const AdminVaccines = () => {
                         ">
 
 
-                            {/* ADD / EDIT */}
+
 
                             {(addingVaccine || editingVaccine) ? (
 
                                 <div className="space-y-5">
 
-                                    {/* IMAGE */}
+
 
                                     <div>
 
@@ -808,7 +763,6 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* NAME */}
 
                                     <div>
 
@@ -842,7 +796,7 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* TYPE */}
+    
 
                                     <div>
 
@@ -876,7 +830,7 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* PET TYPES */}
+    
 
                                     <div>
 
@@ -920,8 +874,6 @@ const AdminVaccines = () => {
 
                                     </div>
 
-
-                                    {/* DOSES + PRICE */}
 
                                     <div className="
                                         grid
@@ -998,7 +950,7 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* STOCK + AVAILABILITY */}
+
 
                                     <div className="
                                         grid
@@ -1092,8 +1044,6 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* DESCRIPTION */}
-
                                     <div>
 
                                         <label className="
@@ -1128,7 +1078,6 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* ACTIONS */}
 
                                     <div className="
                                         flex
@@ -1193,9 +1142,7 @@ const AdminVaccines = () => {
 
                             ) : (
 
-                                /* =========================
-                                   VIEW MODE
-                                ========================= */
+     
 
                                 <>
 
@@ -1211,7 +1158,6 @@ const AdminVaccines = () => {
                                     />
 
 
-                                    {/* DETAILS */}
 
                                     <div className="
                                         mt-6
@@ -1319,7 +1265,7 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* PET TYPES */}
+                      
 
                                     <div className="mt-6">
 
@@ -1360,7 +1306,7 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* DESCRIPTION */}
+                   
 
                                     <div className="mt-6">
 
@@ -1380,7 +1326,7 @@ const AdminVaccines = () => {
                                     </div>
 
 
-                                    {/* ACTIONS */}
+                    
 
                                     <div className="
                                         mt-8
@@ -1438,7 +1384,6 @@ const AdminVaccines = () => {
             )}
 
 
-            {/* DELETE MODAL */}
 
             <DeleteModal
                 isOpen={deleteModalOpen}

@@ -97,7 +97,6 @@ const AdminOrderDetails = ({
 
         <div className="fixed inset-0 z-[100]">
 
-            {/* BACKDROP */}
 
             <div
                 onClick={onClose}
@@ -110,7 +109,6 @@ const AdminOrderDetails = ({
             />
 
 
-            {/* DRAWER */}
 
             <div
                 className="
@@ -127,7 +125,7 @@ const AdminOrderDetails = ({
                 "
             >
 
-                {/* HEADER */}
+
 
                 <div className="
                     px-5
@@ -214,7 +212,7 @@ const AdminOrderDetails = ({
                 </div>
 
 
-                {/* CONTENT */}
+
 
                 <div className="
                     flex-1
@@ -226,7 +224,6 @@ const AdminOrderDetails = ({
                 ">
 
 
-                    {/* CUSTOMER */}
 
                     <section>
 
@@ -261,7 +258,7 @@ const AdminOrderDetails = ({
                     </section>
 
 
-                    {/* SHIPPING */}
+   
 
                     <section>
 
@@ -292,7 +289,7 @@ const AdminOrderDetails = ({
                     </section>
 
 
-                    {/* ITEMS */}
+
 
                     <section>
 
@@ -335,7 +332,7 @@ const AdminOrderDetails = ({
                                     "
                                 >
 
-                                    {/* IMAGE */}
+             
 
                                     {item.item?.photo_url ? (
 
@@ -365,7 +362,7 @@ const AdminOrderDetails = ({
                                     )}
 
 
-                                    {/* INFO */}
+                
 
                                     <div className="min-w-0 flex-1">
 
@@ -433,7 +430,7 @@ const AdminOrderDetails = ({
                     </section>
 
 
-                    {/* PAYMENT */}
+  
 
                     <section>
 
@@ -562,9 +559,6 @@ const AdminOrderDetails = ({
 
                     </section>
 
-
-                    {/* DELIVERY */}
-                    {/* STATUS */}
 
                     <section>
 

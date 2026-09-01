@@ -33,9 +33,7 @@ const AdminProducts = () => {
     }, []);
 
 
-    /* =========================
-       REFRESH
-    ========================= */
+
 
     const handleRefresh = async () => {
 
@@ -47,9 +45,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       OPEN ADD
-    ========================= */
+
 
     const handleStartAdd = () => {
 
@@ -76,9 +72,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       OPEN VIEW
-    ========================= */
+
 
     const handleOpenProduct = (product) => {
 
@@ -88,9 +82,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       START EDIT
-    ========================= */
+
 
     const handleStartEdit = () => {
 
@@ -140,9 +132,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       FORM CHANGE
-    ========================= */
+ 
 
     const handleProductInputChange = (e) => {
 
@@ -163,9 +153,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       PET TYPES
-    ========================= */
+
 
     const handlePetTypesChange = (e) => {
 
@@ -184,9 +172,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       SAVE EDIT
-    ========================= */
+
 
     const handleSaveProduct = async () => {
 
@@ -245,9 +231,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       CREATE PRODUCT
-    ========================= */
+ 
 
     const handleCreateNewProduct = async () => {
 
@@ -300,9 +284,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       DELETE
-    ========================= */
+
 
     const handleDelete = () => {
 
@@ -333,9 +315,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       CLOSE DRAWER
-    ========================= */
+
 
     const handleCloseDrawer = () => {
 
@@ -347,9 +327,7 @@ const AdminProducts = () => {
     };
 
 
-    /* =========================
-       PET TYPE DISPLAY
-    ========================= */
+
 
     const getPetTypes = (product) => {
 
@@ -382,9 +360,7 @@ const AdminProducts = () => {
 
         <div>
 
-            {/* =========================
-                HEADER
-            ========================= */}
+
 
             <div className="
                 flex
@@ -490,9 +466,7 @@ const AdminProducts = () => {
             </div>
 
 
-            {/* =========================
-                PRODUCT GRID
-            ========================= */}
+
 
             <div className="
                 mt-8
@@ -524,7 +498,6 @@ const AdminProducts = () => {
                             "
                         >
 
-                            {/* IMAGE */}
 
                             <div className="
                                 aspect-[4/3]
@@ -548,7 +521,6 @@ const AdminProducts = () => {
                             </div>
 
 
-                            {/* CONTENT */}
 
                             <div className="p-4">
 
@@ -683,7 +655,7 @@ const AdminProducts = () => {
             </div>
 
 
-            {/* EMPTY */}
+
 
             {adminProducts.length === 0 && (
 
@@ -709,9 +681,6 @@ const AdminProducts = () => {
             )}
 
 
-            {/* =========================
-                PRODUCT DRAWER
-            ========================= */}
 
             {(selectedProduct || addingProduct) && (
 
@@ -721,7 +690,7 @@ const AdminProducts = () => {
                     z-[100]
                 ">
 
-                    {/* BACKDROP */}
+          
 
                     <div
                         onClick={handleCloseDrawer}
@@ -734,8 +703,7 @@ const AdminProducts = () => {
                     />
 
 
-                    {/* DRAWER */}
-
+         
                     <div className="
                         absolute
                         right-0
@@ -749,7 +717,6 @@ const AdminProducts = () => {
                         flex-col
                     ">
 
-                        {/* HEADER */}
 
                         <div className="
                             px-5
@@ -824,7 +791,7 @@ const AdminProducts = () => {
                         </div>
 
 
-                        {/* CONTENT */}
+               
 
                         <div className="
                             flex-1
@@ -834,15 +801,13 @@ const AdminProducts = () => {
                         ">
 
 
-                            {/* =========================
-                                ADD / EDIT FORM
-                            ========================= */}
+
 
                             {(addingProduct || editingProduct) ? (
 
                                 <div className="space-y-5">
 
-                                    {/* IMAGE URL */}
+                        
 
                                     <div>
 
@@ -877,7 +842,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* PRODUCT NAME */}
+                           
 
                                     <div>
 
@@ -912,7 +877,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* TYPE */}
+                              
 
                                     <div>
 
@@ -947,7 +912,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* PET TYPES */}
+                  
 
                                     <div>
 
@@ -993,7 +958,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* PRICE + WEIGHT */}
+                       
 
                                     <div className="
                                         grid
@@ -1071,7 +1036,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* ACTIVITY + SIZE */}
+                         
 
                                     <div className="
                                         grid
@@ -1147,7 +1112,6 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* PURPOSE */}
 
                                     <div>
 
@@ -1182,7 +1146,6 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* STOCK + AVAILABILITY */}
 
                                     <div className="
                                         grid
@@ -1276,7 +1239,6 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* MATERIAL */}
 
                                     <div>
 
@@ -1311,7 +1273,6 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* DESCRIPTION */}
 
                                     <div>
 
@@ -1347,7 +1308,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* ACTIONS */}
+        
 
                                     <div className="
                                         flex
@@ -1412,13 +1373,8 @@ const AdminProducts = () => {
 
                             ) : (
 
-                                /* =========================
-                                   VIEW MODE
-                                ========================= */
 
                                 <>
-
-                                    {/* IMAGE */}
 
                                     <img
                                         src={selectedProduct.photo_url}
@@ -1432,7 +1388,6 @@ const AdminProducts = () => {
                                     />
 
 
-                                    {/* BASIC INFO */}
 
                                     <div className="
                                         mt-6
@@ -1553,7 +1508,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* PET TYPES */}
+       
 
                                     <div className="mt-6">
 
@@ -1594,7 +1549,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* INVENTORY */}
+      
 
                                     <div className="
                                         mt-6
@@ -1648,7 +1603,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* MATERIAL */}
+  
 
                                     <div className="mt-6">
 
@@ -1667,7 +1622,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* DESCRIPTION */}
+     
 
                                     <div className="mt-6">
 
@@ -1687,7 +1642,7 @@ const AdminProducts = () => {
                                     </div>
 
 
-                                    {/* ACTIONS */}
+  
 
                                     <div className="
                                         mt-8
@@ -1745,7 +1700,7 @@ const AdminProducts = () => {
             )}
 
 
-            {/* DELETE MODAL */}
+
 
             <DeleteModal
                 isOpen={deleteModalOpen}

@@ -87,7 +87,6 @@ const Profile = () => {
                 shadow-[0_10px_30px_rgba(0,103,105,0.10)]
             ">
 
-                {/* Header */}
 
                 <div className="
                     bg-second
@@ -107,8 +106,6 @@ const Profile = () => {
                         Your Info
                     </h1>
 
-
-                    {/* Profile Image */}
 
                     <div className="
                         flex
@@ -164,8 +161,6 @@ const Profile = () => {
                 </div>
 
 
-                {/* Information */}
-
                 <div className="
                     px-6
                     py-8
@@ -174,8 +169,6 @@ const Profile = () => {
                     space-y-6
                 ">
 
-
-                    {/* Name */}
 
                     <div className="
                         flex
@@ -231,8 +224,6 @@ const Profile = () => {
                     </div>
 
 
-                    {/* Email */}
-
                     <div className="
                         flex
                         flex-col
@@ -286,62 +277,6 @@ const Profile = () => {
                     </div>
 
 
-                    {/* Account Type */}
-
-                    {/* <div className="
-                        flex
-                        flex-col
-                        tab:flex-row
-                        tab:items-center
-                        tab:justify-between
-                        gap-2
-                        tab:gap-6
-                    ">
-
-                        <h2 className="
-                            text-primary
-                            font-medium
-                            tab:w-2/5
-                        ">
-                            Account Type
-                        </h2>
-
-                        <div className="
-                            flex
-                            items-center
-                            w-full
-                            tab:w-3/5
-                        ">
-
-                            <span className="
-                                hidden
-                                tab:block
-                                text-primary
-                                mr-2
-                            ">
-                                :
-                            </span>
-
-                            <div className="
-                                w-full
-                                bg-white
-                                rounded-md
-                                px-3
-                                py-2
-                                text-primary
-                                font-medium
-                                shadow-sm
-                            ">
-                                Free
-                            </div>
-
-                        </div>
-
-                    </div> */}
-
-
-                    {/* Items In Cart */}
-
                     <div className="
                         flex
                         flex-col
@@ -393,8 +328,6 @@ const Profile = () => {
 
                     </div>
 
-
-                    {/* Total Orders */}
 
                     <div className="
                         flex

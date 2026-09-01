@@ -239,7 +239,7 @@ const AdminPets = () => {
 
         <div>
 
-            {/* HEADER */}
+
 
             <div className="
                 flex
@@ -347,7 +347,7 @@ const AdminPets = () => {
             </div>
 
 
-            {/* PET GRID */}
+
 
             <div className="
                 mt-8
@@ -374,7 +374,7 @@ const AdminPets = () => {
                         "
                     >
 
-                        {/* IMAGE */}
+           
 
                         <div className="
                             aspect-[4/3]
@@ -398,7 +398,7 @@ const AdminPets = () => {
                         </div>
 
 
-                        {/* CONTENT */}
+    
 
                         <div className="p-4">
 
@@ -441,7 +441,7 @@ const AdminPets = () => {
                             </div>
 
 
-                            {/* QUICK INFO */}
+             
 
                             <div className="
                                 flex
@@ -474,7 +474,7 @@ const AdminPets = () => {
                             </div>
 
 
-                            {/* MANAGE */}
+       
 
                             <button
                                 onClick={() => {
@@ -511,7 +511,7 @@ const AdminPets = () => {
             </div>
 
 
-            {/* PET DRAWER */}
+  
 
             {(selectedPet || addingPet) && (
 
@@ -521,7 +521,7 @@ const AdminPets = () => {
                     z-[100]
                 ">
 
-                    {/* BACKDROP */}
+  
 
                     <div
                         onClick={handleCloseDrawer}
@@ -534,7 +534,7 @@ const AdminPets = () => {
                     />
 
 
-                    {/* DRAWER */}
+   
 
                     <div className="
                         absolute
@@ -549,7 +549,6 @@ const AdminPets = () => {
                         flex-col
                     ">
 
-                        {/* DRAWER HEADER */}
 
                         <div className="
                             px-5
@@ -625,7 +624,7 @@ const AdminPets = () => {
                         </div>
 
 
-                        {/* DRAWER CONTENT */}
+  
 
                         <div className="
                             flex-1
@@ -636,13 +635,9 @@ const AdminPets = () => {
 
                             {addingPet ? (
 
-                                /* =========================
-                                   ADD MODE
-                                ========================= */
 
                                 <div className="space-y-5">
 
-                                    {/* IMAGE URL */}
 
                                     <div>
 
@@ -679,7 +674,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* BREED */}
+                   
 
                                     <div>
 
@@ -715,7 +710,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* CATEGORY */}
+                      
 
                                     <div>
 
@@ -773,7 +768,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* PRICE + AGE */}
 
                                     <div className="
                                         grid
@@ -851,7 +845,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* GENDER + SIZE */}
+            
 
                                     <div className="
                                         grid
@@ -949,7 +943,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* ACTIVITY LEVEL */}
 
                                     <div>
 
@@ -997,7 +990,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* LIVING ENVIRONMENT */}
 
                                     <div>
 
@@ -1031,7 +1023,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* STOCK + AVAILABILITY */}
+                       
 
                                     <div className="
                                         grid
@@ -1126,7 +1118,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* CHILD + PET FRIENDLY */}
 
                                     <div className="
                                         grid
@@ -1182,7 +1173,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* PERSONALITY */}
 
                                     <div>
 
@@ -1216,7 +1206,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* DESCRIPTION */}
+           
 
                                     <div>
 
@@ -1252,7 +1242,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* ACTIONS */}
 
                                     <div className="
                                         flex
@@ -1309,13 +1298,11 @@ const AdminPets = () => {
 
                             ) : editingPet ? (
 
-                                /* =========================
-                                   EDIT MODE
-                                ========================= */
+      
 
                                 <div className="space-y-5">
 
-                                    {/* IMAGE URL */}
+            
 
                                     <div>
 
@@ -1351,7 +1338,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* BREED */}
+                   
 
                                     <div>
 
@@ -1386,7 +1373,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* CATEGORY */}
+                       
 
                                     <div>
 
@@ -1444,7 +1431,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* PRICE + AGE */}
+              
 
                                     <div className="
                                         grid
@@ -1520,7 +1507,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* GENDER + SIZE */}
+                  
 
                                     <div className="
                                         grid
@@ -1618,7 +1605,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* ACTIVITY LEVEL */}
+             
 
                                     <div>
 
@@ -1666,7 +1653,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* LIVING ENVIRONMENT */}
+           
 
                                     <div>
 
@@ -1699,7 +1686,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* STOCK + AVAILABILITY */}
+               
 
                                     <div className="
                                         grid
@@ -1794,7 +1781,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* CHILD + PET FRIENDLY */}
+    
 
                                     <div className="
                                         grid
@@ -1850,7 +1837,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* PERSONALITY */}
+       
 
                                     <div>
 
@@ -1883,7 +1870,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* DESCRIPTION */}
 
                                     <div>
 
@@ -1918,7 +1904,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* ACTIONS */}
+   
 
                                     <div className="
                                         flex
@@ -1975,9 +1961,7 @@ const AdminPets = () => {
 
                             ) : (
 
-                                /* =========================
-                                   VIEW MODE
-                                ========================= */
+  
 
                                 <>
 
@@ -1993,7 +1977,7 @@ const AdminPets = () => {
                                     />
 
 
-                                    {/* BASIC DETAILS */}
+    
 
                                     <div className="
                                         mt-6
@@ -2097,7 +2081,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* INVENTORY */}
+  
 
                                     <div className="
                                         mt-6
@@ -2150,7 +2134,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* FRIENDLINESS */}
+   
 
                                     <div className="
                                         mt-6
@@ -2203,7 +2187,7 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* PERSONALITY */}
+  
 
                                     <div className="mt-6">
 
@@ -2222,7 +2206,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* DESCRIPTION */}
 
                                     <div className="mt-6">
 
@@ -2242,7 +2225,6 @@ const AdminPets = () => {
                                     </div>
 
 
-                                    {/* ACTIONS */}
 
                                     <div className="
                                         mt-8

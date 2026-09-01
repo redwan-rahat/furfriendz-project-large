@@ -76,7 +76,7 @@ const ShowPetsandProducts = ({ fetchedData = [] }) => {
 
                                     <div className="space-y-4">
 
-                                        {/* Image */}
+                              
 
                                         <div
                                             className="
@@ -132,7 +132,7 @@ const ShowPetsandProducts = ({ fetchedData = [] }) => {
                                         </div>
 
 
-                                        {/* Name */}
+                          
 
                                         <h1
                                             className="

@@ -44,9 +44,7 @@ const Login = () => {
     }, [navigating]);
 
 
-    // ==============================
-    // LOGIN
-    // ==============================
+
 
     const handleUserInfo = (e) => {
 
@@ -104,14 +102,10 @@ const Login = () => {
     };
 
 
-    // ==============================
-    // FORGOT PASSWORD
-    // ==============================
 
     const handleForgot = async () => {
 
-        // Get the email directly from
-        // the existing login email input
+
 
         const emailInput = document.querySelector(
             'input[name="email"]'
@@ -120,7 +114,6 @@ const Login = () => {
         const email = emailInput?.value?.trim();
 
 
-        // No email entered
 
         if (!email) {
 
@@ -133,7 +126,7 @@ const Login = () => {
         }
 
 
-        // Prevent multiple requests
+
 
         if (forgotLoading) return;
 
@@ -233,7 +226,7 @@ const Login = () => {
             >
 
 
-                {/* LOGIN CARD */}
+
 
                 <div
                     className={`${special
@@ -243,7 +236,7 @@ const Login = () => {
                 >
 
 
-                    {/* PARROT */}
+       
 
                     <h1
                         className={`tab:w-36 des:w-44 tab:h-36 des:h-44 absolute -top-16 hidden lap:flex lap:-left-36 des:-left-44 scale-x-[-1] ${special ? '' : 'hidden'
@@ -253,7 +246,6 @@ const Login = () => {
                     </h1>
 
 
-                    {/* TITLE */}
 
                     <h1
                         className={`${special
@@ -265,7 +257,7 @@ const Login = () => {
                     </h1>
 
 
-                    {/* LOGIN FORM */}
+  
 
                     <form
                         action=""
@@ -275,7 +267,7 @@ const Login = () => {
                     >
 
 
-                        {/* EMAIL */}
+           
 
                         <div
                             className={`${special ? 'relative' : ''
@@ -333,7 +325,6 @@ const Login = () => {
                         </div>
 
 
-                        {/* PASSWORD */}
 
                         <div
                             className={`${special ? 'relative' : ''
@@ -400,7 +391,7 @@ const Login = () => {
                         </div>
 
 
-                        {/* ERROR MESSAGE */}
+                   
 
                         <div className="text-red-600 text-sm ml-3 mb-4">
 
@@ -409,7 +400,7 @@ const Login = () => {
                         </div>
 
 
-                        {/* REGISTER + FORGOT PASSWORD */}
+             
 
                         <div
                             className={`${special
@@ -445,7 +436,7 @@ const Login = () => {
                         </div>
 
 
-                        {/* LOGIN BUTTON */}
+        
 
                         <input
                             type="submit"
@@ -459,7 +450,7 @@ const Login = () => {
                     </form>
 
 
-                    {/* GOOGLE LOGIN */}
+        
 
                     <div
                         onClick={() => {
@@ -486,7 +477,7 @@ const Login = () => {
                 </div>
 
 
-                {/* RIGHT SIDE ANIMATION */}
+   
 
                 <div
                     className={`${special

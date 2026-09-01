@@ -1,6 +1,5 @@
 import { useContext, useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
-
 import DownArrow from "../Animations/DownArrow";
 import { AuthContex } from "../AuthProvider/AuthProvider";
 
@@ -79,13 +78,12 @@ const Section5 = () => {
     return (
         <div className="bg-fifth font-page pb-20 text-primary">
 
-            {/* Down Arrow */}
+           
             <div className="w-24 tab:w-44 h-28 des:w-56 tab:h-64 des:h-72 z-10 m-auto">
                 <DownArrow />
             </div>
 
 
-            {/* Heading */}
             <div className="text-primary text-center space-y-3 tab:space-y-6 tab:-mt-16">
 
                 <h1 className="text-2xl tab:text-4xl lap:text-5xl des:text-7xl font-semibold">
@@ -99,7 +97,7 @@ const Section5 = () => {
             </div>
 
 
-            {/* FORM CONTAINER */}
+    
             <div className="w-10/12 tab:w-8/12 des:w-3/6 bg-second m-auto mt-10">
 
                 <div className="w-4/5 m-auto text-white">
@@ -110,11 +108,11 @@ const Section5 = () => {
                         className="py-12 tab:py-14 des:py-16"
                     >
 
-                        {/* FORM GRID */}
+                      
                         <div className="tab:grid tab:grid-cols-2 tab:gap-x-8 des:gap-x-12 gap-y-6">
 
 
-                            {/* NAME */}
+                           
                             <div className="space-y-2">
 
                                 <label
@@ -162,7 +160,7 @@ const Section5 = () => {
                             </div>
 
 
-                            {/* TOPIC DROPDOWN */}
+                     
                             <div className="space-y-2 mt-6 tab:mt-0">
 
                                 <label
@@ -218,7 +216,7 @@ const Section5 = () => {
                             </div>
 
 
-                            {/* DESCRIPTION */}
+                  
                             <div className="space-y-2 mt-6 tab:mt-0 tab:col-span-2">
 
                                 <label
@@ -244,7 +242,7 @@ const Section5 = () => {
                         </div>
 
 
-                        {/* SUBMIT BUTTON */}
+              
                         <div className="mt-8 tab:mt-10">
 
                             <button
