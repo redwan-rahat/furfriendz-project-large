@@ -1,15 +1,10 @@
 import { Outlet, useLocation } from "react-router-dom";
-
 import Footer from "../Footer/Footer";
 import Navbar from "../Navbar/Navbar";
-
 import AOS from "aos";
 import "aos/dist/aos.css";
-
 import { useContext, useEffect } from "react";
-
 import { AuthContex } from "../AuthProvider/AuthProvider";
-
 import LoadingOverlay from "../OtherPages/LoadingOverlay";
 import ModalAlert from "../OtherPages/ModalAlert";
 import FloatingCart from "../Cart/FloatingCart";
@@ -23,7 +18,15 @@ const Root = () => {
     const isAdmin = location.pathname.startsWith("/admin");
     const isDelivery = location.pathname.startsWith("/delivery");
 
-    const isDashboardRoute = isAdmin || isDelivery;
+
+
+    const isBkashCheckout =
+        location.pathname === "/bkash-checkout";
+
+    const isDashboardRoute =
+        isAdmin ||
+        isDelivery ||
+        isBkashCheckout;
 
 
     const {
@@ -80,7 +83,7 @@ const Root = () => {
                 )}
 
 
-                {/* PAGE CONTENT */}
+
 
                 <div className="relative z-0">
 
@@ -89,7 +92,7 @@ const Root = () => {
                 </div>
 
 
-                {/* CUSTOMER FOOTER + CART */}
+
 
                 {!isDashboardRoute && (
 
@@ -112,3 +115,4 @@ const Root = () => {
 };
 
 export default Root;
+

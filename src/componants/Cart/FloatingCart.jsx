@@ -424,7 +424,7 @@ const FloatingCart = () => {
             if (success) {
 
                 setCheckoutOpen(false);
-
+                setCartOpen(false);
 
                 setCheckoutData({
                     full_name: '',
@@ -434,27 +434,9 @@ const FloatingCart = () => {
                     cash_on_delivery: false
                 });
 
-
-                const finalCart =
-                    await handleGetCart();
-
-
-                if (finalCart) {
-
-                    setMyCart(finalCart);
-
-                } else {
-
-                    setMyCart({
-                        pets: [],
-                        products: [],
-                        vaccines: []
-                    });
-
-                }
-
-
                 await handleTotalCarts();
+
+                window.location.reload();
 
             }
 
@@ -524,40 +506,18 @@ const FloatingCart = () => {
                 return;
             }
 
-
             setCartOpen(false);
-
             setCheckoutOpen(false);
 
-
-            const updatedCart =
-                await handleGetCart();
-
-
-            if (updatedCart) {
-
-                setMyCart(updatedCart);
-
-            } else {
-
-                setMyCart({
-                    pets: [],
-                    products: [],
-                    vaccines: []
-                });
-
-            }
-
-
             await handleTotalCarts();
-
 
             localStorage.removeItem(
                 'furfriendz_bkash_success'
             );
 
-        };
+            window.location.reload();
 
+        };
 
         window.addEventListener(
             'storage',
